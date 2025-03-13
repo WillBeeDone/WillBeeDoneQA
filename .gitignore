@@ -1,42 +1,35 @@
-.gradle
+# Gradle
+.gradle/
 build/
+gradle.properties  # Локальные настройки (например, путь к JDK)
 !gradle/wrapper/gradle-wrapper.jar
-!**/src/main/**/build/
-!**/src/test/**/build/
+!gradle/wrapper/gradle-wrapper.properties
 
-### IntelliJ IDEA ###
-.idea/modules.xml
-.idea/jarRepositories.xml
-.idea/compiler.xml
-.idea/libraries/
-*.iws
+# IntelliJ IDEA
+.idea/
 *.iml
-*.ipr
 out/
-!**/src/main/**/out/
-!**/src/test/**/out/
 
-### Eclipse ###
-.apt_generated
+# Eclipse (если кто-то использует)
 .classpath
-.factorypath
 .project
-.settings
-.springBeans
-.sts4-cache
+.settings/
 bin/
-!**/src/main/**/bin/
-!**/src/test/**/bin/
 
-### NetBeans ###
+# NetBeans (если кто-то использует)
 /nbproject/private/
 /nbbuild/
 /dist/
 /nbdist/
 /.nb-gradle/
 
-### VS Code ###
+# VS Code
 .vscode/
 
-### Mac OS ###
+# Логи и временные файлы
+*.log
+*.tmp
+
+# ОС
 .DS_Store
+Thumbs.db
