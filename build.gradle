@@ -10,12 +10,12 @@ repositories {
 }
 
 dependencies {
-    testImplementation platform('org.junit:junit-bom:5.12.0')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'org.testng:testng:7.10.1'
     implementation 'org.seleniumhq.selenium:selenium-java:4.29.0'
     implementation 'org.slf4j:slf4j-nop:2.0.7'
     implementation 'io.github.bonigarcia:webdrivermanager:5.9.3'
 }
+
 
 
 compileJava {
@@ -23,5 +23,5 @@ compileJava {
 }
 
 test {
-    useJUnitPlatform()
+    useTestNG()
 }
