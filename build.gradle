@@ -27,8 +27,16 @@ dependencies {
     implementation 'io.qameta.allure:allure-testng:2.21.0' // для TestNG !
     testImplementation 'io.qameta.allure:allure-selenide:2.21.0' // Логи и скриншоты
 
+    // rest-assured
     testImplementation 'io.rest-assured:rest-assured:5.3.0'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.0'
+
+    // lombok
+    compileOnly 'org.projectlombok:lombok:1.18.36'
+    annotationProcessor 'org.projectlombok:lombok:1.18.36'
+    testCompileOnly 'org.projectlombok:lombok:1.18.36'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.36'
+
 
 }
 
