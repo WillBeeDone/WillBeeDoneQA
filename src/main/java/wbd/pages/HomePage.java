@@ -5,6 +5,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import wbd.core.BasePage;
 
 public class HomePage extends BasePage {
+
     public HomePage(WebDriver driver, WebDriverWait wait) {
         super(driver, wait);
     }

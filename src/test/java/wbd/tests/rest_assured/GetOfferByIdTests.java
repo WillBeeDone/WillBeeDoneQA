@@ -6,19 +6,27 @@ import org.testng.asserts.SoftAssert;
 import wbd.dto.FilteredOffersResponseDto;
 import wbd.utils.ApiClient_GetOfferById;
 
-public class GetOfferByIdTest {
+import static io.restassured.RestAssured.given;
+
+public class GetOfferByIdTests {
 
     @Test
     public void testGetOfferById() {
         int offerId = 1;  // допустим, оффер с ID 1 существует
-        Response response = ApiClient_GetOfferById.getOfferById(offerId); // получаем оффер по ID
 
+        Response response = ApiClient_GetOfferById.getOfferById(offerId); // получаем оффер по ID
         System.out.println("Response body: " + response.asString());
 
         SoftAssert softAssert = new SoftAssert();
 
         // проверка статуса 200 OK
         softAssert.assertEquals(response.getStatusCode(), 200, "Expected status code 200");
+
+        if (response.getStatusCode() == 200) {
+            System.out.println("Тест прошел успешно: Код ответа 200 (OK)");
+        } else {
+            System.out.println("Ошибка: Получен ответ с кодом " + response.getStatusCode());
+        }
 
         // парсим JSON в объект FilteredOffersResponseDto
         FilteredOffersResponseDto offer = response.as(FilteredOffersResponseDto.class);
@@ -34,8 +42,10 @@ public class GetOfferByIdTest {
 
         softAssert.assertTrue(offer.getPricePerHour() > 0, "Цена должна быть положительной");
 
+        // проверка categoryResponseDto как объекта
         softAssert.assertNotNull(offer.getCategoryResponseDto(), "Category не должен быть null");
-        softAssert.assertTrue(offer.getCategoryResponseDto().length() > 0, "Category не должен быть пустым");
+        softAssert.assertNotNull(offer.getCategoryResponseDto().getName(), "Name категории не должен быть null");
+        softAssert.assertTrue(offer.getCategoryResponseDto().getName().length() > 0, "Category name не должен быть пустым");
 
         // проверка UserFilterResponseDto (если оно есть)
         if (offer.getUserFilterResponseDto() != null) {
@@ -49,7 +59,11 @@ public class GetOfferByIdTest {
             softAssert.assertTrue(offer.getUserFilterResponseDto().getProfilePicture().length() > 0, "ProfilePicture не должен быть пустым");
 
             softAssert.assertNotNull(offer.getUserFilterResponseDto().getLocationResponseDto(), "LocationResponseDto не должен быть null");
-            softAssert.assertTrue(offer.getUserFilterResponseDto().getLocationResponseDto().length() > 0, "LocationResponseDto не должен быть пустым");
+
+            if (offer.getUserFilterResponseDto().getLocationResponseDto() != null) {
+                softAssert.assertNotNull(offer.getUserFilterResponseDto().getLocationResponseDto().getCityName(), "CityName не должен быть null");
+                softAssert.assertTrue(offer.getUserFilterResponseDto().getLocationResponseDto().getCityName().length() > 0, "CityName не должен быть пустым");
+            }
         }
 
         // проверка на наличие хотя бы одного изображения
@@ -63,15 +77,53 @@ public class GetOfferByIdTest {
     }
 
     @Test
-    public void testGetOfferByNonExistentId() {
+    public void testGetOfferByNonExistentId_404() {
         int nonExistentOfferId = 9999;  // предположим, что такого оффера нет
         Response response = ApiClient_GetOfferById.getOfferById(nonExistentOfferId); // получаем оффер по несуществующему ID
 
         SoftAssert softAssert = new SoftAssert();
 
-        // Проверка, что сервер вернул 404 (Not Found)
+        // проверка, что сервер вернул 404 (Not Found)
         softAssert.assertEquals(response.getStatusCode(), 404, "Expected status code 404 for non-existent offer");
+
+        if (response.getStatusCode() == 404) {
+            System.out.println("Ошибка: Получен ответ с кодом 404 (Not Found)");
+        }
 
         softAssert.assertAll();
     }
+
+    @Test
+    public void testGetOffersByInvalidId_400() {
+        // запрос с несуществующим или неправильным параметром ID
+        Response response = given()
+                .when()
+                .get("/api/offers/invalid-id")
+                .then()
+                .statusCode(400)  // проверка на статус 400
+                .log().all()
+                .extract().response();
+
+        if (response.getStatusCode() == 400) {
+            System.out.println("Тест прошел успешно: Получен ответ с кодом 400 (Bad Request)");
+        }
+    }
+
+//    @Test
+//    public void testServerError() {
+//        // симулируем ошибку на сервере, например, при вызове неправильного endpoint или когда сервер не может обработать запрос
+//        Response response = given()
+//                .when()
+//                .get("/api/offers/trigger-server-error")
+//                .then()
+//                .statusCode(500)  // проверка на статус 500
+//                .log().all()
+//                .extract().response();
+//
+//        if (response.getStatusCode() == 500) {
+//            System.out.println("Ошибка: Получен ответ с кодом 500 (Internal Server Error)");
+//        }
+//    }
+
+
 }

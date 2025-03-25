@@ -28,7 +28,7 @@ dependencies {
     testImplementation 'io.qameta.allure:allure-selenide:2.21.0' // Логи и скриншоты
 
     // rest-assured
-    testImplementation 'io.rest-assured:rest-assured:4.4.0'
+    implementation 'io.rest-assured:rest-assured:4.4.0'
     implementation 'org.junit.jupiter:junit-jupiter:5.9.0'
 
     // Lombok
