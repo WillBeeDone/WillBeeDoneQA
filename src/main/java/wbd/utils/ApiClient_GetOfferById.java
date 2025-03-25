@@ -12,7 +12,7 @@ public class ApiClient_GetOfferById {
                 .given()
                 .baseUri(BASE_URL)
                 .when()
-                .get("/offers/" + offerId) // подставляем ID
+                .get("/offers/" + offerId)
                 .then()
                 .extract()
                 .response();

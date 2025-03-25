@@ -64,12 +64,12 @@ public class GetOfferByIdTest {
 
     @Test
     public void testGetOfferByNonExistentId() {
-        int nonExistentOfferId = 9999;  // допустим, что такого оффера нет
-        Response response = ApiClient_GetOfferById.getOfferById(nonExistentOfferId); // оффер по несуществующему ID
+        int nonExistentOfferId = 9999;  // предположим, что такого оффера нет
+        Response response = ApiClient_GetOfferById.getOfferById(nonExistentOfferId); // получаем оффер по несуществующему ID
 
         SoftAssert softAssert = new SoftAssert();
 
-        // проверка, что сервер вернул 404 (Not Found)
+        // Проверка, что сервер вернул 404 (Not Found)
         softAssert.assertEquals(response.getStatusCode(), 404, "Expected status code 404 for non-existent offer");
 
         softAssert.assertAll();
