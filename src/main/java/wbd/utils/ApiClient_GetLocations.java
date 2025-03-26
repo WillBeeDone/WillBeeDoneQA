@@ -5,16 +5,14 @@ import io.restassured.response.Response;
 
 import static wbd.core.ApplicationManager.BASE_URL;
 
-public class ApiClient_GetOfferById {
+public class ApiClient_GetLocations {
 
-  //  private static final String BASE_URL = "http://localhost:8080/api";
-
-    public static Response getOfferById(int offerId) {
+    public static Response getLocations() {
         return RestAssured
                 .given()
                 .baseUri(BASE_URL)
                 .when()
-                .get("/offers/" + offerId)
+                .get("/locations")
                 .then()
                 .extract()
                 .response();

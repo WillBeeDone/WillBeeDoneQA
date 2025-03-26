@@ -3,27 +3,25 @@ package wbd.dto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import wbd.dto.UserFilterResponseDto;
-
-import java.util.List;
 
 @Getter
 @Setter
 @ToString
-public class FilteredOffersResponseDto {
+public class AllOffersResponseDto {
     private int id;
     private String title;
     private CategoryResponseDto categoryResponseDto;
     private double pricePerHour;
     private String description;
-    private List<ImageDto> images;
-    private UserFilterResponseDto userFilterResponseDto;
+    private UserDetailsDto userFilterResponseDto;
 
     @Getter
     @Setter
     @ToString
-    public static class ImageDto {
-        private int id;
-        private String imageUrl;
+    public static class UserDetailsDto {
+        private String firstName;
+        private String lastName;
+        private String profilePicture;
+        private LocationResponseDto locationResponseDto;
     }
 }

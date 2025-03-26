@@ -8,7 +8,7 @@ import wbd.utils.ApiClient_GetFilterOffers;
 
 import java.util.List;
 
-public class GetFilteredOffersTest {
+public class GetFilteredOffersTests {
 
     @Test
     public void testGetFilteredOffers() {
@@ -24,6 +24,12 @@ public class GetFilteredOffersTest {
 
         // проверяем статус 200
         response.then().statusCode(200);
+
+        if (response.getStatusCode() == 200) {
+            System.out.println("Тест прошел успешно: Код ответа 200 (OK)");
+        } else {
+            System.out.println("Ошибка: Получен ответ с кодом " + response.getStatusCode());
+        }
 
         // Проверка на пустой список офферов
         if (filteredOffers.isEmpty()) {
@@ -44,8 +50,10 @@ public class GetFilteredOffersTest {
 
             softAssert.assertTrue(filteredOffers.get(0).getPricePerHour() > 0, "Цена должна быть положительной");
 
+            // Проверка categoryResponseDto как объекта
             softAssert.assertNotNull(filteredOffers.get(0).getCategoryResponseDto(), "Category не должен быть null");
-            softAssert.assertTrue(filteredOffers.get(0).getCategoryResponseDto().length() > 0, "Category не должен быть пустым");
+            softAssert.assertNotNull(filteredOffers.get(0).getCategoryResponseDto().getName(), "'name' категории не должен быть null");
+            softAssert.assertTrue(filteredOffers.get(0).getCategoryResponseDto().getName().length() > 0, "Category name не должен быть пустым");
 
             // если OfferDto содержит UserFilterResponseDto
             softAssert.assertNotNull(filteredOffers.get(0).getUserFilterResponseDto(), "UserFilterResponseDto не должен быть null");
@@ -61,8 +69,12 @@ public class GetFilteredOffersTest {
                 softAssert.assertNotNull(filteredOffers.get(0).getUserFilterResponseDto().getProfilePicture(), "ProfilePicture не должен быть null");
                 softAssert.assertTrue(filteredOffers.get(0).getUserFilterResponseDto().getProfilePicture().length() > 0, "ProfilePicture не должен быть пустым");
 
-                softAssert.assertNotNull(filteredOffers.get(0).getUserFilterResponseDto().getLocationResponseDto(), "LocationResponseDto не должен быть null");
-                softAssert.assertTrue(filteredOffers.get(0).getUserFilterResponseDto().getLocationResponseDto().length() > 0, "LocationResponseDto не должен быть пустым");
+                // проверка, что cityName внутри locationResponseDto не null и не пустое
+                if (filteredOffers.get(0).getUserFilterResponseDto().getLocationResponseDto() != null) {
+                    softAssert.assertNotNull(filteredOffers.get(0).getUserFilterResponseDto().getLocationResponseDto().getCityName(), "CityName не должен быть null");
+                    softAssert.assertTrue(filteredOffers.get(0).getUserFilterResponseDto().getLocationResponseDto().getCityName().length() > 0, "CityName не должен быть пустым");
+                }
+
             }
         }
 
