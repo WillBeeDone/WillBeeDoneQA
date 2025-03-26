@@ -1,4 +1,4 @@
-package wbd.tests;
+package wbd.tests.web_tests;
 
 import wbd.core.TestBase;
 
