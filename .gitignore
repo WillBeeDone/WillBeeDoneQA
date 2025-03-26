@@ -1,3 +1,7 @@
+
+# allure-results
+allure-results/
+
 # Gradle
 .gradle/
 build/

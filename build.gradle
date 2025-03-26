@@ -17,16 +17,24 @@ dependencies {
     // WebDriverManager (управление драйверами)
     implementation 'io.github.bonigarcia:webdrivermanager:5.6.3'
 
-    // TestNG для тестирования
+    // Фреймворк TestNG для тестирования
     implementation 'org.testng:testng:7.11.0'
 
     // Логирование: Logback вместо SLF4J
     implementation 'ch.qos.logback:logback-classic:1.5.16'
 
     // Allure для отчетности
-    implementation 'io.qameta.allure:allure-testng:2.21.0'
-}
+    implementation 'io.qameta.allure:allure-testng:2.21.0' // для TestNG !
+    testImplementation 'io.qameta.allure:allure-selenide:2.21.0' // Логи и скриншоты
 
+    // rest-assured
+    implementation 'io.rest-assured:rest-assured:4.4.0'
+    implementation 'org.junit.jupiter:junit-jupiter:5.9.0'
+
+    // Lombok
+    compileOnly 'org.projectlombok:lombok:1.18.36'
+    annotationProcessor 'org.projectlombok:lombok:1.18.36'
+}
 
 test {
     useTestNG()
