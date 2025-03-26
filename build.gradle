@@ -12,21 +12,28 @@ repositories {
 dependencies {
 
     // Selenium WebDriver
-    implementation 'org.seleniumhq.selenium:selenium-java:4.29.0'
+    implementation 'org.seleniumhq.selenium:selenium-java:4.30.0'
 
     // WebDriverManager (управление драйверами)
-    implementation 'io.github.bonigarcia:webdrivermanager:5.6.3'
+    implementation 'io.github.bonigarcia:webdrivermanager:6.0.0'
 
-    // TestNG для тестирования
+    // Фреймворк TestNG для тестирования
     implementation 'org.testng:testng:7.11.0'
 
     // Логирование: Logback вместо SLF4J
-    implementation 'ch.qos.logback:logback-classic:1.5.16'
+    implementation 'ch.qos.logback:logback-classic:1.5.18'
 
     // Allure для отчетности
-    implementation 'io.qameta.allure:allure-testng:2.21.0'
-}
+    implementation 'io.qameta.allure:allure-testng:2.29.1' // для TestNG !
+    testImplementation 'io.qameta.allure:allure-selenide:2.29.1' // Логи и скриншоты
 
+    // rest-assured
+    implementation 'io.rest-assured:rest-assured:5.5.1'
+
+    // Lombok
+    compileOnly 'org.projectlombok:lombok:1.18.36'
+    annotationProcessor 'org.projectlombok:lombok:1.18.36'
+}
 
 test {
     useTestNG()
