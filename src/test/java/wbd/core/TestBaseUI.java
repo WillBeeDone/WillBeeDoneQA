@@ -8,9 +8,9 @@ import org.testng.annotations.BeforeMethod;
 
 import java.lang.reflect.Method;
 
-public class TestBase {
+public class TestBaseUI {
     protected final ApplicationManager app = new ApplicationManager();
-    Logger logger = LoggerFactory.getLogger(TestBase.class);
+    Logger logger = LoggerFactory.getLogger(TestBaseUI.class);
 
 
     @BeforeMethod

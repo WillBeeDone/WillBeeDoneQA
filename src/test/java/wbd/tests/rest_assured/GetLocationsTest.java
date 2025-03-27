@@ -1,24 +1,28 @@
 package wbd.tests.rest_assured;
 
 import io.restassured.response.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
+import wbd.api.client.LocationsClient;
+import wbd.core.TestBaseRA;
 import wbd.dto.LocationResponseDto;
-import wbd.utils.ApiClient_GetLocations;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
-import static wbd.core.ApplicationManager.BASE_URL;
 
-public class GetLocationsTest {
 
+public class GetLocationsTest extends TestBaseRA {
+
+    private static final Logger logger = LoggerFactory.getLogger(GetLocationsTest.class);
     @Test
     public void testGetLocations() {
         // запрос на получение локаций
-        Response response = ApiClient_GetLocations.getLocations();
-        System.out.println("Response body: " + response.asString());
+        Response response = LocationsClient.getLocations();
+        logger.info("Response body: {}", response.asString());
 
         SoftAssert softAssert = new SoftAssert();
 
@@ -51,7 +55,6 @@ public class GetLocationsTest {
     public void testGetLocationsWithInvalidEndpoint_Returns404() {
         // GET-запрос на неверный эндпоинт
         Response response = given()
-                .baseUri(BASE_URL)
                 .when()
                 .get("/locations/invalid") // неправильный путь
                 .then()
@@ -60,7 +63,7 @@ public class GetLocationsTest {
 
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertEquals(response.getStatusCode(), 404, "Expected status code 404 for invalid endpoint /locations/invalid");
-        System.out.println("Received status code " + response.getStatusCode() + " for GET request to /locations/invalid");
+        logger.warn("Received status code {} for GET request to /locations/invalid", response.getStatusCode());
         softAssert.assertAll();
     }
 
@@ -68,7 +71,6 @@ public class GetLocationsTest {
     public void testGetLocationsWithUnexpectedQueryParam_Returns400() {
         //  GET-запрос с неподдерживаемым query-параметром
         Response response = given()
-                .baseUri(BASE_URL)
                 .queryParam("unexpected", "value") // неожиданный query-параметр
                 .when()
                 .get("/locations")
@@ -79,7 +81,7 @@ public class GetLocationsTest {
         SoftAssert softAssert = new SoftAssert();
         // ожидается, что API отклонит запрос с неизвестным параметром, вернув 400 Bad Request
         softAssert.assertEquals(response.getStatusCode(), 400, "Expected status code 400 for GET request to /locations with unexpected query param");
-        System.out.println("Received status code " + response.getStatusCode() + " for GET request to /locations with unexpected query param");
+        logger.warn("Received status code {} for GET request to /locations with unexpected query param", response.getStatusCode());
         softAssert.assertAll();
     }
 }

@@ -1,18 +1,23 @@
 package wbd.tests.rest_assured;
 
 import io.restassured.response.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import wbd.utils.ApiClient_GetCategories;
+import wbd.api.client.CategoriesClient;
+import wbd.core.TestBaseRA;
+
 import java.util.List;
+import static io.restassured.RestAssured.given;
 
-public class GetCategoriesTests {
-
+public class GetCategoriesTests extends TestBaseRA {
+    private static final Logger logger = LoggerFactory.getLogger(GetCategoriesTests.class);
     @Test
     public void testGetCategories_Success() {
-        Response response = ApiClient_GetCategories.getCategories();
+        Response response = CategoriesClient.getCategories();
         int statusCode = response.getStatusCode();
-        System.out.println("Response status: " + statusCode);
+        logger.info("Response status: {}", statusCode);
 
         // статус 200
         Assert.assertEquals(statusCode, 200, "Код ответа должен быть 200");
@@ -22,9 +27,9 @@ public class GetCategoriesTests {
         Assert.assertFalse(categories.isEmpty(), "Список категорий не должен быть пустым");
 
         if (!categories.isEmpty()) {
-            System.out.println("---------------------------------------------------------");
+            logger.info("---------------------------------------------------------");
             for (String category : categories) {
-                System.out.println("Category => " + category + ";");
+                logger.info("Category => {}", category);
             }
         }
         // проверяем, что все категории содержат непустые названия
@@ -36,19 +41,17 @@ public class GetCategoriesTests {
 
     @Test
     public void testGetCategories_NotFound_404() {
-        Response response = ApiClient_GetCategories.getCategories();
-        int statusCode = response.getStatusCode();
-        System.out.println("Response status: " + statusCode);
 
         // если endpoint неправильный, то 404
-        response = io.restassured.RestAssured
-                .given()
-                .baseUri("http://localhost:8080/api")
+        Response response = given()
                 .when()
                 .get("/categories-invalid")
                 .then()
                 .extract()
                 .response();
+
+        int statusCode = response.getStatusCode();
+        logger.info("Response status: {}", statusCode);
 
         Assert.assertEquals(response.getStatusCode(), 404, "Код ответа должен быть 404");
     }

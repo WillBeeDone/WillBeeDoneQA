@@ -1,21 +1,25 @@
 package wbd.tests.rest_assured;
 
 import io.restassured.response.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
+import wbd.api.client.OffersClient;
+import wbd.core.TestBaseRA;
 import wbd.dto.FilteredOffersResponseDto;
-import wbd.utils.ApiClient_GetFilterOffers;
 
 import java.util.List;
 
-public class GetFilteredOffersTests {
+public class GetFilteredOffersTests extends TestBaseRA {
 
+    private static final Logger logger = LoggerFactory.getLogger(GetFilteredOffersTests.class);
     @Test
     public void testGetFilteredOffers() {
-        Response response = ApiClient_GetFilterOffers.getFilteredOffers(); // метод из ApiClient
+        Response response = OffersClient.getFilteredOffers();
 
         // логируем ответ
-        System.out.println("Response body: " + response.asString());
+        logger.info("Response body: {}", response.asString());
 
         // парсим JSON в список
         List<FilteredOffersResponseDto> filteredOffers = response.jsonPath().getList("", FilteredOffersResponseDto.class);
@@ -26,18 +30,18 @@ public class GetFilteredOffersTests {
         response.then().statusCode(200);
 
         if (response.getStatusCode() == 200) {
-            System.out.println("Тест прошел успешно: Код ответа 200 (OK)");
+            logger.info("Тест прошел успешно: Код ответа 200 (OK)");
         } else {
-            System.out.println("Ошибка: Получен ответ с кодом " + response.getStatusCode());
+            logger.error("Ошибка: Получен ответ с кодом {}", response.getStatusCode());
         }
 
         // Проверка на пустой список офферов
         if (filteredOffers.isEmpty()) {
-            System.out.println("⚠️ Список офферов пуст!");
+            logger.warn("⚠️ Список офферов пуст!");
             softAssert.assertTrue(filteredOffers.isEmpty(), "Список офферов должен быть пустым.");
         } else {
             // если список не пустой, выполняем проверки
-            System.out.println("✅ Найдено " + filteredOffers.size() + " офферов.");
+            logger.info("✅ Найдено {} офферов.", filteredOffers.size());
             softAssert.assertNotNull(filteredOffers, "Список офферов не должен быть null");
             softAssert.assertFalse(filteredOffers.isEmpty(), "Список офферов не должен быть пустым");
 

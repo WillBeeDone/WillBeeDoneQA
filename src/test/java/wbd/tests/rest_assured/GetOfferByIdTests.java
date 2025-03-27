@@ -1,21 +1,25 @@
 package wbd.tests.rest_assured;
 
 import io.restassured.response.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
+import wbd.api.client.OffersClient;
+import wbd.core.TestBaseRA;
 import wbd.dto.FilteredOffersResponseDto;
-import wbd.utils.ApiClient_GetOfferById;
 
 import static io.restassured.RestAssured.given;
 
-public class GetOfferByIdTests {
+public class GetOfferByIdTests extends TestBaseRA {
 
+    private static final Logger logger = LoggerFactory.getLogger(GetOfferByIdTests.class);
     @Test
     public void testGetOfferById() {
         int offerId = 1;  // допустим, оффер с ID 1 существует
 
-        Response response = ApiClient_GetOfferById.getOfferById(offerId); // получаем оффер по ID
-        System.out.println("Response body: " + response.asString());
+        Response response = OffersClient.getOfferById(offerId); // получаем оффер по ID
+        logger.info("Response body: {}", response.asString());
 
         SoftAssert softAssert = new SoftAssert();
 
@@ -23,14 +27,13 @@ public class GetOfferByIdTests {
         softAssert.assertEquals(response.getStatusCode(), 200, "Expected status code 200");
 
         if (response.getStatusCode() == 200) {
-            System.out.println("Тест прошел успешно: Код ответа 200 (OK)");
+            logger.info("Тест прошел успешно: Код ответа 200 (OK)");
         } else {
-            System.out.println("Ошибка: Получен ответ с кодом " + response.getStatusCode());
+            logger.error("Ошибка: Получен ответ с кодом {}", response.getStatusCode());
         }
 
         // парсим JSON в объект FilteredOffersResponseDto
         FilteredOffersResponseDto offer = response.as(FilteredOffersResponseDto.class);
-
         softAssert.assertNotNull(offer, "Offer не должен быть null");
 
         // все необходимые поля присутствуют
@@ -79,7 +82,7 @@ public class GetOfferByIdTests {
     @Test
     public void testGetOfferByNonExistentId_404() {
         int nonExistentOfferId = 9999;  // предположим, что такого оффера нет
-        Response response = ApiClient_GetOfferById.getOfferById(nonExistentOfferId); // получаем оффер по несуществующему ID
+        Response response = OffersClient.getOfferById(nonExistentOfferId); // получаем оффер по несуществующему ID
 
         SoftAssert softAssert = new SoftAssert();
 
@@ -87,7 +90,7 @@ public class GetOfferByIdTests {
         softAssert.assertEquals(response.getStatusCode(), 404, "Expected status code 404 for non-existent offer");
 
         if (response.getStatusCode() == 404) {
-            System.out.println("Ошибка: Получен ответ с кодом 404 (Not Found)");
+            logger.warn("Ошибка: Получен ответ с кодом 404 (Not Found)");
         }
 
         softAssert.assertAll();
@@ -98,14 +101,14 @@ public class GetOfferByIdTests {
         // запрос с несуществующим или неправильным параметром ID
         Response response = given()
                 .when()
-                .get("/api/offers/invalid-id")
+                .get("/offers/invalid-id")
                 .then()
                 .statusCode(400)  // проверка на статус 400
                 .log().all()
                 .extract().response();
 
         if (response.getStatusCode() == 400) {
-            System.out.println("Тест прошел успешно: Получен ответ с кодом 400 (Bad Request)");
+            logger.info("Тест прошел успешно: Получен ответ с кодом 400 (Bad Request)");
         }
     }
 
@@ -114,7 +117,7 @@ public class GetOfferByIdTests {
 //        // симулируем ошибку на сервере, например, при вызове неправильного endpoint или когда сервер не может обработать запрос
 //        Response response = given()
 //                .when()
-//                .get("/api/offers/trigger-server-error")
+//                .get("/offers/trigger-server-error")
 //                .then()
 //                .statusCode(500)  // проверка на статус 500
 //                .log().all()

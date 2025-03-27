@@ -1,6 +1,6 @@
 package wbd.tests.web_tests;
 
-import wbd.core.TestBase;
+import wbd.core.TestBaseUI;
 
-public class LoginTests extends TestBase {
+public class LoginTests extends TestBaseUI {
 }
