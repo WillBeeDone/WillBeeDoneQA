@@ -5,7 +5,7 @@ import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import wbd.core.TestBaseRA;
 import wbd.api.dto.FilteredOffersResponseDto;
-import wbd.api.client.ApiClient_GetOfferById;
+import wbd.api.client.get.ApiClient_GetOfferById;
 
 import static io.restassured.RestAssured.given;
 

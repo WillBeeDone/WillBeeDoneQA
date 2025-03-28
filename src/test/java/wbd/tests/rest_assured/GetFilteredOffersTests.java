@@ -5,7 +5,7 @@ import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import wbd.core.TestBaseRA;
 import wbd.api.dto.FilteredOffersResponseDto;
-import wbd.api.client.ApiClient_GetFilterOffers;
+import wbd.api.client.get.ApiClient_GetFilterOffers;
 
 import java.util.List;
 

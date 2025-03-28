@@ -1,15 +1,15 @@
-package wbd.api.client;
+package wbd.api.client.get;
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 
-public class ApiClient_GetCategories {
+public class ApiClient_GetLocations {
 
-    public static Response getCategories() {
+    public static Response getLocations() {
         return RestAssured
                 .given()
                 .when()
-                .get("/categories")
+                .get("/locations")
                 .then()
                 .log().all()
                 .extract()
