@@ -4,7 +4,7 @@ import io.restassured.response.Response;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import wbd.core.TestBaseRA;
-import wbd.api_client.ApiClient_GetCategories;
+import wbd.api.сlient.get.ApiClient_GetCategories;
 import java.util.List;
 
 public class GetCategoriesTests extends TestBaseRA {
@@ -48,7 +48,6 @@ public class GetCategoriesTests extends TestBaseRA {
         // если endpoint неправильный, то 404
         response = io.restassured.RestAssured
                 .given()
-                .baseUri("http://localhost:8080/api")
                 .when()
                 .get("/categories-invalid")
                 .then()

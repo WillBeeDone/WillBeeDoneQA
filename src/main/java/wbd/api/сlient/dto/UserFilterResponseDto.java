@@ -1,4 +1,4 @@
-package wbd.dto;
+package wbd.api.сlient.dto;
 
 import lombok.Getter;
 import lombok.Setter;

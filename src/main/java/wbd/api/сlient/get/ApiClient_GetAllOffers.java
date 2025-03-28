@@ -1,18 +1,19 @@
-package wbd.api_client;
+package wbd.api.сlient.get;
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 
-public class ApiClient_GetFilterOffers {
+public class ApiClient_GetAllOffers {
 
-    public static Response getFilteredOffers() {
+    public static Response getAllOffers() {
         return RestAssured
                 .given()
                 .when()
-                .get("/offers/filter?cityName=all&category=all&keyPhrase=all")
+                .get("/")
                 .then()
                 .log().all()
                 .extract()
                 .response();
     }
 }
+

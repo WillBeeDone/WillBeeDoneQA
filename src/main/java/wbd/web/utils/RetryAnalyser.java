@@ -1,4 +1,4 @@
-package wbd.utils;
+package wbd.web.utils;
 
 import org.testng.IRetryAnalyzer;
 import org.testng.ITestResult;

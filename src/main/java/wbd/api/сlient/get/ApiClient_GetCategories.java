@@ -1,4 +1,4 @@
-package wbd.api_client;
+package wbd.api.сlient.get;
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;

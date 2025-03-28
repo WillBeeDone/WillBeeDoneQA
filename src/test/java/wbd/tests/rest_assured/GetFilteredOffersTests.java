@@ -4,8 +4,8 @@ import io.restassured.response.Response;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import wbd.core.TestBaseRA;
-import wbd.dto.FilteredOffersResponseDto;
-import wbd.api_client.ApiClient_GetFilterOffers;
+import wbd.api.сlient.dto.FilteredOffersResponseDto;
+import wbd.api.сlient.get.ApiClient_GetFilterOffers;
 
 import java.util.List;
 
@@ -19,11 +19,10 @@ public class GetFilteredOffersTests extends TestBaseRA {
 
         Response response = ApiClient_GetFilterOffers.getFilteredOffers(); // метод из ApiClient
 
-        // логируем ответ
         logger.info("Response body: " + response.asString());
 
         // парсим JSON в список
-        List<FilteredOffersResponseDto> filteredOffers = response.jsonPath().getList("", FilteredOffersResponseDto.class);
+        List<FilteredOffersResponseDto> filteredOffers = response.jsonPath().getList("contain", FilteredOffersResponseDto.class);
 
         SoftAssert softAssert = new SoftAssert();
 
@@ -82,7 +81,7 @@ public class GetFilteredOffersTests extends TestBaseRA {
 
             }
         }
-        // запуск
+
         softAssert.assertAll();
     }
 }

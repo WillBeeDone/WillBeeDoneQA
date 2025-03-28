@@ -1,4 +1,4 @@
-package wbd.utils;
+package wbd.web.utils;
 
 public class DataProviders {
 }
