@@ -5,7 +5,7 @@ import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import wbd.core.TestBaseRA;
 import wbd.api.dto.LocationResponseDto;
-import wbd.api.client.ApiClient_GetLocations;
+import wbd.api.client.get.ApiClient_GetLocations;
 
 import java.util.ArrayList;
 import java.util.List;

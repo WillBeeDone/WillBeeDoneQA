@@ -5,7 +5,7 @@ import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import wbd.core.TestBaseRA;
 import wbd.api.dto.AllOffersResponseDto;
-import wbd.api.client.ApiClient_GetAllOffers;
+import wbd.api.client.get.ApiClient_GetAllOffers;
 
 import java.util.List;
 
@@ -82,7 +82,7 @@ public class GetAllOffersTests extends TestBaseRA {
     public void testGetAllOffersWithInvalidEndpoint_404() {
         Response response = given()
                 .when()
-                .get("/api/invalid-offers") // неправильный эндпоинт
+                .get("/invalid-offers") // неправильный эндпоинт
                 .then()
                 .log().all()
                 .extract()
@@ -103,7 +103,7 @@ public class GetAllOffersTests extends TestBaseRA {
         Response response = given()
                 .queryParam("pricePerHour", "invalid-price") // некорректный параметр
                 .when()
-                .get("/api/offers")
+                .get("/offers")
                 .then()
                 .log().all()
                 .extract()
@@ -124,7 +124,7 @@ public class GetAllOffersTests extends TestBaseRA {
         Response response = given()
                 .queryParam("category", "nonexistent-category") // некорректное значение категории
                 .when()
-                .get("/api/offers")
+                .get("/offers")
                 .then()
                 .log().all()
                 .extract()
@@ -145,7 +145,7 @@ public class GetAllOffersTests extends TestBaseRA {
         Response response = given()
                 .queryParam("cityName", 123) // Некорректное значение для города
                 .when()
-                .get("/api/offers")
+                .get("/offers")
                 .then()
                 .log().all()
                 .extract()
