@@ -18,6 +18,7 @@ public class ApplicationManager {
     public WebDriver driver;
     public WebDriverWait wait;
     public BasePage basePage;
+
     public void init() {
 
         String browser = System.getProperty("browser", "chrome");
@@ -49,7 +50,9 @@ public class ApplicationManager {
             driver = new ChromeDriver(); // Перезапуск браузера
             driver.get("");
         }
+
         basePage = new BasePage(driver,wait);
+
     }
 
     public BasePage getBasePage() {

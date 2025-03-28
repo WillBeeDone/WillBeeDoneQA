@@ -7,6 +7,7 @@ import wbd.core.TestBaseRA;
 import wbd.api.сlient.dto.FilteredOffersResponseDto;
 import wbd.api.сlient.get.ApiClient_GetFilterOffers;
 
+
 import java.util.List;
 
 public class GetFilteredOffersTests extends TestBaseRA {
@@ -18,6 +19,7 @@ public class GetFilteredOffersTests extends TestBaseRA {
         logger.info("=============================================");
 
         Response response = ApiClient_GetFilterOffers.getFilteredOffers(); // метод из ApiClient
+
 
         logger.info("Response body: " + response.asString());
 

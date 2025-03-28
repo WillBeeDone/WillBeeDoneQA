@@ -7,6 +7,7 @@ import wbd.core.TestBaseRA;
 import wbd.api.сlient.dto.FilteredOffersResponseDto;
 import wbd.api.сlient.get.ApiClient_GetOfferById;
 
+
 import static io.restassured.RestAssured.given;
 
 public class GetOfferByIdTests extends TestBaseRA {
@@ -20,7 +21,7 @@ public class GetOfferByIdTests extends TestBaseRA {
         int offerId = 1;  // допустим, оффер с ID 1 существует
 
         Response response = ApiClient_GetOfferById.getOfferById(offerId); // получаем оффер по ID
-        System.out.println("Response body: " + response.asString());
+        logger.info("Response body: " + response.asString());
 
         SoftAssert softAssert = new SoftAssert();
 
@@ -28,9 +29,9 @@ public class GetOfferByIdTests extends TestBaseRA {
         softAssert.assertEquals(response.getStatusCode(), 200, "Expected status code 200");
 
         if (response.getStatusCode() == 200) {
-            System.out.println("Тест прошел успешно: Код ответа 200 (OK)");
+            logger.info("Тест прошел успешно: Код ответа 200 (OK)");
         } else {
-            System.out.println("Ошибка: Получен ответ с кодом " + response.getStatusCode());
+            logger.error("Ошибка: Получен ответ с кодом " + response.getStatusCode());
         }
 
         // парсим JSON в объект FilteredOffersResponseDto
@@ -81,6 +82,17 @@ public class GetOfferByIdTests extends TestBaseRA {
     }
 
     @Test
+    public void testGetOfferById_InvalidId() {
+        int invalidId = -1; // некорректный ID
+        Response response = ApiClient_GetOfferById.getOfferById(invalidId);
+
+        SoftAssert softAssert = new SoftAssert();
+        softAssert.assertNotEquals(response.getStatusCode(), 200, "Ожидается ошибка для некорректного ID");
+
+        softAssert.assertAll();
+    }
+
+    @Test
     public void testGetOfferByNonExistentId_404() {
         int nonExistentOfferId = 9999;  // предположим, что такого оффера нет
         Response response = ApiClient_GetOfferById.getOfferById(nonExistentOfferId); // получаем оффер по несуществующему ID
@@ -91,7 +103,7 @@ public class GetOfferByIdTests extends TestBaseRA {
         softAssert.assertEquals(response.getStatusCode(), 404, "Expected status code 404 for non-existent offer");
 
         if (response.getStatusCode() == 404) {
-            System.out.println("Ошибка: Получен ответ с кодом 404 (Not Found)");
+            logger.error("Ошибка: Получен ответ с кодом 404 (Not Found)");
         }
 
         softAssert.assertAll();
@@ -102,14 +114,15 @@ public class GetOfferByIdTests extends TestBaseRA {
         // запрос с несуществующим или неправильным параметром ID
         Response response = given()
                 .when()
-                .get("/api/offers/invalid-id")
+                .get("/offers/invalid-id")
                 .then()
                 .statusCode(400)  // проверка на статус 400
                 .log().all()
                 .extract().response();
 
         if (response.getStatusCode() == 400) {
-            System.out.println("Тест прошел успешно: Получен ответ с кодом 400 (Bad Request)");
+            logger.info("Тест прошел успешно: Получен ответ с кодом 400 (Bad Request)");
         }
     }
+
 }

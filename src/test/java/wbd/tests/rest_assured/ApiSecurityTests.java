@@ -1,6 +1,7 @@
 package wbd.tests.rest_assured;
 
 
+
 import io.restassured.response.Response;
 import org.testng.annotations.Test;
 import wbd.core.TestBaseRA;
@@ -25,5 +26,6 @@ public class ApiSecurityTests extends TestBaseRA {
             System.out.println("Ошибка: Получен ответ с кодом 500 (Internal Server Error)");
         }
     }
+
 
 }

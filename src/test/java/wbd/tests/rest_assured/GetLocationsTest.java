@@ -7,6 +7,7 @@ import wbd.core.TestBaseRA;
 import wbd.api.сlient.dto.LocationResponseDto;
 import wbd.api.сlient.get.ApiClient_GetLocations;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -87,4 +88,3 @@ public class GetLocationsTest extends TestBaseRA {
         softAssert.assertAll();
     }
 }
-
