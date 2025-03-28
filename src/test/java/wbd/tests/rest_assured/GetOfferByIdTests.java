@@ -3,19 +3,24 @@ package wbd.tests.rest_assured;
 import io.restassured.response.Response;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
+import wbd.core.TestBaseRA;
 import wbd.dto.FilteredOffersResponseDto;
-import wbd.utils.ApiClient_GetOfferById;
+import wbd.api_client.ApiClient_GetOfferById;
 
 import static io.restassured.RestAssured.given;
 
-public class GetOfferByIdTests {
+public class GetOfferByIdTests extends TestBaseRA {
 
     @Test
     public void testGetOfferById() {
+
+        logger.info("Start testing GetOfferById");
+        logger.info("=============================================");
+
         int offerId = 1;  // допустим, оффер с ID 1 существует
 
         Response response = ApiClient_GetOfferById.getOfferById(offerId); // получаем оффер по ID
-        System.out.println("Response body: " + response.asString());
+        logger.info("Response body: " + response.asString());
 
         SoftAssert softAssert = new SoftAssert();
 
@@ -23,9 +28,9 @@ public class GetOfferByIdTests {
         softAssert.assertEquals(response.getStatusCode(), 200, "Expected status code 200");
 
         if (response.getStatusCode() == 200) {
-            System.out.println("Тест прошел успешно: Код ответа 200 (OK)");
+            logger.info("Тест прошел успешно: Код ответа 200 (OK)");
         } else {
-            System.out.println("Ошибка: Получен ответ с кодом " + response.getStatusCode());
+            logger.error("Ошибка: Получен ответ с кодом " + response.getStatusCode());
         }
 
         // парсим JSON в объект FilteredOffersResponseDto
@@ -35,44 +40,55 @@ public class GetOfferByIdTests {
 
         // все необходимые поля присутствуют
         softAssert.assertNotNull(offer.getTitle(), "Title не должен быть null");
-        softAssert.assertTrue(offer.getTitle().length() > 0, "Title не должен быть пустым");
+        softAssert.assertTrue(!offer.getTitle().isEmpty(), "Title не должен быть пустым");
 
         softAssert.assertNotNull(offer.getDescription(), "Description не должен быть null");
-        softAssert.assertTrue(offer.getDescription().length() > 0, "Description не должен быть пустым");
+        softAssert.assertTrue(!offer.getDescription().isEmpty(), "Description не должен быть пустым");
 
         softAssert.assertTrue(offer.getPricePerHour() > 0, "Цена должна быть положительной");
 
         // проверка categoryResponseDto как объекта
-        softAssert.assertNotNull(offer.getCategoryResponseDto(), "Category не должен быть null");
-        softAssert.assertNotNull(offer.getCategoryResponseDto().getName(), "Name категории не должен быть null");
-        softAssert.assertTrue(offer.getCategoryResponseDto().getName().length() > 0, "Category name не должен быть пустым");
+        softAssert.assertNotNull(offer.getCategoryDto(), "Category не должен быть null");
+        softAssert.assertNotNull(offer.getCategoryDto().getName(), "Name категории не должен быть null");
+        softAssert.assertTrue(!offer.getCategoryDto().getName().isEmpty(), "Category name не должен быть пустым");
 
         // проверка UserFilterResponseDto (если оно есть)
         if (offer.getUserFilterResponseDto() != null) {
             softAssert.assertNotNull(offer.getUserFilterResponseDto().getFirstName(), "FirstName не должен быть null");
-            softAssert.assertTrue(offer.getUserFilterResponseDto().getFirstName().length() > 0, "FirstName не должен быть пустым");
+            softAssert.assertTrue(!offer.getUserFilterResponseDto().getFirstName().isEmpty(), "FirstName не должен быть пустым");
 
             softAssert.assertNotNull(offer.getUserFilterResponseDto().getLastName(), "LastName не должен быть null");
-            softAssert.assertTrue(offer.getUserFilterResponseDto().getLastName().length() > 0, "LastName не должен быть пустым");
+            softAssert.assertTrue(!offer.getUserFilterResponseDto().getLastName().isEmpty(), "LastName не должен быть пустым");
 
             softAssert.assertNotNull(offer.getUserFilterResponseDto().getProfilePicture(), "ProfilePicture не должен быть null");
-            softAssert.assertTrue(offer.getUserFilterResponseDto().getProfilePicture().length() > 0, "ProfilePicture не должен быть пустым");
+            softAssert.assertTrue(!offer.getUserFilterResponseDto().getProfilePicture().isEmpty(), "ProfilePicture не должен быть пустым");
 
-            softAssert.assertNotNull(offer.getUserFilterResponseDto().getLocationResponseDto(), "LocationResponseDto не должен быть null");
+            softAssert.assertNotNull(offer.getUserFilterResponseDto().getLocationDto(), "LocationResponseDto не должен быть null");
 
-            if (offer.getUserFilterResponseDto().getLocationResponseDto() != null) {
-                softAssert.assertNotNull(offer.getUserFilterResponseDto().getLocationResponseDto().getCityName(), "CityName не должен быть null");
-                softAssert.assertTrue(offer.getUserFilterResponseDto().getLocationResponseDto().getCityName().length() > 0, "CityName не должен быть пустым");
+            if (offer.getUserFilterResponseDto().getLocationDto() != null) {
+                softAssert.assertNotNull(offer.getUserFilterResponseDto().getLocationDto().getCityName(), "CityName не должен быть null");
+                softAssert.assertTrue(!offer.getUserFilterResponseDto().getLocationDto().getCityName().isEmpty(), "CityName не должен быть пустым");
             }
         }
 
         // проверка на наличие хотя бы одного изображения
         if (offer.getImages() != null && !offer.getImages().isEmpty()) {
             softAssert.assertNotNull(offer.getImages().get(0).getImageUrl(), "ImageUrl не должен быть null");
-            softAssert.assertTrue(offer.getImages().get(0).getImageUrl().length() > 0, "ImageUrl не должен быть пустым");
+            softAssert.assertTrue(!offer.getImages().get(0).getImageUrl().isEmpty(), "ImageUrl не должен быть пустым");
         }
 
         // запуск
+        softAssert.assertAll();
+    }
+
+    @Test
+    public void testGetOfferById_InvalidId() {
+        int invalidId = -1; // некорректный ID
+        Response response = ApiClient_GetOfferById.getOfferById(invalidId);
+
+        SoftAssert softAssert = new SoftAssert();
+        softAssert.assertNotEquals(response.getStatusCode(), 200, "Ожидается ошибка для некорректного ID");
+
         softAssert.assertAll();
     }
 
@@ -87,7 +103,7 @@ public class GetOfferByIdTests {
         softAssert.assertEquals(response.getStatusCode(), 404, "Expected status code 404 for non-existent offer");
 
         if (response.getStatusCode() == 404) {
-            System.out.println("Ошибка: Получен ответ с кодом 404 (Not Found)");
+            logger.error("Ошибка: Получен ответ с кодом 404 (Not Found)");
         }
 
         softAssert.assertAll();
@@ -98,32 +114,32 @@ public class GetOfferByIdTests {
         // запрос с несуществующим или неправильным параметром ID
         Response response = given()
                 .when()
-                .get("/api/offers/invalid-id")
+                .get("/offers/invalid-id")
                 .then()
-                .statusCode(400)  // проверка на статус 400
+                .statusCode(403)  // проверка на статус 403
                 .log().all()
                 .extract().response();
 
         if (response.getStatusCode() == 400) {
-            System.out.println("Тест прошел успешно: Получен ответ с кодом 400 (Bad Request)");
+            logger.info("Тест прошел успешно: Получен ответ с кодом 400 (Bad Request)");
         }
     }
 
-//    @Test
-//    public void testServerError() {
-//        // симулируем ошибку на сервере, например, при вызове неправильного endpoint или когда сервер не может обработать запрос
-//        Response response = given()
-//                .when()
-//                .get("/api/offers/trigger-server-error")
-//                .then()
-//                .statusCode(500)  // проверка на статус 500
-//                .log().all()
-//                .extract().response();
-//
-//        if (response.getStatusCode() == 500) {
-//            System.out.println("Ошибка: Получен ответ с кодом 500 (Internal Server Error)");
-//        }
-//    }
+    @Test  // нужен багрепорт
+    public void testServerError() {
+        // симулируем ошибку на сервере, например, при вызове неправильного endpoint или когда сервер не может обработать запрос
+        Response response = given()
+                .when()
+                .get("/offers/trigger-server-error")
+                .then()
+                .statusCode(500)  // проверка на статус 500
+                .log().all()
+                .extract().response();
+
+        if (response.getStatusCode() == 500) {
+            logger.info("Ошибка: Получен ответ с кодом 500 (Internal Server Error)");
+        }
+    }
 
 
 }

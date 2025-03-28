@@ -22,6 +22,6 @@ public class AllOffersResponseDto {
         private String firstName;
         private String lastName;
         private String profilePicture;
-        private LocationResponseDto locationResponseDto;
+        private LocationResponseDto locationDto;
     }
 }
