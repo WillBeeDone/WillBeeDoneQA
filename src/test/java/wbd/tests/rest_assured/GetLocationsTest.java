@@ -1,28 +1,28 @@
 package wbd.tests.rest_assured;
 
 import io.restassured.response.Response;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
-import wbd.api.client.LocationsClient;
 import wbd.core.TestBaseRA;
-import wbd.dto.LocationResponseDto;
+import wbd.api.dto.LocationResponseDto;
+import wbd.api.client.ApiClient_GetLocations;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
 
-
 public class GetLocationsTest extends TestBaseRA {
 
-    private static final Logger logger = LoggerFactory.getLogger(GetLocationsTest.class);
     @Test
     public void testGetLocations() {
+
+        logger.info("Start testing GetLocations");
+        logger.info("=============================================");
+
         // запрос на получение локаций
-        Response response = LocationsClient.getLocations();
-        logger.info("Response body: {}", response.asString());
+        Response response = ApiClient_GetLocations.getLocations();
+        logger.info("Response body: " + response.asString());
 
         SoftAssert softAssert = new SoftAssert();
 
@@ -58,12 +58,13 @@ public class GetLocationsTest extends TestBaseRA {
                 .when()
                 .get("/locations/invalid") // неправильный путь
                 .then()
+                .log().all()
                 .extract()
                 .response();
 
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertEquals(response.getStatusCode(), 404, "Expected status code 404 for invalid endpoint /locations/invalid");
-        logger.warn("Received status code {} for GET request to /locations/invalid", response.getStatusCode());
+        logger.info("Received status code " + response.getStatusCode() + " for GET request to /locations/invalid");
         softAssert.assertAll();
     }
 
@@ -75,14 +76,14 @@ public class GetLocationsTest extends TestBaseRA {
                 .when()
                 .get("/locations")
                 .then()
+                .log().all()
                 .extract()
                 .response();
 
         SoftAssert softAssert = new SoftAssert();
         // ожидается, что API отклонит запрос с неизвестным параметром, вернув 400 Bad Request
         softAssert.assertEquals(response.getStatusCode(), 400, "Expected status code 400 for GET request to /locations with unexpected query param");
-        logger.warn("Received status code {} for GET request to /locations with unexpected query param", response.getStatusCode());
+        logger.info("Received status code " + response.getStatusCode() + " for GET request to /locations with unexpected query param");
         softAssert.assertAll();
     }
 }
-

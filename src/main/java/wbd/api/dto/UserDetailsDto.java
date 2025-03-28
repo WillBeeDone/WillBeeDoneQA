@@ -1,4 +1,4 @@
-package wbd.dto;
+package wbd.api.dto;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,5 +11,5 @@ public class UserDetailsDto {
     private String firstName;
     private String lastName;
     private String profilePicture;
-    private LocationResponseDto locationResponseDto;
+    private LocationResponseDto locationDto;
 }

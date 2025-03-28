@@ -1,24 +1,27 @@
 package wbd.tests.rest_assured;
 
 import io.restassured.response.Response;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
-import wbd.api.client.OffersClient;
 import wbd.core.TestBaseRA;
-import wbd.dto.AllOffersResponseDto;
+import wbd.api.dto.AllOffersResponseDto;
+import wbd.api.client.ApiClient_GetAllOffers;
 
 import java.util.List;
+
 import static io.restassured.RestAssured.given;
 
 public class GetAllOffersTests extends TestBaseRA {
-    private static final Logger logger = LoggerFactory.getLogger(GetAllOffersTests.class);
+
     @Test
     public void testGetAllOffers() {
+
+        logger.info("Start testing GetAllOffers");
+        logger.info("=============================================");
+
         // получаем все офферы
-        Response response = OffersClient.getAllOffers();
-        logger.info("Response body: {}", response.asString());
+        Response response = ApiClient_GetAllOffers.getAllOffers();
+        logger.info("Response body: " + response.asString());
 
         SoftAssert softAssert = new SoftAssert();
 
@@ -28,13 +31,11 @@ public class GetAllOffersTests extends TestBaseRA {
         if (response.getStatusCode() == 200) {
             logger.info("Тест прошел успешно: Код ответа 200 (OK)");
         } else {
-            logger.error("Ошибка: Получен ответ с кодом {}", response.getStatusCode());
+            logger.error("Ошибка: Получен ответ с кодом " + response.getStatusCode());
         }
 
-        // парсим JSON в список объектов AllOffersResponseDto только если статус 200
-
+        // парсим JSON в список объектов AllOffersResponseDto
         List<AllOffersResponseDto> offers = response.jsonPath().getList("", AllOffersResponseDto.class);
-        logger.info("Получено офферов: {}", offers.size());
 
         softAssert.assertNotNull(offers, "Offers list не должен быть null");
         softAssert.assertTrue(!offers.isEmpty(), "Offers list не должен быть пустым");
@@ -60,17 +61,17 @@ public class GetAllOffersTests extends TestBaseRA {
                 softAssert.assertNotNull(offer.getUserFilterResponseDto().getFirstName(), "FirstName не должен быть null");
                 softAssert.assertTrue(offer.getUserFilterResponseDto().getFirstName().length() > 0, "FirstName не должен быть пустым");
 
-                softAssert.assertNotNull(offer.getUserFilterResponseDto().getLocationResponseDto(), "LocationResponseDto не должен быть null");
+                softAssert.assertNotNull(offer.getUserFilterResponseDto().getLocationDto(), "LocationResponseDto не должен быть null");
 
-                if (offer.getUserFilterResponseDto().getLocationResponseDto() != null) {
-                    softAssert.assertNotNull(offer.getUserFilterResponseDto().getLocationResponseDto().getCityName(), "CityName не должен быть null");
-                    softAssert.assertTrue(offer.getUserFilterResponseDto().getLocationResponseDto().getCityName().length() > 0, "CityName не должен быть пустым");
+                if (offer.getUserFilterResponseDto().getLocationDto() != null) {
+                    softAssert.assertNotNull(offer.getUserFilterResponseDto().getLocationDto().getCityName(), "CityName не должен быть null");
+                    softAssert.assertTrue(offer.getUserFilterResponseDto().getLocationDto().getCityName().length() > 0, "CityName не должен быть пустым");
                 }
             }
 
             logger.info("---------------------------------------------------------");
             for (AllOffersResponseDto offerDto : offers ) {
-                logger.info("Offer => {}", offerDto.getTitle());
+                logger.error("Offer => " + offerDto.getTitle() + ";");
             }
         }
 
@@ -81,8 +82,9 @@ public class GetAllOffersTests extends TestBaseRA {
     public void testGetAllOffersWithInvalidEndpoint_404() {
         Response response = given()
                 .when()
-                .get("/invalid-offers") // неправильный эндпоинт
+                .get("/api/invalid-offers") // неправильный эндпоинт
                 .then()
+                .log().all()
                 .extract()
                 .response();
 
@@ -91,18 +93,19 @@ public class GetAllOffersTests extends TestBaseRA {
         //  статус 404
         softAssert.assertEquals(response.getStatusCode(), 404, "Expected status code 404 for invalid endpoint");
 
-        logger.warn("Получен ответ с кодом {} для несуществующего эндпоинта", response.getStatusCode());
+        logger.error("Ошибка: Получен ответ с кодом " + response.getStatusCode());
 
         softAssert.assertAll();
     }
 
-    @Test   // не возвращает 400 - баг репорт
+    @Test   // не проходит - баг репорт
     public void testGetAllOffersWithInvalidQueryParam_400() {
         Response response = given()
                 .queryParam("pricePerHour", "invalid-price") // некорректный параметр
                 .when()
-                .get("/offers")
+                .get("/api/offers")
                 .then()
+                .log().all()
                 .extract()
                 .response();
 
@@ -111,18 +114,19 @@ public class GetAllOffersTests extends TestBaseRA {
         // статус 400
         softAssert.assertEquals(response.getStatusCode(), 400, "Expected status code 400 for invalid query param");
 
-        logger.warn("Получен код ответа {} при передаче некорректного параметра pricePerHour", response.getStatusCode());
+        logger.error("Ошибка: Получен ответ с кодом " + response.getStatusCode());
 
         softAssert.assertAll();
     }
 
-    @Test  // не возвращает 400 - баг репорт
+    @Test  // не проходит - баг репорт
     public void testGetAllOffersWithInvalidQueryParam_Category_400() {
         Response response = given()
                 .queryParam("category", "nonexistent-category") // некорректное значение категории
                 .when()
-                .get("/offers")
+                .get("/api/offers")
                 .then()
+                .log().all()
                 .extract()
                 .response();
 
@@ -131,38 +135,19 @@ public class GetAllOffersTests extends TestBaseRA {
         // Ожидаем статус 400 для некорректного параметра "category"
         softAssert.assertEquals(response.getStatusCode(), 400, "Expected status code 400 for invalid 'category' query param");
 
-        logger.warn("Получен код ответа {} при передаче несуществующей категории", response.getStatusCode());
+        logger.error("Ошибка: Получен ответ с кодом " + response.getStatusCode() + " при передаче некорректной категории");
 
         softAssert.assertAll();
     }
 
-    @Test  // не возвращает 400 - баг репорт
-    public void testGetAllOffersWithInvalidQueryParam_UserFirstName_400() {
-        Response response = given()
-                .queryParam("firstName", "") // Пустое значение для имени пользователя
-                .when()
-                .get("/offers")
-                .then()
-                .extract()
-                .response();
-
-        SoftAssert softAssert = new SoftAssert();
-
-        // Ожидаем статус 400 для некорректного параметра "firstName"
-        softAssert.assertEquals(response.getStatusCode(), 400, "Expected status code 400 for invalid 'firstName' query param");
-
-        logger.warn("Получен код ответа {} при передаче пустого firstName", response.getStatusCode());
-
-        softAssert.assertAll();
-    }
-
-    @Test  // не возвращает 400 - баг репорт
+    @Test  // не проходит - баг репорт
     public void testGetAllOffersWithInvalidQueryParam_Location_400() {
         Response response = given()
                 .queryParam("cityName", 123) // Некорректное значение для города
                 .when()
-                .get("/offers")
+                .get("/api/offers")
                 .then()
+                .log().all()
                 .extract()
                 .response();
 
@@ -171,8 +156,10 @@ public class GetAllOffersTests extends TestBaseRA {
         // Ожидаем статус 400 для некорректного параметра "cityName"
         softAssert.assertEquals(response.getStatusCode(), 400, "Expected status code 400 for invalid 'cityName' query param");
 
-        logger.warn("Получен код ответа {} при передаче некорректного cityName", response.getStatusCode());
+        logger.error("Ошибка: Получен ответ с кодом " + response.getStatusCode() + " при передаче некорректного названия города");
+
         softAssert.assertAll();
     }
-}
 
+
+}

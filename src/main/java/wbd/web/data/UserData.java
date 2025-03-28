@@ -1,4 +1,4 @@
-package wbd.data;
+package wbd.web.data;
 
 public class UserData {
     public static final String VALID_EMAIL = "";

@@ -1,4 +1,4 @@
-package wbd.core;
+package wbd.web.core;
 
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
