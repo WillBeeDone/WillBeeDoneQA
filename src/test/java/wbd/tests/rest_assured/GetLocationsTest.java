@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
-import static wbd.core.ApplicationManager.BASE_URL;
 
 public class GetLocationsTest extends TestBaseRA {
 

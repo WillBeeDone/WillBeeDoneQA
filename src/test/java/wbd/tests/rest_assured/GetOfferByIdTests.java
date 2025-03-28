@@ -116,13 +116,42 @@ public class GetOfferByIdTests extends TestBaseRA {
                 .when()
                 .get("/offers/invalid-id")
                 .then()
-                .statusCode(403)  // проверка на статус 403
+                .statusCode(400)  // проверка на статус 400
                 .log().all()
                 .extract().response();
 
         if (response.getStatusCode() == 400) {
             logger.info("Тест прошел успешно: Получен ответ с кодом 400 (Bad Request)");
         }
+    }
+
+    // тест для неавторизованного пользователя
+    @Test
+    public void testGetOfferWithoutToken() {
+
+        Response response = given()
+                .when()
+                .get("offers/1")  // запрос без авторизации
+                .then()
+                .statusCode(200)  // ожидаем успешный статус 200
+                .log().all()
+                .extract().response();
+
+        // проверяем, что ответ не содержит данных пользователя (имя, фото, местоположение)
+        String responseBody = response.getBody().asString();
+        SoftAssert softAssert = new SoftAssert();
+
+        // Ожидаем, что в ответе будет информации о пользователе
+        softAssert.assertTrue(responseBody.contains("firstName"), "Имя исполнителя должно быть видно неавторизованному пользователю");
+        softAssert.assertTrue(responseBody.contains("lastName"), "Фамилия исполнителя  должна быть видна неавторизованному пользователю");
+        softAssert.assertTrue(responseBody.contains("profilePicture"), "Фото исполнителя  должно быть видно неавторизованному пользователю");
+        softAssert.assertTrue(responseBody.contains("locationDto"), "Местоположение исполнителя должно быть видно неавторизованному пользователю");
+        softAssert.assertTrue(responseBody.contains("title"), "Название предложения должно быть видно");
+        softAssert.assertTrue(responseBody.contains("categoryDto"), "Категория предложения должна быть видна");
+        softAssert.assertTrue(responseBody.contains("pricePerHour"), "Цена за час должна быть видна");
+        softAssert.assertTrue(responseBody.contains("description"), "Описание предложения должно быть видно");
+
+        softAssert.assertAll();
     }
 
     @Test  // нужен багрепорт
