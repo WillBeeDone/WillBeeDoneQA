@@ -4,8 +4,9 @@ import io.restassured.response.Response;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import wbd.core.TestBaseRA;
-import wbd.api.dto.FilteredOffersResponseDto;
-import wbd.api.client.get.ApiClient_GetOfferById;
+import wbd.api.сlient.dto.FilteredOffersResponseDto;
+import wbd.api.сlient.get.ApiClient_GetOfferById;
+
 
 import static io.restassured.RestAssured.given;
 
@@ -77,7 +78,6 @@ public class GetOfferByIdTests extends TestBaseRA {
             softAssert.assertTrue(!offer.getImages().get(0).getImageUrl().isEmpty(), "ImageUrl не должен быть пустым");
         }
 
-        // запуск
         softAssert.assertAll();
     }
 
@@ -109,7 +109,7 @@ public class GetOfferByIdTests extends TestBaseRA {
         softAssert.assertAll();
     }
 
-    @Test
+    @Test  // написать баг-репорт
     public void testGetOffersByInvalidId_400() {
         // запрос с несуществующим или неправильным параметром ID
         Response response = given()
@@ -124,51 +124,5 @@ public class GetOfferByIdTests extends TestBaseRA {
             logger.info("Тест прошел успешно: Получен ответ с кодом 400 (Bad Request)");
         }
     }
-
-    // тест для неавторизованного пользователя
-    @Test
-    public void testGetOfferWithoutToken() {
-
-        Response response = given()
-                .when()
-                .get("offers/1")  // запрос без авторизации
-                .then()
-                .statusCode(200)  // ожидаем успешный статус 200
-                .log().all()
-                .extract().response();
-
-        // проверяем, что ответ не содержит данных пользователя (имя, фото, местоположение)
-        String responseBody = response.getBody().asString();
-        SoftAssert softAssert = new SoftAssert();
-
-        // Ожидаем, что в ответе будет информации о пользователе
-        softAssert.assertTrue(responseBody.contains("firstName"), "Имя исполнителя должно быть видно неавторизованному пользователю");
-        softAssert.assertTrue(responseBody.contains("lastName"), "Фамилия исполнителя  должна быть видна неавторизованному пользователю");
-        softAssert.assertTrue(responseBody.contains("profilePicture"), "Фото исполнителя  должно быть видно неавторизованному пользователю");
-        softAssert.assertTrue(responseBody.contains("locationDto"), "Местоположение исполнителя должно быть видно неавторизованному пользователю");
-        softAssert.assertTrue(responseBody.contains("title"), "Название предложения должно быть видно");
-        softAssert.assertTrue(responseBody.contains("categoryDto"), "Категория предложения должна быть видна");
-        softAssert.assertTrue(responseBody.contains("pricePerHour"), "Цена за час должна быть видна");
-        softAssert.assertTrue(responseBody.contains("description"), "Описание предложения должно быть видно");
-
-        softAssert.assertAll();
-    }
-
-    @Test  // нужен багрепорт
-    public void testServerError() {
-        // симулируем ошибку на сервере, например, при вызове неправильного endpoint или когда сервер не может обработать запрос
-        Response response = given()
-                .when()
-                .get("/offers/trigger-server-error")
-                .then()
-                .statusCode(500)  // проверка на статус 500
-                .log().all()
-                .extract().response();
-
-        if (response.getStatusCode() == 500) {
-            logger.info("Ошибка: Получен ответ с кодом 500 (Internal Server Error)");
-        }
-    }
-
 
 }

@@ -12,6 +12,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 
 public class ApplicationManager {
+
+    public static final String BASE_URL = "http://localhost:8080/api";
+
     public WebDriver driver;
     public WebDriverWait wait;
     public BasePage basePage;
@@ -47,7 +50,9 @@ public class ApplicationManager {
             driver = new ChromeDriver(); // Перезапуск браузера
             driver.get("");
         }
-        basePage = new BasePage(driver, wait);
+
+        basePage = new BasePage(driver,wait);
+
     }
 
     public BasePage getBasePage() {

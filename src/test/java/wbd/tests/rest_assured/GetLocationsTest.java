@@ -4,8 +4,9 @@ import io.restassured.response.Response;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import wbd.core.TestBaseRA;
-import wbd.api.dto.LocationResponseDto;
-import wbd.api.client.get.ApiClient_GetLocations;
+import wbd.api.сlient.dto.LocationResponseDto;
+import wbd.api.сlient.get.ApiClient_GetLocations;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +46,7 @@ public class GetLocationsTest extends TestBaseRA {
         // Проверяем, что каждое значение не пустое
         for (LocationResponseDto loc : locations) {
             softAssert.assertNotNull(loc.getCityName(), "City name should not be null");
-            softAssert.assertTrue(loc.getCityName().trim().length() > 0, "City name should not be empty");
+            softAssert.assertTrue(!loc.getCityName().trim().isEmpty(), "City name should not be empty");
         }
 
         softAssert.assertAll();

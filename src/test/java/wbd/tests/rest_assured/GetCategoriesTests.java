@@ -4,7 +4,7 @@ import io.restassured.response.Response;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import wbd.core.TestBaseRA;
-import wbd.api.client.get.ApiClient_GetCategories;
+import wbd.api.сlient.get.ApiClient_GetCategories;
 import java.util.List;
 
 public class GetCategoriesTests extends TestBaseRA {

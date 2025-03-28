@@ -4,8 +4,9 @@ import io.restassured.response.Response;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import wbd.core.TestBaseRA;
-import wbd.api.dto.AllOffersResponseDto;
-import wbd.api.client.get.ApiClient_GetAllOffers;
+import wbd.api.сlient.dto.AllOffersResponseDto;
+import wbd.api.сlient.get.ApiClient_GetAllOffers;
+
 
 import java.util.List;
 
@@ -35,7 +36,7 @@ public class GetAllOffersTests extends TestBaseRA {
         }
 
         // парсим JSON в список объектов AllOffersResponseDto
-        List<AllOffersResponseDto> offers = response.jsonPath().getList("", AllOffersResponseDto.class);
+        List<AllOffersResponseDto> offers = response.jsonPath().getList("content", AllOffersResponseDto.class);
 
         softAssert.assertNotNull(offers, "Offers list не должен быть null");
         softAssert.assertTrue(!offers.isEmpty(), "Offers list не должен быть пустым");
@@ -45,21 +46,21 @@ public class GetAllOffersTests extends TestBaseRA {
             AllOffersResponseDto offer = offers.get(0);
 
             softAssert.assertNotNull(offer.getTitle(), "Title не должен быть null");
-            softAssert.assertTrue(offer.getTitle().length() > 0, "Title не должен быть пустым");
+            softAssert.assertTrue(!offer.getTitle().isEmpty(), "Title не должен быть пустым");
 
             softAssert.assertNotNull(offer.getDescription(), "Description не должен быть null");
-            softAssert.assertTrue(offer.getDescription().length() > 0, "Description не должен быть пустым");
+            softAssert.assertTrue(!offer.getDescription().isEmpty(), "Description не должен быть пустым");
 
             softAssert.assertTrue(offer.getPricePerHour() > 0, "Цена должна быть положительной");
 
-            softAssert.assertNotNull(offer.getCategoryResponseDto(), "Category не должен быть null");
-            softAssert.assertNotNull(offer.getCategoryResponseDto().getName(), "Name категории не должен быть null");
+            softAssert.assertNotNull(offer.getCategoryDto(), "Category не должен быть null");
+            softAssert.assertNotNull(offer.getCategoryDto().getName(), "Name категории не должен быть null");
 
             softAssert.assertNotNull(offer.getUserFilterResponseDto(), "User не должен быть null");
 
             if (offer.getUserFilterResponseDto() != null) {
                 softAssert.assertNotNull(offer.getUserFilterResponseDto().getFirstName(), "FirstName не должен быть null");
-                softAssert.assertTrue(offer.getUserFilterResponseDto().getFirstName().length() > 0, "FirstName не должен быть пустым");
+                softAssert.assertTrue(!offer.getUserFilterResponseDto().getFirstName().isEmpty(), "FirstName не должен быть пустым");
 
                 softAssert.assertNotNull(offer.getUserFilterResponseDto().getLocationDto(), "LocationResponseDto не должен быть null");
 
