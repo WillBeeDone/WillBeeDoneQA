@@ -1,9 +1,8 @@
-package wbd.dto;
+package wbd.api.dto;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import wbd.dto.UserFilterResponseDto;
 
 import java.util.List;
 
@@ -13,7 +12,7 @@ import java.util.List;
 public class FilteredOffersResponseDto {
     private int id;
     private String title;
-    private CategoryResponseDto categoryResponseDto;
+    private CategoryResponseDto categoryDto;
     private double pricePerHour;
     private String description;
     private List<ImageDto> images;
