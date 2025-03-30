@@ -1,5 +1,8 @@
 package wbd.tests.rest_assured;
 
+<<<<<<< HEAD
+public class PostApiSecurityTests {
+=======
 import org.testng.annotations.Test;
 import wbd.core.TestBaseRA;
 import wbd.utils.DataProviders;
@@ -47,4 +50,5 @@ public class PostApiSecurityTests extends TestBaseRA {
                 .log().ifValidationFails();
 
     }
+>>>>>>> origin/dev
 }

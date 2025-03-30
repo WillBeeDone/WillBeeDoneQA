@@ -54,7 +54,6 @@ public class GetApiSecurityTests extends TestBaseRA {
                 .log().ifValidationFails();
     }
 
-
     @Test // написать баг-репорт
     public void testServerError() {
         // симулируем ошибку на сервере, например, при вызове неправильного endpoint или когда сервер не может обработать запрос
@@ -67,7 +66,8 @@ public class GetApiSecurityTests extends TestBaseRA {
                 .extract().response();
 
         if (response.getStatusCode() == 404) {
-            System.out.println("Ошибка: Получен ответ с кодом 404 (Internal Server Error)");
+
+            logger.error("Error: Received response with code 404 (page not found 404)");
         }
     }
 }
