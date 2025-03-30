@@ -1,4 +1,4 @@
-package wbd.web.utils;
+package wbd.utils;
 
 import org.testng.annotations.DataProvider;
 
