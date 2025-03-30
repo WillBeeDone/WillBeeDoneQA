@@ -1,10 +1,7 @@
 package wbd.tests.rest_assured;
 
-<<<<<<< HEAD
-public class PostApiSecurityTests {
-=======
-import org.testng.annotations.Test;
 import wbd.core.TestBaseRA;
+import org.testng.annotations.Test;
 import wbd.utils.DataProviders;
 
 import static io.restassured.RestAssured.given;
@@ -30,6 +27,7 @@ public class PostApiSecurityTests extends TestBaseRA {
                 .body(not(containsString("exception")))
                 .log().ifValidationFails();
     }
+
     // проверка попыток SQL-инъекций при регистрации
     // используется ВАЛИДНЫЙ password для проверки поля email
     // В ожиданиях ответы 400,422. 403 statusCode НО не 200
@@ -50,5 +48,4 @@ public class PostApiSecurityTests extends TestBaseRA {
                 .log().ifValidationFails();
 
     }
->>>>>>> origin/dev
 }
