@@ -92,7 +92,6 @@ public class GetApiSecurityTests extends TestBaseRA {
                 .log().ifValidationFails();
     }
 
-
     @Test // написать баг-репорт
     public void testServerError() {
         // симулируем ошибку на сервере, например, при вызове неправильного endpoint или когда сервер не может обработать запрос
