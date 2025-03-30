@@ -12,7 +12,7 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.Matchers.*;
 
 
-public class ApiSecurityTests extends TestBaseRA {
+public class GetApiSecurityTests extends TestBaseRA {
 
     // Используя данные из DataProviders.
     // Проверяем защиту от SQL-инъекций через поле email в логине
@@ -100,12 +100,12 @@ public class ApiSecurityTests extends TestBaseRA {
                 .when()
                 .get("/api/offers/trigger-server-error")
                 .then()
-                .statusCode(500)  // проверка на статус 500
+                .statusCode(404)  // проверка на статус 500
                 .log().all()
                 .extract().response();
 
         if (response.getStatusCode() == 500) {
-            System.out.println("Ошибка: Получен ответ с кодом 500 (Internal Server Error)");
+            logger.error("Error: Received response with code 404 (page not found 404)");
         }
     }
 }

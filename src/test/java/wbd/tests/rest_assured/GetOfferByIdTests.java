@@ -29,53 +29,53 @@ public class GetOfferByIdTests extends TestBaseRA {
         softAssert.assertEquals(response.getStatusCode(), 200, "Expected status code 200");
 
         if (response.getStatusCode() == 200) {
-            logger.info("Тест прошел успешно: Код ответа 200 (OK)");
+            logger.info("The test was successful: Response code 200 (OK)");
         } else {
-            logger.error("Ошибка: Получен ответ с кодом " + response.getStatusCode());
+            logger.error("Error: Received response with code " + response.getStatusCode());
         }
 
         // парсим JSON в объект FilteredOffersResponseDto
         FilteredOffersResponseDto offer = response.as(FilteredOffersResponseDto.class);
 
-        softAssert.assertNotNull(offer, "Offer не должен быть null");
+        softAssert.assertNotNull(offer, "Offer must not be null");
 
         // все необходимые поля присутствуют
-        softAssert.assertNotNull(offer.getTitle(), "Title не должен быть null");
-        softAssert.assertTrue(!offer.getTitle().isEmpty(), "Title не должен быть пустым");
+        softAssert.assertNotNull(offer.getTitle(), "Title must not be null");
+        softAssert.assertTrue(!offer.getTitle().isEmpty(), "Title should not be empty");
 
-        softAssert.assertNotNull(offer.getDescription(), "Description не должен быть null");
-        softAssert.assertTrue(!offer.getDescription().isEmpty(), "Description не должен быть пустым");
+        softAssert.assertNotNull(offer.getDescription(), "Description must not be null");
+        softAssert.assertTrue(!offer.getDescription().isEmpty(), "Description should not be empty");
 
-        softAssert.assertTrue(offer.getPricePerHour() > 0, "Цена должна быть положительной");
+        softAssert.assertTrue(offer.getPricePerHour() > 0, "The price has to be positive");
 
         // проверка categoryResponseDto как объекта
-        softAssert.assertNotNull(offer.getCategoryDto(), "Category не должен быть null");
-        softAssert.assertNotNull(offer.getCategoryDto().getName(), "Name категории не должен быть null");
-        softAssert.assertTrue(!offer.getCategoryDto().getName().isEmpty(), "Category name не должен быть пустым");
+        softAssert.assertNotNull(offer.getCategoryDto(), "Category must not be null");
+        softAssert.assertNotNull(offer.getCategoryDto().getName(), "Category Name must not be null");
+        softAssert.assertTrue(!offer.getCategoryDto().getName().isEmpty(), "Category name must not be empty");
 
         // проверка UserFilterResponseDto (если оно есть)
         if (offer.getUserFilterResponseDto() != null) {
-            softAssert.assertNotNull(offer.getUserFilterResponseDto().getFirstName(), "FirstName не должен быть null");
-            softAssert.assertTrue(!offer.getUserFilterResponseDto().getFirstName().isEmpty(), "FirstName не должен быть пустым");
+            softAssert.assertNotNull(offer.getUserFilterResponseDto().getFirstName(), "FirstName must not be null");
+            softAssert.assertTrue(!offer.getUserFilterResponseDto().getFirstName().isEmpty(), "FirstName must not be empty");
 
-            softAssert.assertNotNull(offer.getUserFilterResponseDto().getLastName(), "LastName не должен быть null");
-            softAssert.assertTrue(!offer.getUserFilterResponseDto().getLastName().isEmpty(), "LastName не должен быть пустым");
+            softAssert.assertNotNull(offer.getUserFilterResponseDto().getLastName(), "LastName must not be null");
+            softAssert.assertTrue(!offer.getUserFilterResponseDto().getLastName().isEmpty(), "LastName must not be empty");
 
-            softAssert.assertNotNull(offer.getUserFilterResponseDto().getProfilePicture(), "ProfilePicture не должен быть null");
-            softAssert.assertTrue(!offer.getUserFilterResponseDto().getProfilePicture().isEmpty(), "ProfilePicture не должен быть пустым");
+            softAssert.assertNotNull(offer.getUserFilterResponseDto().getProfilePicture(), "ProfilePicture must not be null");
+            softAssert.assertTrue(!offer.getUserFilterResponseDto().getProfilePicture().isEmpty(), "ProfilePicture must not be empty");
 
-            softAssert.assertNotNull(offer.getUserFilterResponseDto().getLocationDto(), "LocationResponseDto не должен быть null");
+            softAssert.assertNotNull(offer.getUserFilterResponseDto().getLocationDto(), "LocationResponseDto must not be null");
 
             if (offer.getUserFilterResponseDto().getLocationDto() != null) {
-                softAssert.assertNotNull(offer.getUserFilterResponseDto().getLocationDto().getCityName(), "CityName не должен быть null");
-                softAssert.assertTrue(!offer.getUserFilterResponseDto().getLocationDto().getCityName().isEmpty(), "CityName не должен быть пустым");
+                softAssert.assertNotNull(offer.getUserFilterResponseDto().getLocationDto().getCityName(), "CityName must not be null");
+                softAssert.assertTrue(!offer.getUserFilterResponseDto().getLocationDto().getCityName().isEmpty(), "CityName must not be empty");
             }
         }
 
         // проверка на наличие хотя бы одного изображения
         if (offer.getImages() != null && !offer.getImages().isEmpty()) {
-            softAssert.assertNotNull(offer.getImages().get(0).getImageUrl(), "ImageUrl не должен быть null");
-            softAssert.assertTrue(!offer.getImages().get(0).getImageUrl().isEmpty(), "ImageUrl не должен быть пустым");
+            softAssert.assertNotNull(offer.getImages().get(0).getImageUrl(), "ImageUrl must not be null");
+            softAssert.assertTrue(!offer.getImages().get(0).getImageUrl().isEmpty(), "ImageUrl must not be empty");
         }
 
         softAssert.assertAll();
@@ -87,7 +87,7 @@ public class GetOfferByIdTests extends TestBaseRA {
         Response response = ApiClient_GetOfferById.getOfferById(invalidId);
 
         SoftAssert softAssert = new SoftAssert();
-        softAssert.assertNotEquals(response.getStatusCode(), 200, "Ожидается ошибка для некорректного ID");
+        softAssert.assertNotEquals(response.getStatusCode(), 200, "An error is expected for an invalid ID");
 
         softAssert.assertAll();
     }
@@ -103,7 +103,7 @@ public class GetOfferByIdTests extends TestBaseRA {
         softAssert.assertEquals(response.getStatusCode(), 404, "Expected status code 404 for non-existent offer");
 
         if (response.getStatusCode() == 404) {
-            logger.error("Ошибка: Получен ответ с кодом 404 (Not Found)");
+            logger.error("Error: Received response with code 404 (Not Found)");
         }
 
         softAssert.assertAll();
@@ -121,7 +121,7 @@ public class GetOfferByIdTests extends TestBaseRA {
                 .extract().response();
 
         if (response.getStatusCode() == 400) {
-            logger.info("Тест прошел успешно: Получен ответ с кодом 400 (Bad Request)");
+            logger.info("The test was successful: Received a response with code 400 (Bad Request)");
         }
     }
 
