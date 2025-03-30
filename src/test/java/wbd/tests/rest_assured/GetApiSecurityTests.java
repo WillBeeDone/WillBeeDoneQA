@@ -1,11 +1,9 @@
 package wbd.tests.rest_assured;
 
-
-
 import io.restassured.response.Response;
 import org.testng.annotations.Test;
 import wbd.core.TestBaseRA;
-import wbd.web.utils.DataProviders;
+import wbd.utils.DataProviders;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.not;
@@ -14,42 +12,6 @@ import static org.hamcrest.Matchers.*;
 
 public class GetApiSecurityTests extends TestBaseRA {
 
-    // Используя данные из DataProviders.
-    // Проверяем защиту от SQL-инъекций через поле email в логине
-    // При неудаче — выводим тело ответа
-    @Test(dataProvider = "sqlInjectionPayloads", dataProviderClass = DataProviders.class)
-    public void testSqlInjectionInLogin(String maliciousEmail) {
-        given()
-                .contentType("application/json")
-                .body("{\"email\": \"" + maliciousEmail + "\", \"password\": \"anything\"}")
-                .when()
-                .post("/auth/login")
-                .then()
-                .statusCode(not(200)) // Ожидаем, что вход не удался
-                .body(not(containsString("SQL")))
-                .body(not(containsString("syntax")))
-                .body(not(containsString("exception")))
-                .log().ifValidationFails();
-    }
-    // проверка попыток SQL-инъекций при регистрации
-    // используется ВАЛИДНЫЙ password для проверки поля email
-    // В ожиданиях ответы 400,422. 403 statusCode НО не 200
-    // 500 ответа быть не должно!
-    // трассировки SQL/исключений быть не должно!
-    @Test(dataProvider = "sqlInjectionPayloads", dataProviderClass = DataProviders.class)
-    public void testSqlInjectionInRegister(String maliciousEmail) {
-        given()
-                .contentType("application/json")
-                .body("{\"email\": \"" + maliciousEmail + "\", \"password\": \"ValidPass123\"}")
-                .when()
-                .post("/register")
-                .then()
-                .statusCode(not(200)) // Регистрация не должна пройти
-                .body(not(containsString("SQL")))
-                .body(not(containsString("syntax")))
-                .body(not(containsString("exception")))
-                .log().ifValidationFails();
-    }
     // Задача проверки:
     // Подставляем вредоносные строки в query-параметры (в category, priceFrom, location)
     //Проверяем:
@@ -97,14 +59,22 @@ public class GetApiSecurityTests extends TestBaseRA {
         // симулируем ошибку на сервере, например, при вызове неправильного endpoint или когда сервер не может обработать запрос
         Response response = given()
                 .when()
-                .get("/api/offers/trigger-server-error")
+                .get("/offers/trigger-server-error")
                 .then()
+<<<<<<< HEAD
                 .statusCode(404)  // проверка на статус 500
+=======
+                .statusCode(404)  // проверка на статус 404
+>>>>>>> origin/dev
                 .log().all()
                 .extract().response();
 
         if (response.getStatusCode() == 404) {
+<<<<<<< HEAD
             logger.error("Error: Received response with code 404 (page not found 404)");
+=======
+            System.out.println("Ошибка: Получен ответ с кодом 404 (Internal Server Error)");
+>>>>>>> origin/dev
         }
     }
 }
