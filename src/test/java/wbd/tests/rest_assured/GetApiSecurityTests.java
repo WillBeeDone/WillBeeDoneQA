@@ -61,20 +61,13 @@ public class GetApiSecurityTests extends TestBaseRA {
                 .when()
                 .get("/offers/trigger-server-error")
                 .then()
-<<<<<<< HEAD
-                .statusCode(404)  // проверка на статус 500
-=======
                 .statusCode(404)  // проверка на статус 404
->>>>>>> origin/dev
                 .log().all()
                 .extract().response();
 
         if (response.getStatusCode() == 404) {
-<<<<<<< HEAD
+
             logger.error("Error: Received response with code 404 (page not found 404)");
-=======
-            System.out.println("Ошибка: Получен ответ с кодом 404 (Internal Server Error)");
->>>>>>> origin/dev
         }
     }
 }
