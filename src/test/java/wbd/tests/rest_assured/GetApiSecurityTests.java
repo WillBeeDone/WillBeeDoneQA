@@ -104,7 +104,7 @@ public class GetApiSecurityTests extends TestBaseRA {
                 .log().all()
                 .extract().response();
 
-        if (response.getStatusCode() == 500) {
+        if (response.getStatusCode() == 404) {
             logger.error("Error: Received response with code 404 (page not found 404)");
         }
     }
