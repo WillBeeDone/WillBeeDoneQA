@@ -161,6 +161,4 @@ public class GetAllOffersTests extends TestBaseRA {
 
         softAssert.assertAll();
     }
-
-
 }
