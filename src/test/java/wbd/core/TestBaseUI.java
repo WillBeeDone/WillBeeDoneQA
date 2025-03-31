@@ -13,7 +13,6 @@ public class TestBaseUI {
     protected final ApplicationManager app = new ApplicationManager();
     Logger logger = LoggerFactory.getLogger(TestBaseUI.class);
 
-
     @BeforeMethod
     public void setUp(Method method) {
         logger.info("Test is started: [" + method.getName() + "]");
@@ -22,7 +21,6 @@ public class TestBaseUI {
 
     @AfterMethod(enabled = false)
     public void tearDown(Method method, ITestResult result) {
-
         if (result.isSuccess()) {
             logger.info("Test is PASSED: [" + method.getName() + "]");
         } else {
@@ -31,4 +29,3 @@ public class TestBaseUI {
         app.stop();
     }
 }
-
