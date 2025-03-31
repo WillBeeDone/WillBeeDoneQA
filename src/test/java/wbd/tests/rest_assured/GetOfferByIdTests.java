@@ -3,10 +3,9 @@ package wbd.tests.rest_assured;
 import io.restassured.response.Response;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
+import wbd.api.client.get.ApiClient_GetOfferById;
 import wbd.core.TestBaseRA;
-import wbd.api.сlient.dto.FilteredOffersResponseDto;
-import wbd.api.сlient.get.ApiClient_GetOfferById;
-
+import wbd.api.dto.FilteredOffersResponseDto;
 
 import static io.restassured.RestAssured.given;
 

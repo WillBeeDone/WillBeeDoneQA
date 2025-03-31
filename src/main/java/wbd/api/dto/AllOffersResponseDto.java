@@ -10,7 +10,7 @@ import lombok.ToString;
 public class AllOffersResponseDto {
     private int id;
     private String title;
-    private CategoryResponseDto categoryResponseDto;
+    private CategoryResponseDto categoryDto;
     private double pricePerHour;
     private String description;
     private UserDetailsDto userFilterResponseDto;

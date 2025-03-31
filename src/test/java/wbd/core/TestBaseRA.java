@@ -31,5 +31,7 @@ public class TestBaseRA {
     public void init() {
         RestAssured.baseURI = "http://localhost:8080/";
         RestAssured.basePath = "api";
+
+        // RestAssured.baseURI = "https://monkfish-app-73239.ondigitalocean.app";
     }
 }
