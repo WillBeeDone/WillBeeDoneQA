@@ -54,7 +54,7 @@ public class GetApiSecurityTests extends TestBaseRA {
                 .log().ifValidationFails();
     }
 
-    @Test // написать баг-репорт
+    @Test // баг-репорт, выдает 400 вмето 404
     public void testServerError() {
         // симулируем ошибку на сервере, например, при вызове неправильного endpoint или когда сервер не может обработать запрос
         Response response = given()

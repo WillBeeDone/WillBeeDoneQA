@@ -3,10 +3,9 @@ package wbd.tests.rest_assured;
 import io.restassured.response.Response;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
+import wbd.api.client.get.ApiClient_GetLocations;
 import wbd.core.TestBaseRA;
-import wbd.api.сlient.dto.LocationResponseDto;
-import wbd.api.сlient.get.ApiClient_GetLocations;
-
+import wbd.api.dto.LocationResponseDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +68,8 @@ public class GetLocationsTest extends TestBaseRA {
         softAssert.assertAll();
     }
 
+    //  написать баг-репорт! сервер игнорирует незнакомые query-параметры
+    //  и не возвращает 400, а отвечает 200 (ОК)
     @Test
     public void testGetLocationsWithUnexpectedQueryParam_Returns400() {
         //  GET-запрос с неподдерживаемым query-параметром
