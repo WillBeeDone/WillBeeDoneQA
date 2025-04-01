@@ -24,4 +24,8 @@ public class LoginPage extends BasePage {
         passwordField.clear();
         passwordField.sendKeys(password);
     }
+
+    public WebElement getErrorMessage() {
+        return driver.findElement(By.xpath("//*[contains(text(), 'Must contains upper&lower case, number, special character. Length 8 or more.')]"));
+    }
 }
