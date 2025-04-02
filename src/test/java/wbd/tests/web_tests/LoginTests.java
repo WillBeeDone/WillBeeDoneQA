@@ -39,6 +39,6 @@ public class LoginTests extends TestBaseUI {
 
         app.driver.findElement(By.xpath("//button[contains(text(),'Sign in')]")).click();
 
-        Assert.assertEquals(loginPage.getErrorMessage().getText(), "Must contains upper&lower case, number, special character. Length 8 or more.");
+        Assert.assertEquals(loginPage.getErrorMessage().getText(), "Invalid login or password.");
     }
 }

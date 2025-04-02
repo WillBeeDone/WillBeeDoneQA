@@ -26,6 +26,6 @@ public class LoginPage extends BasePage {
     }
 
     public WebElement getErrorMessage() {
-        return driver.findElement(By.xpath("//*[contains(text(), 'Must contains upper&lower case, number, special character. Length 8 or more.')]"));
+        return driver.findElement(By.xpath("//*[contains(text(), 'Invalid login or password.')]"));
     }
 }
