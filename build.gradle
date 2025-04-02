@@ -33,6 +33,8 @@ dependencies {
     // Lombok
     compileOnly 'org.projectlombok:lombok:1.18.36'
     annotationProcessor 'org.projectlombok:lombok:1.18.36'
+
+    implementation 'org.json:json:20210307'
 }
 
 test {
