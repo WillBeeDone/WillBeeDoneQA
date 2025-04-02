@@ -3,8 +3,8 @@ package wbd.tests.rest_assured;
 import io.restassured.response.Response;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import wbd.core.TestBaseRA;
 import wbd.api.client.get.ApiClient_GetCategories;
+import wbd.core.TestBaseRA;
 import java.util.List;
 
 public class GetCategoriesTests extends TestBaseRA {
@@ -20,11 +20,11 @@ public class GetCategoriesTests extends TestBaseRA {
         logger.info("Response status: " + statusCode);
 
         // статус 200
-        Assert.assertEquals(statusCode, 200, "Код ответа должен быть 200");
+        Assert.assertEquals(statusCode, 200, "The response code must be 200");
 
         // проверяем, что список категорий не пуст
         List<String> categories = response.jsonPath().getList("$", String.class);
-        Assert.assertFalse(categories.isEmpty(), "Список категорий не должен быть пустым");
+        Assert.assertFalse(categories.isEmpty(), "The list of categories should not be empty");
 
         if (!categories.isEmpty()) {
             logger.info("---------------------------------------------------------");
@@ -34,8 +34,8 @@ public class GetCategoriesTests extends TestBaseRA {
         }
         // проверяем, что все категории содержат непустые названия
         for (String category : categories) {
-            Assert.assertNotNull(category, "Имя категории не должно быть null");
-            Assert.assertFalse(category.trim().isEmpty(), "Имя категории не должно быть пустым");
+            Assert.assertNotNull(category, "The category name must not be null");
+            Assert.assertFalse(category.trim().isEmpty(), "The category name must not be empty");
         }
     }
 
@@ -55,6 +55,6 @@ public class GetCategoriesTests extends TestBaseRA {
                 .extract()
                 .response();
 
-        Assert.assertEquals(response.getStatusCode(), 404, "Код ответа должен быть 404");
+        Assert.assertEquals(response.getStatusCode(), 404, "The response code should be 404");
     }
 }
