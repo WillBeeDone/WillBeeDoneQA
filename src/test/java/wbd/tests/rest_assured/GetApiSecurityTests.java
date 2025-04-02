@@ -1,0 +1,73 @@
+package wbd.tests.rest_assured;
+
+import io.restassured.response.Response;
+import org.testng.annotations.Test;
+import wbd.core.TestBaseRA;
+import wbd.utils.DataProviders;
+
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.Matchers.*;
+
+
+public class GetApiSecurityTests extends TestBaseRA {
+
+    // Задача проверки:
+    // Подставляем вредоносные строки в query-параметры (в category, priceFrom, location)
+    //Проверяем:
+    //нет 500/502/stack trace
+    //нет SQL ошибок
+    //сервис корректно фильтрует/отфутболивает
+    // GET /offers/filter, SQL-инъекции в query-параметры
+    @Test(dataProvider = "sqlInjectionPayloads", dataProviderClass = DataProviders.class)
+    public void testSqlInjectionInOfferFilter(String maliciousInput) {
+        given()
+                .queryParam("category", maliciousInput)
+                .queryParam("location", "1") // валидный ID, чтобы не мешал
+                .queryParam("priceFrom", "0")
+                .queryParam("priceTo", "9999")
+                .when()
+                .get("/offers/filter")
+                .then()
+                .statusCode(anyOf(is(200), is(400), is(422))) // главное — не 500+
+                .body(not(containsString("SQL")))
+                .body(not(containsString("syntax")))
+                .body(not(containsString("exception")))
+                .log().ifValidationFails();
+    }
+    // SQL-инъекции через path-параметр в GET /offers/{id}
+    // Подставляет вредоносное значение в {id} оффера.
+    // Проверяется, что:
+    // не вылетает ошибка 500;
+    // нет SQL сообщений;
+    //бэк отвечает контролируемо (400, 404, 422 и т.д.)
+    @Test(dataProvider = "sqlInjectionPayloads", dataProviderClass = DataProviders.class)
+    public void testSqlInjectionInOfferId(String maliciousId) {
+        given()
+                .when()
+                .get("/offers/" + maliciousId)
+                .then()
+                .statusCode(anyOf(is(400), is(403), is(404), is(422))) // корректное поведение: NOT FOUND, BAD REQUEST и т.п.
+                .body(not(containsString("SQL")))
+                .body(not(containsString("syntax")))
+                .body(not(containsString("exception")))
+                .log().ifValidationFails();
+    }
+
+    @Test // баг-репорт, выдает 400 вмето 404
+    public void testServerError() {
+        // симулируем ошибку на сервере, например, при вызове неправильного endpoint или когда сервер не может обработать запрос
+        Response response = given()
+                .when()
+                .get("/offers/trigger-server-error")
+                .then()
+                .statusCode(404)  // проверка на статус 404
+                .log().all()
+                .extract().response();
+
+        if (response.getStatusCode() == 404) {
+
+            logger.error("Error: Received response with code 404 (page not found 404)");
+        }
+    }
+}

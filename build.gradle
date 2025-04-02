@@ -10,18 +10,41 @@ repositories {
 }
 
 dependencies {
-    testImplementation 'org.testng:testng:7.10.1'
-    implementation 'org.seleniumhq.selenium:selenium-java:4.29.0'
-    implementation 'org.slf4j:slf4j-nop:2.0.7'
-    implementation 'io.github.bonigarcia:webdrivermanager:5.9.3'
-}
 
+    // Selenium WebDriver
+    implementation 'org.seleniumhq.selenium:selenium-java:4.30.0'
 
+    // WebDriverManager (управление драйверами)
+    implementation 'io.github.bonigarcia:webdrivermanager:6.0.0'
 
-compileJava {
-    options.encoding = 'UTF-8'
+    // Фреймворк TestNG для тестирования
+    implementation 'org.testng:testng:7.11.0'
+
+    // Логирование: Logback вместо SLF4J
+    implementation 'ch.qos.logback:logback-classic:1.5.18'
+
+    // Allure для отчетности
+    implementation 'io.qameta.allure:allure-testng:2.29.1' // для TestNG !
+    testImplementation 'io.qameta.allure:allure-selenide:2.29.1' // Логи и скриншоты
+
+    // rest-assured
+    implementation 'io.rest-assured:rest-assured:5.5.1'
+
+    // Lombok
+    compileOnly 'org.projectlombok:lombok:1.18.36'
+    annotationProcessor 'org.projectlombok:lombok:1.18.36'
 }
 
 test {
     useTestNG()
+    systemProperty 'file.encoding', 'UTF-8'
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+// Добавление задачи для генерации Allure-отчета
+task allureReport(type: Exec) {
+    commandLine "allure", "generate", "allure-results", "-o", "allure-report", "--clean"
 }
