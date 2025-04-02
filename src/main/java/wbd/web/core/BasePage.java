@@ -40,4 +40,9 @@ public class BasePage {
         System.out.println("Screenshot saved to: [" + screenshot.getAbsolutePath() + "]");
         return screenshot.getAbsolutePath();
     }
+
+
+    public void scrollTo(int y) {
+        js.executeScript("window.scrollBy(0," + y + ")");
+    }
 }

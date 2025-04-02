@@ -36,7 +36,7 @@ public class ApplicationManager {
                 driver = new ChromeDriver();
         }
 
-        driver.manage().window().setPosition(new Point(2500, 0)); // Размещение окна браузера
+        //driver.manage().window().setPosition(new Point(2500, 0)); // Размещение окна браузера
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));

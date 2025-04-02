@@ -31,16 +31,17 @@ public class HomePage extends BasePage {
         return this;
     }
 
-//    public OffersPage selectCategory(String categoryName) {
-//        Select select = new Select(categoryDropdown);
-//        select.selectByVisibleText(categoryName);
-//
-//        String selected = select.getFirstSelectedOption().getText().trim();
-//        logger.info("The category is chosen: {}", selected);
-//        Assert.assertEquals(selected, categoryName, "The selected category does not match");
-//
-//        return new OffersPage(driver, wait);
-//    }
+
+    public OffersPage selectCategory(String categoryName) {
+        Select select = new Select(categoryDropdown);
+        select.selectByVisibleText(categoryName);
+
+        String selected = select.getFirstSelectedOption().getText().trim();
+        logger.info("The category is chosen: {}", selected);
+        Assert.assertEquals(selected, categoryName, "The selected category does not match");
+
+        return new OffersPage(driver, wait);
+    }
 
     private WebElement getSearchField() {
         return driver.findElement(By.xpath("//input[@placeholder='Enter keywords to search']"));
