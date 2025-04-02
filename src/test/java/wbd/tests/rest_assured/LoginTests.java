@@ -8,6 +8,7 @@ import wbd.api.client.AuthClient;
 import wbd.api.dto.AuthRequestDto;
 import wbd.api.dto.TokenResponseDto;
 import wbd.core.TestBaseRA;
+import wbd.utils.RetryAnalyzer;
 
 public class LoginTests extends TestBaseRA {
     SoftAssert softAssert = new SoftAssert();
@@ -33,7 +34,7 @@ public class LoginTests extends TestBaseRA {
 
     }
 
-    @Test
+    @Test(retryAnalyzer = RetryAnalyzer.class)
     public void loginSimpleTestWithoutAssert() {
         Response response = AuthClient.login(body);
         response
@@ -44,19 +45,19 @@ public class LoginTests extends TestBaseRA {
 
 
     //  баг-репорт
-    @Test
+    @Test(retryAnalyzer = RetryAnalyzer.class)
     public void loginSuccessTest() {
         Response response = AuthClient.login(body);
         logger.info("Login response: {}", response.asString());
 
-        softAssert.assertEquals(response.getStatusCode(), 200, "Ожидается статус 200 OK");
+        softAssert.assertEquals(response.getStatusCode(), 200, "Expected 200 OK");
 
         TokenResponseDto tokens = response.as(TokenResponseDto.class);
-        softAssert.assertNotNull(tokens, "TokenResponseDto не должен быть null");
+        softAssert.assertNotNull(tokens, "TokenResponseDto should not be null");
 
         if (tokens != null) {
-            softAssert.assertNotNull(tokens.getAccessToken(), "accessToken не должен быть null");
-            softAssert.assertNotNull(tokens.getRefreshToken(), "refreshToken не должен быть null");
+            softAssert.assertNotNull(tokens.getAccessToken(), "accessToken should not be null");
+            softAssert.assertNotNull(tokens.getRefreshToken(), "refreshToken should not be null");
 
             logger.info("Access Token: {}", tokens.getAccessToken());
             logger.info("Refresh Token: {}", tokens.getRefreshToken());

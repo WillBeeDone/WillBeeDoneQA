@@ -38,4 +38,22 @@ public class DataProviders {
                 {"user@mail.com", "❌ Password same as email"}
         };
     }
+
+    @DataProvider
+    public Object[][] categories() {
+        return new Object[][]{
+                {"Plumber"},
+                {"Computer Technician"},
+                {"Pet Care"},
+                {"Moving"},
+                {"Gardening Services"},
+                {"Auto Mechanic"},
+                {"Cleaning"},
+                {"Electrician"},
+                {"Beauty & Care"},
+                {"Appliance Repair"},
+                {"Handyman"},
+                {"Other"}
+        };
+    }
 }
