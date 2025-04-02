@@ -27,4 +27,18 @@ public class LoginTests extends TestBaseUI {
         //Проверяем наличие Sign Out
         Assert.assertTrue(app.driver.findElement(By.xpath("//button[contains(text(),'SignOut')]")).isDisplayed());
     }
+
+    @Test
+    public void loginWrongPasswordNegativeTest() {
+        LoginPage loginPage = new LoginPage(app.driver, app.wait);
+
+        app.driver.findElement(By.xpath("//button[contains(text(),'Sign In')]")).click();
+
+        loginPage.enterEmail(UserData.VALID_EMAIL);
+        loginPage.enterPassword("WrongPassword123");
+
+        app.driver.findElement(By.xpath("//button[contains(text(),'Sign in')]")).click();
+
+        Assert.assertEquals(loginPage.getErrorMessage().getText(), "Must contains upper&lower case, number, special character. Length 8 or more.");
+    }
 }
