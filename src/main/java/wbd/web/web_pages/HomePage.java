@@ -31,6 +31,7 @@ public class HomePage extends BasePage {
         return this;
     }
 
+
     public OffersPage selectCategory(String categoryName) {
         Select select = new Select(categoryDropdown);
         select.selectByVisibleText(categoryName);
