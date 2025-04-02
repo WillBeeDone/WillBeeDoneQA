@@ -10,7 +10,7 @@ import wbd.web.web_pages.HomePage;
 
 import java.util.List;
 
-public class HeaderTests extends TestBaseUI {
+public class HeaderComponentTests extends TestBaseUI {
     @Test
     public void testCityDropdownOptions() {
         HeaderComponent header = new HeaderComponent(app.driver);
