@@ -35,7 +35,6 @@ public class RegistrationPage extends BasePage {
     //  =====================================
     public RegistrationPage(WebDriver driver, WebDriverWait wait) {
         super(driver, wait);
-        PageFactory.initElements(driver, this);  // инициализация элементов на странице
     }
 
     // открыть страницу регистрации
