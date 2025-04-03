@@ -1,0 +1,12 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+<suite name="API Security Subtest Suite">
+  <test name="Run Specific Test">
+    <classes>
+      <class name="wbd.tests.rest_assured.PostApiSecurityTests">
+        <methods>
+          <include name="testSqlInjectionInRegister"/>
+        </methods>
+      </class>
+    </classes>
+  </test>
+</suite>

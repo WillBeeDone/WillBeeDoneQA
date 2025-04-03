@@ -1,0 +1,12 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+<suite name="Security Suite - POST One Test">
+  <test name="POST Specific Test">
+    <classes>
+      <class name="wbd.tests.rest_assured.PostApiSecurityTests">
+        <methods>
+          <include name="testSqlInjectionInRegister"/>
+        </methods>
+      </class>
+    </classes>
+  </test>
+</suite>
