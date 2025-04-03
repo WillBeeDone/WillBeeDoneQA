@@ -15,7 +15,7 @@ public class LoginTests extends TestBaseUI {
 
         loginPage.openLoginPage();
         loginPage.enterEmail(UserData.VALID_EMAIL);
-        loginPage.enterPassword("Password!123");  // Пароль оставлен напрямую
+        loginPage.enterPassword("Password!123");
         loginPage.submitLogin();
 
         Assert.assertTrue(loginPage.isSignOutButtonDisplayed(), "Sign Out button is not displayed!");
