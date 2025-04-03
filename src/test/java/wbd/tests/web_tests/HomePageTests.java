@@ -1,6 +1,5 @@
 package wbd.tests.web_tests;
 
-import org.openqa.selenium.By;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import wbd.core.TestBaseUI;
@@ -14,36 +13,21 @@ import org.openqa.selenium.WebElement;
 public class HomePageTests extends TestBaseUI {
     @Test
     public void testSearchByKeyword() {
-        // init pages
+        // Инициализация страниц
         HomePage homePage = new HomePage(app.driver, app.wait);
         HeaderComponent header = new HeaderComponent(app.driver);
 
-        // performing search
+        // Выполнение поиска
         homePage.searchFor("Plumber");
 
-        //waiting till cards contain "Plumber"
-        app.wait.until(driver -> {
-            try {
-                List<WebElement> cards = driver.findElements(By.cssSelector("._offerContainer_1h601_5"));
-                if (cards.isEmpty()) {
-                    return false;
-                }
-                WebElement firstCard = cards.get(0);
-                String categoryText = firstCard.findElement(By.cssSelector("._category_1h601_87")).getText();
-                System.out.println("Checking category: " + categoryText);
-                return categoryText.equals("Plumber");
-            } catch (Exception e) {
-                System.out.println("Exception in wait: " + e.getMessage());
-                return false; // Продолжаем ждать, если исключение
-            }
-        });
+        // Ожидание загрузки карточек с категорией "Plumber"
+        homePage.waitForAdCardsWithCategory("Plumber");
 
-
-        // checking cards
+        // Проверка карточек
         List<WebElement> adCards = homePage.getAdCards();
         Assert.assertTrue(adCards.size() > 0, "Ad cards should be present after search");
 
-        // checking cards for "Plumber" category
+        // Проверка категории каждой карточки
         for (WebElement card : adCards) {
             String categoryText = homePage.getCategoryFromCard(card);
             Assert.assertEquals(categoryText, "Plumber",

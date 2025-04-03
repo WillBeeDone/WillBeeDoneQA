@@ -4,6 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -18,19 +19,25 @@ public class HomePage extends BasePage {
 
     private static final Logger logger = LoggerFactory.getLogger(HomePage.class);
 
-    public HomePage(WebDriver driver, WebDriverWait wait) {
-        super(driver, wait);
-    }
-
     @FindBy(xpath = "(//select[@class='_dropdown_1sio9_1'])[2]")
     WebElement categoryDropdown;
+
+    @FindBy(xpath = "//input[@placeholder='Enter keywords to search']")
+    private WebElement searchField;
+
+    @FindBy(xpath = "//button[contains(text(),'Go →')]")
+    private WebElement searchButton;
+
+    public HomePage(WebDriver driver, WebDriverWait wait) {
+        super(driver, wait);
+        PageFactory.initElements(driver, this); // Инициализация элементов с @FindBy
+    }
 
     public HomePage clickAllCategories() {
         wait.until(ExpectedConditions.elementToBeClickable(categoryDropdown)).click();
         System.out.println("The click on the All Categories is executed");
         return this;
     }
-
 
     public OffersPage selectCategory(String categoryName) {
         Select select = new Select(categoryDropdown);
@@ -43,36 +50,42 @@ public class HomePage extends BasePage {
         return new OffersPage(driver, wait);
     }
 
-    private WebElement getSearchField() {
-        return driver.findElement(By.xpath("//input[@placeholder='Enter keywords to search']"));
-    }
-
-    private WebElement getSearchButton() {
-        return driver.findElement(By.xpath("//button[contains(text(),'Go →')]"));
-    }
-
     public void enterSearchKeyword(String keyword) {
-        getSearchField().clear();
-        getSearchField().sendKeys(keyword);
+        searchField.clear();
+        searchField.sendKeys(keyword);
     }
 
     public void clickSearchButton() {
-        getSearchButton().click();
+        wait.until(ExpectedConditions.elementToBeClickable(searchButton)).click();
     }
 
     public void searchFor(String keyword) {
         enterSearchKeyword(keyword);
         clickSearchButton();
     }
+
     public List<WebElement> getAdCards() {
         return driver.findElements(By.cssSelector("._offerContainer_1h601_5"));
-
     }
+
     public String getCityFromCard(WebElement card) {
         return card.findElement(By.cssSelector("._location_1h601_100")).getText();
     }
 
     public String getCategoryFromCard(WebElement card) {
         return card.findElement(By.cssSelector("._category_1h601_87")).getText();
+    }
+
+    // Новый метод для ожидания загрузки карточек с нужной категорией
+    public void waitForAdCardsWithCategory(String category) {
+        wait.until(driver -> {
+            List<WebElement> cards = getAdCards();
+            if (cards.isEmpty()) {
+                return false;
+            }
+            String categoryText = getCategoryFromCard(cards.get(0));
+            System.out.println("Checking category: " + categoryText);
+            return categoryText.equals(category);
+        });
     }
 }
