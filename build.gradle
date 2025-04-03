@@ -38,8 +38,19 @@ dependencies {
 }
 
 test {
-    useTestNG()
+    useTestNG {
+        if (project.hasProperty("testngXml")) {
+            suites project.getProperty("testngXml")
+        } else {
+            suites 'testng.xml'
+        }
+    }
+
     systemProperty 'file.encoding', 'UTF-8'
+
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
 }
 
 tasks.withType(JavaCompile) {
