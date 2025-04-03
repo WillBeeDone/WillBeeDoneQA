@@ -10,7 +10,7 @@ import java.util.List;
 
 import org.openqa.selenium.WebElement;
 
-public class HomePageTests extends TestBaseUI {
+public class SearchTests extends TestBaseUI {
     @Test
     public void testSearchByKeyword() {
         // Инициализация страниц
