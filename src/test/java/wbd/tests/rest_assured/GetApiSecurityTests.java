@@ -19,7 +19,7 @@ public class GetApiSecurityTests extends TestBaseRA {
     //нет SQL ошибок
     //сервис корректно фильтрует/отфутболивает
     // GET /offers/filter, SQL-инъекции в query-параметры
-    @Test(dataProvider = "sqlInjectionPayloads", dataProviderClass = DataProviders.class)
+    @Test(dataProvider = "sqlInjectionPayloads", dataProviderClass = DataProviders.class, groups = "security")
     public void testSqlInjectionInOfferFilter(String maliciousInput) {
         given()
                 .queryParam("category", maliciousInput)
@@ -41,7 +41,7 @@ public class GetApiSecurityTests extends TestBaseRA {
     // не вылетает ошибка 500;
     // нет SQL сообщений;
     //бэк отвечает контролируемо (400, 404, 422 и т.д.)
-    @Test(dataProvider = "sqlInjectionPayloads", dataProviderClass = DataProviders.class)
+    @Test(dataProvider = "sqlInjectionPayloads", dataProviderClass = DataProviders.class, groups = "security")
     public void testSqlInjectionInOfferId(String maliciousId) {
         given()
                 .when()
@@ -54,7 +54,8 @@ public class GetApiSecurityTests extends TestBaseRA {
                 .log().ifValidationFails();
     }
 
-    @Test // баг-репорт, выдает 400 вмето 404
+
+@Test(groups = "security")
     public void testServerError() {
         // симулируем ошибку на сервере, например, при вызове неправильного endpoint или когда сервер не может обработать запрос
         Response response = given()
@@ -66,8 +67,7 @@ public class GetApiSecurityTests extends TestBaseRA {
                 .extract().response();
 
         if (response.getStatusCode() == 404) {
-
-            logger.error("Error: Received response with code 404 (page not found 404)");
+            System.out.println("Ошибка: Получен ответ с кодом 404 (Internal Server Error)");
         }
     }
 }

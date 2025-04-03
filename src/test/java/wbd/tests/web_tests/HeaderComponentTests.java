@@ -1,7 +1,6 @@
 package wbd.tests.web_tests;
 
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import wbd.core.TestBaseUI;
@@ -25,22 +24,23 @@ public class HeaderComponentTests extends TestBaseUI {
         HeaderComponent header = new HeaderComponent(app.driver);
 
         header.selectCity("Berlin");
-        String selectedCity = new Select(header.getCityDropdown()).getFirstSelectedOption().getText();
+        String selectedCity = header.getSelectedCity();
         Assert.assertEquals(selectedCity, "Berlin");
     }
 
     @Test
     public void testAdCardsAfterCitySelection() {
         HeaderComponent header = new HeaderComponent(app.driver);
-        HomePage homePage = new HomePage(app.driver,app.wait);
-        // Выбираем город
+        HomePage homePage = new HomePage(app.driver, app.wait);
+
+        // Select a city
         header.selectCity("Berlin");
 
-        // Получаем все карточки
+        // Get all ad cards
         List<WebElement> adCards = homePage.getAdCards();
         Assert.assertTrue(adCards.size() > 0, "Ad cards should be present after city selection");
 
-        // Проверяем, что каждая карточка содержит "Berlin"
+        // Verify each card contains "Berlin"
         for (WebElement card : adCards) {
             String cityText = homePage.getCityFromCard(card);
             Assert.assertEquals(cityText, "Berlin", "Each ad card should display 'Berlin'");
