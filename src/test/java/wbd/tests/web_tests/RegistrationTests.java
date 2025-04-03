@@ -75,7 +75,7 @@ public class RegistrationTests extends TestBaseUI {
     @Test
     public void RegistrationWithMailTmPositiveTest() throws IOException, InterruptedException {
         SoftAssert softAssert = new SoftAssert();
-        String email = TestBaseUI.generateEmail(); // генерируем временный email
+        String email = RegistrationPage.generateEmail(); // генерируем временный email
         String password = UserData.VALID_PASSWORD;
 
         registrationPage.openRegistrationPage();
@@ -90,7 +90,7 @@ public class RegistrationTests extends TestBaseUI {
         softAssert.assertEquals(alertText, "Please, check your email.", "Alert text mismatch!");
 
         // получаем ссылку для подтверждения регистрации
-        String confirmationLink = TestBaseUI.getConfirmationLink(email);
+        String confirmationLink = RegistrationPage.getConfirmationLink(email);
         softAssert.assertNotNull(confirmationLink, "No confirmation link found!");
 
         // переходим по ссылке подтверждения
