@@ -1,12 +1,11 @@
 package wbd.tests.web_tests;
 
-import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import wbd.core.TestBaseUI;
 import wbd.utils.DataProviders;
 import wbd.web.web_pages.HomePage;
 
-public class CategorySelectionTest extends TestBaseUI {
+public class CategorySelectionTests extends TestBaseUI {
 
 
     @Test
