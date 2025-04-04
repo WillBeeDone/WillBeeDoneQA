@@ -9,7 +9,7 @@ public class ApiClient_GetAllOffers {
         return RestAssured
                 .given()
                 .when()
-                .get("/")
+                .get("/offers/all")
                 .then()
                 .log().all()
                 .extract()

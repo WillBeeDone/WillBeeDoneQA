@@ -17,6 +17,24 @@ public class DataProviders {
     }
 
     @DataProvider
+    public Object[][] invalidEmails() {
+        return new Object[][]{
+                {"test", "❌ Missing '@' and domain)"},
+                {"test@", "❌ Missing domain"},
+                {"test@gmail", "❌ Missing '.' and top-level domain (TLD)"},
+                {"test@gmail.", "❌ Missing top-level domain (TLD)"},
+                {"test@.com", "❌ Missing second-level domain"},
+                {"test@@gmail.com", "❌ Superfluous '@' "},
+                {"test@gmail..com", "❌ Superfluous '.'"},
+                {"test@ gmail.com", "❌ Superfluous spaces"},
+                {"test @gmail.com", "❌ Superfluous spaces"},
+                {"test@gmail .com", "❌ Superfluous spaces"},
+                {"test@gmail. com", "❌ Superfluous spaces"},
+                {"я@есть.баг", "❌ Inadmissible symbols"}
+        };
+    }
+
+    @DataProvider
     public Object[][] validPasswords() {
         return new Object[][]{
                 {"Abc123!@#", "✅ Valid password with upper, lower, digits, specials"},
