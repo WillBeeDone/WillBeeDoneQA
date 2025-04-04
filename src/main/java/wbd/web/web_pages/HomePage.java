@@ -30,7 +30,6 @@ public class HomePage extends BasePage {
 
     public HomePage(WebDriver driver, WebDriverWait wait) {
         super(driver, wait);
-        PageFactory.initElements(driver, this); // Инициализация элементов с @FindBy
     }
 
     public HomePage clickAllCategories() {

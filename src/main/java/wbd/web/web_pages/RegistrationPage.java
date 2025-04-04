@@ -51,41 +51,48 @@ public class RegistrationPage extends BasePage {
     //  =====================================
     public RegistrationPage(WebDriver driver, WebDriverWait wait) {
         super(driver, wait);
+
     }
 
     // открыть страницу регистрации
-    public void openRegistrationPage() {
-        signUpButton.click();  // кликаем на кнопку "Sign Up"
+    public RegistrationPage openRegistrationPage() {
+        signUpButton.click(); // кликаем на кнопку "Sign Up"
+        return this;
     }
 
     // вводим email
-    public void enterEmail(String email) {
+    public RegistrationPage enterEmail(String email) {
         emailField.clear();  // очищаем поле email
-        emailField.sendKeys(email);  // вводим email
+        emailField.sendKeys(email); // вводим email
+        return this;
     }
 
     // вводим пароль
-    public void enterPassword(String password) {
+    public RegistrationPage enterPassword(String password) {
         passwordField.clear();  // очищаем поле пароля
-        passwordField.sendKeys(password);  // вводим пароль
+        passwordField.sendKeys(password); // вводим пароль
+        return this;
     }
 
     // подтверждаем пароль
-    public void confirmPassword(String password) {
+    public RegistrationPage confirmPassword(String password) {
         confirmPasswordField.clear();  // очищаем поле подтверждения пароля
-        confirmPasswordField.sendKeys(password);  // вводим подтверждение пароля
+        confirmPasswordField.sendKeys(password); // вводим подтверждение пароля
+        return this;
     }
 
     // ставим галочку согласия с условиями
-    public void checkAgreeBox() {
+    public RegistrationPage checkAgreeBox() {
         if (!agreeCheckbox.isSelected()) {
             agreeCheckbox.click();  // если не выбрана галочка, ставим ее
         }
+        return this;
     }
 
     // отправляем форму регистрации
-    public void submitRegistration() {
+    public RegistrationPage submitRegistration() {
         submitButton.click();  // кликаем на кнопку "Sign up"
+        return this;
     }
 
     // получаем текст алерта и закрываем его
