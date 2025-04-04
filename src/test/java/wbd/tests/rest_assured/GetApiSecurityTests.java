@@ -1,9 +1,11 @@
 package wbd.tests.rest_assured;
 
 import io.restassured.response.Response;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 import wbd.core.TestBaseRA;
 import wbd.utils.DataProviders;
+import org.testng.asserts.SoftAssert;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.not;
@@ -11,6 +13,7 @@ import static org.hamcrest.Matchers.*;
 
 
 public class GetApiSecurityTests extends TestBaseRA {
+    SoftAssert softAssert = new SoftAssert();
 
     // Задача проверки:
     // Подставляем вредоносные строки в query-параметры (в category, priceFrom, location)
@@ -35,6 +38,7 @@ public class GetApiSecurityTests extends TestBaseRA {
                 .body(not(containsString("exception")))
                 .log().ifValidationFails();
     }
+
     // SQL-инъекции через path-параметр в GET /offers/{id}
     // Подставляет вредоносное значение в {id} оффера.
     // Проверяется, что:
@@ -54,8 +58,7 @@ public class GetApiSecurityTests extends TestBaseRA {
                 .log().ifValidationFails();
     }
 
-
-@Test(groups = "security")
+    @Test(groups = "security")
     public void testServerError() {
         // симулируем ошибку на сервере, например, при вызове неправильного endpoint или когда сервер не может обработать запрос
         Response response = given()
@@ -66,8 +69,12 @@ public class GetApiSecurityTests extends TestBaseRA {
                 .log().all()
                 .extract().response();
 
+        // статус 404 с использованием SoftAssert
+        softAssert.assertEquals(response.getStatusCode(), 404, "Expected Not Found (404) error from the server");
+
         if (response.getStatusCode() == 404) {
-            System.out.println("Ошибка: Получен ответ с кодом 404 (Internal Server Error)");
+            logger.info("Received expected 404 Not Found error response.");
         }
+        softAssert.assertAll();
     }
 }

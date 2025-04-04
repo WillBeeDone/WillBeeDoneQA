@@ -10,7 +10,7 @@ public class ApiClient_GetOffers {
         return RestAssured
                 .given()
                 .when()
-                .get("/offers")  // Обрати внимание, что "/offers" может быть другим путем в зависимости от настроек твоего API
+                .get("/offers")
                 .then()
                 .log().all()
                 .extract()

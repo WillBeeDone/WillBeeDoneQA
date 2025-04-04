@@ -29,7 +29,7 @@ public class GetCategoriesTests extends TestBaseRA {
         if (!categories.isEmpty()) {
             logger.info("---------------------------------------------------------");
             for (String category : categories) {
-                logger.error("Category => " + category + ";");
+                logger.info("Category => " + category + ";");
             }
         }
         // проверяем, что все категории содержат непустые названия
@@ -41,12 +41,11 @@ public class GetCategoriesTests extends TestBaseRA {
 
     @Test
     public void testGetCategories_NotFound_404() {
-        Response response = ApiClient_GetCategories.getCategories();
-        int statusCode = response.getStatusCode();
-        logger.info("Response status: " + statusCode);
+        logger.info("Start testing GetCategories with invalid endpoint");
+        logger.info("=============================================");
 
-        // если endpoint неправильный, то 404
-        response = io.restassured.RestAssured
+        // Отправляем запрос на несуществующий эндпоинт
+        Response response = io.restassured.RestAssured
                 .given()
                 .when()
                 .get("/categories-invalid")
@@ -55,6 +54,9 @@ public class GetCategoriesTests extends TestBaseRA {
                 .extract()
                 .response();
 
-        Assert.assertEquals(response.getStatusCode(), 404, "The response code should be 404");
+        int statusCode = response.getStatusCode();
+        logger.info("Response status: " + statusCode);
+
+        Assert.assertEquals(statusCode, 404, "The response code should be 404");
     }
 }

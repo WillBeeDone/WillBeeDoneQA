@@ -13,81 +13,87 @@ public class GetAllOffersTests extends TestBaseRA {
 
     @Test
     public void testGetAllOffers() {
-        logger.info("Start testing GetAllOffers");
+        logger.info("start testing GetAllOffers");
         logger.info("=============================================");
 
-        // Отправляем GET-запрос на получение всех офферов
+        // отправляем GET-запрос на получение всех офферов
         Response response = ApiClient_GetAllOffers.getAllOffers();
-        logger.info("Response body: " + response.asString());
+        logger.info("response body: " + response.asString());
 
         SoftAssert softAssert = new SoftAssert();
 
-        // Проверяем статус-код 200 OK
-        softAssert.assertEquals(response.getStatusCode(), 200, "Expected status code 200");
+        // проверяем статус-код 200 OK
+        softAssert.assertEquals(response.getStatusCode(), 200, "expected status code 200");
 
         if (response.getStatusCode() == 200) {
-            logger.info("✅ Тест успешен: Код ответа 200 (OK)");
+            logger.info("✅ test successful: response code 200 (OK)");
         } else {
-            logger.error("❌ Ошибка: Получен ответ с кодом " + response.getStatusCode());
+            logger.error("❌ error: received response with code " + response.getStatusCode());
         }
 
-        // Парсим JSON в список объектов AllOffersResponseDto
+        // парсим JSON в список объектов AllOffersResponseDto
         List<AllOffersResponseDto> offers = response.jsonPath().getList("", AllOffersResponseDto.class);
 
-        // Проверяем, что список офферов не пустой
-        softAssert.assertNotNull(offers, "Список офферов не должен быть null");
-        softAssert.assertFalse(offers.isEmpty(), "Список офферов не должен быть пустым");
+        // проверяем, что список офферов не пустой
+        softAssert.assertNotNull(offers, "offers list must not be null");
+        softAssert.assertFalse(offers.isEmpty(), "offers list must not be empty");
 
-        // Если есть хотя бы один оффер — проверяем его данные
+        // если есть хотя бы один оффер — проверяем его данные
         if (!offers.isEmpty()) {
             AllOffersResponseDto offer = offers.get(0);
 
-            softAssert.assertNotNull(offer.getTitle(), "Title не должен быть null");
-            softAssert.assertFalse(offer.getTitle().isEmpty(), "Title не должен быть пустым");
+            // проверяем id
+            softAssert.assertTrue(offer.getId() > 0, "id must be greater than 0");
 
-            softAssert.assertNotNull(offer.getDescription(), "Description не должен быть null");
-            softAssert.assertFalse(offer.getDescription().isEmpty(), "Description не должен быть пустым");
+            // проверяем title
+            softAssert.assertNotNull(offer.getTitle(), "title must not be null");
+            softAssert.assertFalse(offer.getTitle().isEmpty(), "title must not be empty");
 
-            softAssert.assertTrue(offer.getPricePerHour() > 0, "Цена должна быть положительной");
+            // проверяем категорию
+            softAssert.assertNotNull(offer.getCategoryDto(), "category must not be null");
+            softAssert.assertNotNull(offer.getCategoryDto().getName(), "category name must not be null");
+            softAssert.assertFalse(offer.getCategoryDto().getName().isEmpty(), "category name must not be empty");
 
-            // Проверяем категорию
-            softAssert.assertNotNull(offer.getCategoryDto(), "Category не должен быть null");
-            softAssert.assertNotNull(offer.getCategoryDto().getName(), "Category Name не должен быть null");
+            // проверяем pricePerHour
+            softAssert.assertTrue(offer.getPricePerHour() > 0, "price per hour must be positive");
 
-            // Проверяем пользователя
-            softAssert.assertNotNull(offer.getUserFilterResponseDto(), "User не должен быть null");
+            // проверяем description
+            softAssert.assertNotNull(offer.getDescription(), "description must not be null");
+            softAssert.assertFalse(offer.getDescription().isEmpty(), "description must not be empty");
+
+            // проверяем пользователя
+            softAssert.assertNotNull(offer.getUserFilterResponseDto(), "user must not be null");
 
             if (offer.getUserFilterResponseDto() != null) {
-                softAssert.assertNotNull(offer.getUserFilterResponseDto().getFirstName(), "FirstName не должен быть null");
-                softAssert.assertFalse(offer.getUserFilterResponseDto().getFirstName().isEmpty(), "FirstName не должен быть пустым");
+                // проверяем firstName
+                softAssert.assertNotNull(offer.getUserFilterResponseDto().getFirstName(), "firstName must not be null");
+                softAssert.assertFalse(offer.getUserFilterResponseDto().getFirstName().isEmpty(), "firstName must not be empty");
 
-                softAssert.assertNotNull(offer.getUserFilterResponseDto().getLocationDto(), "LocationResponseDto не должен быть null");
+                // проверяем lastName
+                softAssert.assertNotNull(offer.getUserFilterResponseDto().getLastName(), "lastName must not be null");
+                softAssert.assertFalse(offer.getUserFilterResponseDto().getLastName().isEmpty(), "lastName must not be empty");
+
+                // проверяем profilePicture
+                softAssert.assertNotNull(offer.getUserFilterResponseDto().getProfilePicture(), "profilePicture must not be null");
+                softAssert.assertFalse(offer.getUserFilterResponseDto().getProfilePicture().isEmpty(), "profilePicture must not be empty");
+
+                // проверяем locationDto
+                softAssert.assertNotNull(offer.getUserFilterResponseDto().getLocationDto(), "location must not be null");
 
                 if (offer.getUserFilterResponseDto().getLocationDto() != null) {
-                    softAssert.assertNotNull(offer.getUserFilterResponseDto().getLocationDto().getCityName(), "CityName не должен быть null");
-                    softAssert.assertFalse(offer.getUserFilterResponseDto().getLocationDto().getCityName().isEmpty(), "CityName не должен быть пустым");
+                    // проверяем cityName
+                    softAssert.assertNotNull(offer.getUserFilterResponseDto().getLocationDto().getCityName(), "cityName must not be null");
+                    softAssert.assertFalse(offer.getUserFilterResponseDto().getLocationDto().getCityName().isEmpty(), "cityName must not be empty");
                 }
-            }
-
-            // Проверяем изображения (если они есть)
-            List<String> images = offer.getImages(); // Список изображений (URL)
-
-            if (images != null && !images.isEmpty()) {
-                for (String imageUrl : images) {
-                    softAssert.assertNotNull(imageUrl, "Image URL не должен быть null");
-                    softAssert.assertFalse(imageUrl.isEmpty(), "Image URL не должен быть пустым");
-                }
-            } else {
-                logger.warn("⚠️ Оффер не содержит изображений!");
             }
 
             logger.info("---------------------------------------------------------");
             for (AllOffersResponseDto offerDto : offers) {
-                logger.info("Оффер => " + offerDto.getTitle() + ";");
+                logger.info("offer => " + offerDto.getTitle() + ";");
             }
         }
 
-        // Выполняем все SoftAssert проверки
+        // выполняем все SoftAssert проверки
         softAssert.assertAll();
     }
 }
