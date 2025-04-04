@@ -34,7 +34,7 @@ public class HomePage extends BasePage {
 
     public HomePage clickAllCategories() {
         wait.until(ExpectedConditions.elementToBeClickable(categoryDropdown)).click();
-        System.out.println("The click on the All Categories is executed");
+        logger.info("Clicked on the 'All Categories' dropdown");
         return this;
     }
 
