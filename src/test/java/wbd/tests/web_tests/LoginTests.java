@@ -1,13 +1,21 @@
 package wbd.tests.web_tests;
 
-import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
 import wbd.core.TestBaseUI;
 import wbd.utils.DataProviders;
 import wbd.web.data.UserData;
 import wbd.web.web_pages.LoginPage;
 
 public class LoginTests extends TestBaseUI {
+
+    private SoftAssert softAssert;
+
+    @BeforeMethod
+    public void setUpSoftAssert() {
+        softAssert = new SoftAssert();
+    }
 
     @Test
     public void loginPositiveTest() {
@@ -18,7 +26,8 @@ public class LoginTests extends TestBaseUI {
         loginPage.enterPassword("Password!123");
         loginPage.submitLogin();
 
-        Assert.assertTrue(loginPage.isSignOutButtonDisplayed(), "Sign Out button is not displayed!");
+        softAssert.assertTrue(loginPage.isSignOutButtonDisplayed(), "Sign Out button is not displayed!");
+        softAssert.assertAll();
     }
 
     @Test(dataProvider = "invalidPasswords", dataProviderClass = DataProviders.class)
@@ -30,7 +39,8 @@ public class LoginTests extends TestBaseUI {
         loginPage.enterPassword(invalidPassword);
         loginPage.submitLogin();
 
-        Assert.assertEquals(loginPage.getErrorMessageText(), "Invalid login or password.",
+        softAssert.assertEquals(loginPage.getErrorMessageText(), "Invalid login or password.",
                 "Error message mismatch for password: " + invalidPassword + " (" + errorDescription + ")");
+        softAssert.assertAll();
     }
 }
