@@ -1,8 +1,9 @@
 package wbd.tests.web_tests;
 
 import org.openqa.selenium.WebElement;
-import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
 import wbd.core.TestBaseUI;
 import wbd.web.web_pages.HeaderComponent;
 import wbd.web.web_pages.HomePage;
@@ -10,13 +11,24 @@ import wbd.web.web_pages.HomePage;
 import java.util.List;
 
 public class HeaderComponentTests extends TestBaseUI {
+
+    private SoftAssert softAssert;
+
+    @BeforeMethod
+    public void setUpSoftAssert() {
+        softAssert = new SoftAssert();
+    }
+
     @Test
     public void testCityDropdownOptions() {
-        HeaderComponent header = new HeaderComponent(app.driver,app.wait);
 
+        HeaderComponent header = new HeaderComponent(app.driver,app.wait);
+        
         List<WebElement> cities = header.getCityOptions();
-        Assert.assertTrue(cities.size() > 0, "Dropdown should contain cities");
-        Assert.assertEquals(cities.get(3).getText(), "Berlin");
+
+        softAssert.assertTrue(cities.size() > 0, "Dropdown should contain cities");
+        softAssert.assertEquals(cities.get(3).getText(), "Berlin");
+        softAssert.assertAll();
     }
 
     @Test
@@ -25,7 +37,8 @@ public class HeaderComponentTests extends TestBaseUI {
 
         header.selectCity("Berlin");
         String selectedCity = header.getSelectedCity();
-        Assert.assertEquals(selectedCity, "Berlin");
+        softAssert.assertEquals(selectedCity, "Berlin");
+        softAssert.assertAll();
     }
 
     @Test
@@ -33,17 +46,18 @@ public class HeaderComponentTests extends TestBaseUI {
         HeaderComponent header = new HeaderComponent(app.driver,app.wait);
         HomePage homePage = new HomePage(app.driver, app.wait);
 
-        // Select a city
+        // Выбор города
         header.selectCity("Berlin");
 
-        // Get all ad cards
+        // Получение всех карточек объявлений
         List<WebElement> adCards = homePage.getAdCards();
-        Assert.assertTrue(adCards.size() > 0, "Ad cards should be present after city selection");
+        softAssert.assertTrue(adCards.size() > 0, "Ad cards should be present after city selection");
 
-        // Verify each card contains "Berlin"
+        // Проверка, что каждая карточка содержит "Berlin"
         for (WebElement card : adCards) {
             String cityText = homePage.getCityFromCard(card);
-            Assert.assertEquals(cityText, "Berlin", "Each ad card should display 'Berlin'");
+            softAssert.assertEquals(cityText, "Berlin", "Each ad card should display 'Berlin'");
         }
+        softAssert.assertAll();
     }
 }
