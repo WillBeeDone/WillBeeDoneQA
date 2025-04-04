@@ -25,7 +25,6 @@ dependencies {
 
     // Allure для отчетности
     implementation 'io.qameta.allure:allure-testng:2.29.1' // для TestNG !
-    testImplementation 'io.qameta.allure:allure-selenide:2.29.1' // Логи и скриншоты
 
     // rest-assured
     implementation 'io.rest-assured:rest-assured:5.5.1'

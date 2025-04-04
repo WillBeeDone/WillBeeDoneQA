@@ -12,7 +12,7 @@ import java.util.List;
 public class HeaderComponentTests extends TestBaseUI {
     @Test
     public void testCityDropdownOptions() {
-        HeaderComponent header = new HeaderComponent(app.driver);
+        HeaderComponent header = new HeaderComponent(app.driver,app.wait);
 
         List<WebElement> cities = header.getCityOptions();
         Assert.assertTrue(cities.size() > 0, "Dropdown should contain cities");
@@ -21,7 +21,7 @@ public class HeaderComponentTests extends TestBaseUI {
 
     @Test
     public void testSelectCity() {
-        HeaderComponent header = new HeaderComponent(app.driver);
+        HeaderComponent header = new HeaderComponent(app.driver,app.wait);
 
         header.selectCity("Berlin");
         String selectedCity = header.getSelectedCity();
@@ -30,7 +30,7 @@ public class HeaderComponentTests extends TestBaseUI {
 
     @Test
     public void testAdCardsAfterCitySelection() {
-        HeaderComponent header = new HeaderComponent(app.driver);
+        HeaderComponent header = new HeaderComponent(app.driver,app.wait);
         HomePage homePage = new HomePage(app.driver, app.wait);
 
         // Select a city

@@ -1,16 +1,17 @@
 package wbd.tests.web_tests;
 
-import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import wbd.core.TestBaseUI;
 import wbd.utils.DataProviders;
 import wbd.web.data.UserData;
-import wbd.web.web_pages.LoginPage;
+import wbd.web.helpers.HelperMailTm;
 import wbd.web.web_pages.RegistrationPage;
 
 import java.io.IOException;
+
+import static wbd.web.helpers.HelperMailTm.getConfirmationLink;
 
 public class RegistrationTests extends TestBaseUI {
     private RegistrationPage registrationPage;
@@ -27,7 +28,7 @@ public class RegistrationTests extends TestBaseUI {
     public void Registration_PositiveTest() {
         String randomEmail = "test" + System.currentTimeMillis() + "@gmail.com";
 
-        new RegistrationPage(app.driver, app.wait)
+        registrationPage
                 .openRegistrationPage() // открываем страницу регистрации
                 .enterEmail(randomEmail) // вводим email
                 .enterPassword(UserData.VALID_PASSWORD) // вводим пароль
@@ -53,7 +54,7 @@ public class RegistrationTests extends TestBaseUI {
         for (String email : invalidEmails) {
             registrationPage.enterEmail(email);
             // проверяем, что отображается сообщение об ошибке
-            softAssert.assertTrue(registrationPage.isEmailValidationErrorDisplayed(), "No error for: " + email);
+            softAssert.assertTrue(registrationPage.isValidationErrorDisplayed("Incorrect email"), "No error for: " + email);
         }
         softAssert.assertAll();
     }
@@ -69,7 +70,7 @@ public class RegistrationTests extends TestBaseUI {
             registrationPage.enterPassword(invalidPassword);
             registrationPage.confirmPassword(invalidPassword);
             // проверяем, что появляется сообщение об ошибке
-            softAssert.assertTrue(registrationPage.isPasswordValidationErrorDisplayed(), "No error for: " + invalidPassword);
+            softAssert.assertTrue(registrationPage.isValidationErrorDisplayed("Must contains upper&lower"), "No error for: " + invalidPassword);
         }
         softAssert.assertAll();
     }
@@ -83,7 +84,7 @@ public class RegistrationTests extends TestBaseUI {
                 .enterEmail(invalidEmail);
 
         // фиксируем, что вернет метод проверки появилось сообщение об ошибке или нет
-        boolean isErrorDisplayed = registrationPage.isEmailValidationErrorDisplayed();
+        boolean isErrorDisplayed = registrationPage.isValidationErrorDisplayed("Incorrect email");
 
         logger.info(isErrorDisplayed
                 ? "✅ The error is displayed: " + errorDescription
@@ -100,7 +101,7 @@ public class RegistrationTests extends TestBaseUI {
                 .enterPassword(invalidPassword);
 
         // фиксируем, что вернет метод проверки появилось сообщение об ошибке или нет
-        boolean isErrorDisplayed = registrationPage.isPasswordValidationErrorDisplayed();
+        boolean isErrorDisplayed = registrationPage.isValidationErrorDisplayed("Must contains upper&lower");
 
         logger.info(isErrorDisplayed
                 ? "✅ The error is displayed: " + errorDescription
@@ -115,22 +116,23 @@ public class RegistrationTests extends TestBaseUI {
     // тест регистрации с временным email через mail.tm
     @Test
     public void RegistrationWithMailTmPositiveTest() throws IOException, InterruptedException {
-        String email = RegistrationPage.generateEmail(); // генерируем временный email
+        String email = HelperMailTm.generateEmail(); // генерируем временный email
         String password = UserData.VALID_PASSWORD;
 
-        registrationPage.openRegistrationPage();
-        registrationPage.enterEmail(email);
-        registrationPage.enterPassword(password);
-        registrationPage.confirmPassword(password);
-        registrationPage.checkAgreeBox();
-        registrationPage.submitRegistration();
+        registrationPage
+                .openRegistrationPage()
+                .enterEmail(email)
+                .enterPassword(password)
+                .confirmPassword(password)
+                .checkAgreeBox()
+                .submitRegistration();
 
         // проверяем появление алерта и его текст
         String alertText = registrationPage.getAlertTextAndAccept();
         softAssert.assertEquals(alertText, "Please, check your email.", "Alert text mismatch!");
 
         // получаем ссылку для подтверждения регистрации
-        String confirmationLink = RegistrationPage.getConfirmationLink(email);
+        String confirmationLink = getConfirmationLink(email);
         softAssert.assertNotNull(confirmationLink, "No confirmation link found!");
 
         // переходим по ссылке подтверждения

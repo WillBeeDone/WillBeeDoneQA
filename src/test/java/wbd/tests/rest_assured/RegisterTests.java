@@ -1,8 +1,6 @@
 package wbd.tests.rest_assured;
 
 import io.restassured.response.Response;
-import org.testng.Assert;
-import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import wbd.api.client.AuthClient;
