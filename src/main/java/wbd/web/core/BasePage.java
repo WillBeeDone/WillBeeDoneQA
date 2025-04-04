@@ -2,6 +2,7 @@ package wbd.web.core;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,7 @@ import java.nio.file.Files;
 import java.time.Duration;
 
 public class BasePage {
+
     public WebDriver driver;
     public WebDriverWait wait;
     public JavascriptExecutor js;
@@ -24,7 +26,6 @@ public class BasePage {
         this.js = (JavascriptExecutor) driver;
         PageFactory.initElements(driver,this);
     }
-
 
     public String takeScreenshot() {
 
@@ -39,7 +40,6 @@ public class BasePage {
         System.out.println("Screenshot saved to: [" + screenshot.getAbsolutePath() + "]");
         return screenshot.getAbsolutePath();
     }
-
 
     public void scrollTo(int y) {
         js.executeScript("window.scrollBy(0," + y + ")");
@@ -59,6 +59,41 @@ public class BasePage {
             Assert.assertTrue(isTextPresent, "Expected text: [" + text + "], actual text in element: [" + element.getText() + "]");
         } catch (TimeoutException e) {
             throw new AssertionError("Text not found in element: [" + element + "], expected text: [" + text + "]", e);
+        }
+    }
+
+    public void click(WebElement element,int y) {
+        scrollTo(y);
+        wait.until(ExpectedConditions.elementToBeClickable(element));
+        element.click();
+    }
+
+    // получаем текст алерта и закрываем его
+    public String getAlertTextAndAccept() {
+        wait.until(ExpectedConditions.alertIsPresent());  // ждем появления алерта
+        Alert alert = driver.switchTo().alert();  // переключаемся на алерт
+        String alertText = alert.getText();  // получаем текст алерта
+        alert.accept();  // принимаем алерт
+        return alertText;
+    }
+
+    // проверяем, что произошел редирект на главную страницу
+    public boolean isRedirectedToMainPage() {
+        return driver.getCurrentUrl().contains("#/");  // проверяем, что URL содержит "#/"
+    }
+
+    public boolean isRedirectedToLoginPage() {
+        return driver.getCurrentUrl().contains("#/login");
+    }
+
+    // проверяем, что отображается ошибка для некорректного email или  password
+    public boolean isValidationErrorDisplayed(String partialText) {
+        try {
+            wait.until(ExpectedConditions.visibilityOfElementLocated(
+                    By.xpath("//p[contains(text(),'" + partialText + "')]")));
+            return true;
+        } catch (Exception e) {
+            return false;
         }
     }
 }

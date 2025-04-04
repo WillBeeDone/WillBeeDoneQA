@@ -42,4 +42,6 @@ public class OfferResponseDto {
         private boolean unsorted;
         private boolean empty;
     }
+
 }
+
