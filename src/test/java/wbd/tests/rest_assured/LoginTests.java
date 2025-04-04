@@ -45,8 +45,8 @@ public class LoginTests extends TestBaseRA {
 
 
     //  баг-репорт
-    @Test(retryAnalyzer = RetryAnalyzer.class)
-    public void loginSuccessTest() {
+    @Test(retryAnalyzer = RetryAnalyzer.class,groups = "Positive")
+    public void loginSuccessTestPositive() {
         Response response = AuthClient.login(body);
         logger.info("Login response: {}", response.asString());
 
@@ -67,12 +67,12 @@ public class LoginTests extends TestBaseRA {
     }
 
     // баг-репорт
-    @Test
-    public void loginWrongPasswordTest() {
+    @Test(groups = "Negative")
+    public void loginWrongPasswordTestNegative() {
         Response loginResponse = AuthClient.login(errorBody);
         logger.info("Wrong password login response: {}", loginResponse.asString());
 
-        softAssert.assertEquals(loginResponse.getStatusCode(), 401, "Ожидается статус 401 Unauthorized");
+        softAssert.assertEquals(loginResponse.getStatusCode(), 401, "Status is expected 401 Unauthorized");
 
         softAssert.assertAll();
     }
