@@ -1,7 +1,6 @@
 package wbd.tests.web_tests;
 
 import org.openqa.selenium.WebElement;
-import org.testng.Assert;
 import org.testng.annotations.Test;
 import wbd.core.TestBaseUI;
 import wbd.web.web_pages.HomePage;
@@ -19,9 +18,6 @@ public class SearchTests extends TestBaseUI {
 
         // Ожидание загрузки карточек с категорией "Plumber"
         homePage.waitForAdCardsWithCategory("Plumber");
-
-        // Создаем экземпляр SoftAssert
-        SoftAssert softAssert = new SoftAssert();
 
         // Проверка наличия карточек
         List<WebElement> adCards = homePage.getAdCards();
