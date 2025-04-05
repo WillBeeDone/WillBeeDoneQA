@@ -91,4 +91,3 @@ public class RegistrationPage extends BasePage {
     // создаем временный e-mail перед регистрацией, используя сервис "Guerrilla Mail",
     // который дает временные e-mail через API
 }
-

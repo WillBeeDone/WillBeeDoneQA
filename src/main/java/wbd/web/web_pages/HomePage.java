@@ -18,20 +18,29 @@ public class HomePage extends BasePage {
 
     private static final Logger logger = LoggerFactory.getLogger(HomePage.class);
 
+    @FindBy(xpath = "//button[@type='button' and contains(text(),'Sign In')]")
+    WebElement signInButton;
+    @FindBy(xpath = "//button[@type='button' and text()='Sign Up']")
+    WebElement signUpButton;
     @FindBy(xpath = "(//select[@class='_dropdown_1sio9_1'])[2]")
     WebElement categoryDropdown;
 
     @FindBy(xpath = "//input[@placeholder='Enter keywords to search']")
-    private WebElement searchField;
-
+    WebElement searchField;
     @FindBy(xpath = "//button[contains(text(),'Go →')]")
-    private WebElement searchButton;
+    WebElement searchButton;
 
     public HomePage(WebDriver driver, WebDriverWait wait) {
         super(driver, wait);
     }
 
-    public HomePage clickAllCategories() {
+    public LoginPage getLoginPage() {
+        wait.until(ExpectedConditions.elementToBeClickable(signInButton)).click();
+        return new LoginPage(driver, wait);
+    }
+
+
+     public HomePage clickAllCategories() {
         wait.until(ExpectedConditions.elementToBeClickable(categoryDropdown)).click();
         logger.info("Clicked on the 'All Categories' dropdown");
         return this;
@@ -87,9 +96,4 @@ public class HomePage extends BasePage {
         });
     }
 
-
-    public LoginPage getLoginPage() {
-
-        return new LoginPage(driver, wait);
-    }
 }

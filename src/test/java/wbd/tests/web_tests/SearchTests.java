@@ -20,9 +20,6 @@ public class SearchTests extends TestBaseUI {
         // Ожидание загрузки карточек с категорией "Plumber"
         homePage.waitForAdCardsWithCategory("Plumber");
 
-        // Создаем экземпляр SoftAssert
-        SoftAssert softAssert = new SoftAssert();
-
         // Проверка наличия карточек
         List<WebElement> adCards = homePage.getAdCards();
         softAssert.assertTrue(adCards.size() > 0, "Ad cards should be present after search");
