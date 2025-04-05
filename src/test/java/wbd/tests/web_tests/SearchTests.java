@@ -2,6 +2,7 @@ package wbd.tests.web_tests;
 
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
 import wbd.core.TestBaseUI;
 import wbd.web.web_pages.HomePage;
 

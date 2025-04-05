@@ -86,7 +86,7 @@ public class BasePage {
         return driver.getCurrentUrl().contains("#/login");
     }
 
-    // проверяем, что отображается ошибка для некорректного email или  password
+    // проверяем, что отображается ошибка для некорректного email или password
     public boolean isValidationErrorDisplayed(String partialText) {
         try {
             wait.until(ExpectedConditions.visibilityOfElementLocated(
