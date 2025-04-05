@@ -2,26 +2,22 @@ package wbd.tests.web_tests;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import org.testng.asserts.SoftAssert;
 import wbd.core.TestBaseUI;
 import wbd.utils.DataProviders;
 import wbd.web.data.UserData;
+import wbd.web.web_pages.HomePage;
 import wbd.web.web_pages.LoginPage;
 
 public class LoginTests extends TestBaseUI {
-
-    private SoftAssert softAssert;
+    LoginPage loginPage;
 
     @BeforeMethod
-    public void setUpSoftAssert() {
-        softAssert = new SoftAssert();
+    public void precondition() {
+        loginPage = new HomePage(app.driver, app.wait).getLoginPage();
     }
 
     @Test
     public void loginPositiveTest() {
-        LoginPage loginPage = new LoginPage(app.driver, app.wait);
-
-        loginPage.openLoginPage();
         loginPage.enterEmail(UserData.VALID_EMAIL);
         loginPage.enterPassword("Password!123");
         loginPage.submitLogin();
@@ -34,7 +30,6 @@ public class LoginTests extends TestBaseUI {
     public void loginWrongPasswordNegativeTest(String invalidPassword, String errorDescription) {
         LoginPage loginPage = new LoginPage(app.driver, app.wait);
 
-        loginPage.openLoginPage();
         loginPage.enterEmail(UserData.VALID_EMAIL);
         loginPage.enterPassword(invalidPassword);
         loginPage.submitLogin();

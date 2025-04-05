@@ -12,7 +12,7 @@ import java.util.List;
 public class HeaderComponent extends BasePage {
 
     @FindBy(xpath = "(//select[@class='_dropdown_1sio9_1'])[1]")
-    private WebElement cityDropdown;
+    WebElement cityDropdown;
 
     public HeaderComponent(WebDriver driver, WebDriverWait wait) {
         super(driver, wait);
