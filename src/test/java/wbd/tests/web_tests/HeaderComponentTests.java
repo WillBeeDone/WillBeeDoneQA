@@ -1,9 +1,7 @@
 package wbd.tests.web_tests;
 
 import org.openqa.selenium.WebElement;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import org.testng.asserts.SoftAssert;
 import wbd.core.TestBaseUI;
 import wbd.web.web_pages.HeaderComponent;
 import wbd.web.web_pages.HomePage;
@@ -12,12 +10,6 @@ import java.util.List;
 
 public class HeaderComponentTests extends TestBaseUI {
 
-    private SoftAssert softAssert;
-
-    @BeforeMethod
-    public void setUpSoftAssert() {
-        softAssert = new SoftAssert();
-    }
 
     @Test
     public void testCityDropdownOptions() {

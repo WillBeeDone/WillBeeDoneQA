@@ -21,8 +21,7 @@ import java.util.Set;
 import static wbd.web.helpers.HelperMailTm.getConfirmationLink;
 
 public class RegistrationTests extends TestBaseUI {
-    private RegistrationPage registrationPage;
-    SoftAssert softAssert = new SoftAssert();
+    RegistrationPage registrationPage;
 
     // инициализация страницы регистрации перед выполнением тестов
     @BeforeMethod
