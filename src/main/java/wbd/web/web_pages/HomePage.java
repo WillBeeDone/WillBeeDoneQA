@@ -72,15 +72,15 @@ public class HomePage extends BasePage {
     }
 
     public List<WebElement> getAdCards() {
-        return driver.findElements(By.cssSelector("._offerContainer_1h601_5"));
+        return driver.findElements(By.cssSelector("._offerContainer_jbegn_11"));
     }
 
     public String getCityFromCard(WebElement card) {
-        return card.findElement(By.cssSelector("._location_1h601_100")).getText();
+        return card.findElement(By.cssSelector("._location_jbegn_143")).getText();
     }
 
     public String getCategoryFromCard(WebElement card) {
-        return card.findElement(By.cssSelector("._category_1h601_87")).getText();
+        return card.findElement(By.cssSelector("._category_jbegn_130")).getText();
     }
 
     // Новый метод для ожидания загрузки карточек с нужной категорией
