@@ -69,7 +69,7 @@ public class GetApiSecurityTests extends TestBaseRA {
                 .log().all()
                 .extract().response();
 
-        // статус 404 с использованием SoftAssert
+        // статус 404
         softAssert.assertEquals(response.getStatusCode(), 404, "Expected Not Found (404) error from the server");
 
         if (response.getStatusCode() == 404) {

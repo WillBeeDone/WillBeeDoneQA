@@ -88,4 +88,33 @@ public class GetLocationsTest extends TestBaseRA {
         logger.info("Received status code " + response.getStatusCode() + " for GET request to /locations with unexpected query param");
         softAssert.assertAll();
     }
+
+    @Test
+    public void testGetOffersWithInvalidCityName_Returns400() {
+        // отправляем GET-запрос с некорректным значением для cityName (например, числовая строка)
+        Response response = given()
+                .queryParam("cityName", "123")
+                .when()
+                .get("/locations")  // отправляем запрос на эндпоинт получения офферов
+                .then()
+                .log().all()  // логируем полный ответ для отладки
+                .extract()
+                .response();
+
+        SoftAssert softAssert = new SoftAssert();
+
+        // Ожидается, что API вернет статус 400 Bad Request, так как передан некорректный параметр cityName
+        softAssert.assertEquals(response.getStatusCode(), 400, "Expected status code 400 for GET request to /api/offers with invalid cityName");
+
+        // Логируем статус ответа
+        logger.info("Received status code " + response.getStatusCode() + " for GET request to /api/offers with invalid cityName");
+
+        // Если API возвращает сообщение об ошибке, можно проверить его
+        String errorMessage = response.jsonPath().getString("error");
+        softAssert.assertTrue(errorMessage.contains("Invalid cityName"), "Error message does not match");
+
+        // Выполняем все проверки
+        softAssert.assertAll();
+    }
+
 }

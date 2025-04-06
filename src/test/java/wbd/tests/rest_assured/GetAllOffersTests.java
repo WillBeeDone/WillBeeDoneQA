@@ -1,5 +1,6 @@
 package wbd.tests.rest_assured;
 
+import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
@@ -8,6 +9,8 @@ import wbd.core.TestBaseRA;
 import wbd.api.dto.AllOffersResponseDto;
 
 import java.util.List;
+
+import static io.restassured.RestAssured.given;
 
 public class GetAllOffersTests extends TestBaseRA {
 
@@ -96,4 +99,100 @@ public class GetAllOffersTests extends TestBaseRA {
         // выполняем все SoftAssert проверки
         softAssert.assertAll();
     }
+
+    // баг-репорт, сервер возвращает 200
+    @Test
+    public void testGetAllOffersWithInvalidQueryParam_Location() {
+        // отправляем GET-запрос с некорректным значением для cityName (например, числовая строка)
+        Response response = given()
+                .queryParam("cityName", "123")
+                .when()
+                .get("/offers/all")
+                .then()
+                .log().all()
+                .extract()
+                .response();
+
+        SoftAssert softAssert = new SoftAssert();
+
+        // ожидается, что API вернет статус 400 Bad Request, так как передан некорректный параметр cityName
+        softAssert.assertEquals(response.getStatusCode(), 400,
+                "Expected 400 for invalid cityName in GET /offers/all");
+
+        // проверка наличия сообщения об ошибке, если оно есть
+        String errorMessage = response.jsonPath().getString("error");
+        if (errorMessage != null) {
+            softAssert.assertTrue(errorMessage.toLowerCase().contains("cityname"),
+                    "Error message should mention 'cityName'");
+        } else {
+            logger.warn("⚠ Error message is null — server may not provide error details");
+        }
+
+        logger.info("Received status code " + response.getStatusCode() +
+                " for GET /offers/all with invalid cityName");
+
+        softAssert.assertAll();
+    }
+
+    // баг репорт, сервер возвращает 200
+    @Test
+    public void testGetAllOffersWithInvalidQueryParam_Category() {
+        // Отправляем запрос через API-клиент с некорректным значением категории
+        Response response = given()
+                .queryParam("category", "nonexistent-category")  // Некорректная категория
+                .when()
+                .get("/offers/all")
+                .then()
+                .log().all()  // Логируем все данные для отладки
+                .extract()
+                .response();
+
+        SoftAssert softAssert = new SoftAssert();
+
+        // Проверяем, что возвращается ошибка 400 Bad Request при передаче некорректной категории
+        softAssert.assertEquals(response.getStatusCode(), 400,
+                "Expected status code 400 for invalid category in GET request to /offers/all");
+
+        // Проверяем, что ошибка содержит упоминание категории, если она есть в сообщении
+        if (response.getStatusCode() == 400 && response.getContentType().contains("application/json")) {
+            String errorMessage = response.jsonPath().getString("error");
+            softAssert.assertTrue(errorMessage != null && errorMessage.toLowerCase().contains("category"),
+                    "Error message should mention 'category'");
+            logger.info("Received error message: " + errorMessage);
+        }
+
+        // Выполняем все проверки
+        softAssert.assertAll();
+    }
+
+    @Test
+    public void testGetAllOffersWithInvalidQueryParam_PricePerHour() {
+        // отправляем запрос с некорректным значением для pricePerHour (например, строка вместо числа)
+        Response response = given()
+                .queryParam("pricePerHour", "invalid-price")  // Некорректное значение для pricePerHour
+                .when()
+                .get("/offers/all")  // Новый эндпоинт для получения офферов
+                .then()
+                .log().all()  // Логируем полный ответ для отладки
+                .extract()
+                .response();
+
+        SoftAssert softAssert = new SoftAssert();
+
+        // Ожидаем, что API вернет статус 400 Bad Request
+        softAssert.assertEquals(response.getStatusCode(), 400, "Expected status code 400 for invalid pricePerHour");
+
+        // Проверяем сообщение об ошибке, чтобы оно содержало информацию о некорректном параметре pricePerHour
+        if (response.getStatusCode() == 400) {
+            String errorMessage = response.jsonPath().getString("error");
+            softAssert.assertTrue(errorMessage != null && errorMessage.toLowerCase().contains("priceperhour"),
+                    "Error message should mention 'pricePerHour'");
+        }
+
+        softAssert.assertAll();
+    }
+
+
+
+
 }
