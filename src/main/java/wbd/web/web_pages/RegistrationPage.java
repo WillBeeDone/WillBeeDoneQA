@@ -4,16 +4,11 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import wbd.web.core.BasePage;
 
 
 public class RegistrationPage extends BasePage {
 
-    public static Logger logger = LoggerFactory.getLogger(RegistrationPage.class);
-
-    // инициализация элементов страницы с помощью PageFactory
     @FindBy(xpath = "//button[@type='button' and text()='Sign Up']")
     private WebElement signUpButton;
 

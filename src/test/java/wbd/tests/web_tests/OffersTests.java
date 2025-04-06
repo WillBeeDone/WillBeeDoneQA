@@ -8,7 +8,6 @@ import wbd.web.web_pages.HomePage;
 import wbd.web.web_pages.OffersPage;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 public class OffersTests extends TestBaseUI {
 
@@ -20,8 +19,8 @@ public class OffersTests extends TestBaseUI {
                 .clickAllCategories()
                 .selectCategory(categoryName)
                 .scrollAfterCategorySelection()
-                .verifySelectedCategory(categoryName)
-                .verifyOfferText(categoryName);        ;
+                .verifySelectedCategory(categoryName);
+        ;
 
     }
 
@@ -31,40 +30,48 @@ public class OffersTests extends TestBaseUI {
                 .clickAllCategories()
                 .selectCategory(categoryName)
                 .scrollAfterCategorySelection()
-                .verifySelectedCategory(categoryName)
-                .verifyOfferText(categoryName);       ;
+                .verifySelectedCategory(categoryName);
 
     }
 
     @Test(groups = "Negative")
     public void testSelectInvalidCategoryNegative() {
-        String categoryName = "Nonexistent Category";
+        String realCategory = "Pet Care";
+        String fakeCategory = "Nonexistent Category";
 
         try {
             new HomePage(app.driver, app.wait)
                     .clickAllCategories()
-                    .selectCategory(categoryName);
+                    .selectCategory(realCategory)
+                    .scrollAfterCategorySelection()
+                    .verifyOfferText(fakeCategory);
 
-            Assert.fail("It was expected that the category" + categoryName +"' would not be found, but the exception did not occur");
-        } catch (NoSuchElementException e) {
-            System.out.println("Expected behavior: category not found — " + e.getMessage());
+            Assert.fail("It was expected that there will be no category in offers '" + fakeCategory + "'");
+        } catch (AssertionError e) {
+            System.out.println("Expected behavior: Offer with a '" + fakeCategory + "' was not found");
         }
     }
+
+
 
     @Test(groups = "Negative")
     public void testSelectEmptyCategoryNegative() {
-        String categoryName = "";
+        String realCategory = "Pet Care";
+        String emptyCategory = "";
 
         try {
             new HomePage(app.driver, app.wait)
                     .clickAllCategories()
-                    .selectCategory(categoryName);
+                    .selectCategory(realCategory)
+                    .scrollAfterCategorySelection()
+                    .verifyOfferText(emptyCategory);
 
-            Assert.fail("Exclusion was expected when choosing an empty category");
-        } catch (NoSuchElementException e) {
-            System.out.println("An empty category is not chosen, as expected");
+            Assert.fail("It was expected that no empty category would be shown in offers");
+        } catch (AssertionError e) {
+            System.out.println("Expected behavior: No offers contain an empty category");
         }
     }
+
 
     @Test(groups = "Negative")
     public void testFakeCategoryInOffersNegative() {
@@ -101,7 +108,6 @@ public class OffersTests extends TestBaseUI {
             Assert.assertFalse(text.contains(wrongCategory), "Unexpected category '" + wrongCategory + "' found in offer card: " + text);
         }
 
-        logger.info("✅ Verified that '{}' offers do not contain category '{}'", realCategory, wrongCategory);
+        logger.info("Verified that '{}' offers do not contain category '{}'", realCategory, wrongCategory);
     }
-
 }

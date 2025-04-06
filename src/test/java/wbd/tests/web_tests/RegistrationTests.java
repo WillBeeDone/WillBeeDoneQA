@@ -2,7 +2,6 @@ package wbd.tests.web_tests;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import org.testng.asserts.SoftAssert;
 import wbd.core.TestBaseUI;
 import wbd.utils.DataProviders;
 import wbd.web.data.UserData;

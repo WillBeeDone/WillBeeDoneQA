@@ -31,10 +31,23 @@ public class OffersPage extends BasePage {
     }
 
 
+    @FindBy(xpath = "//p[contains(@class,'_category') and text()]")
+    List<WebElement> offerCategoryTitles;
     public OffersPage verifySelectedCategory(String categoryName) {
-        String selected = new Select(categoryDropdown).getFirstSelectedOption().getText().trim();
-        logger.info("Selected category (from dropdown): {}", selected);
-        Assert.assertEquals(selected, categoryName, "Dropdown selection doesn't match category");
+        boolean found = false;
+
+        for (WebElement categoryTitle : offerCategoryTitles) {
+            String actual = categoryTitle.getText().trim();
+            logger.info("🔍 Category found in offer card: {}", actual);
+
+            if (actual.equalsIgnoreCase(categoryName)) {
+                found = true;
+                break;
+            }
+        }
+
+        Assert.assertTrue(found, "❌ Category '" + categoryName + "' was not found in offer cards");
+        logger.info("✅ Category '{}' successfully found among offers", categoryName);
         return this;
     }
 
