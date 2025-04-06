@@ -18,6 +18,9 @@ public class LoginPage extends BasePage {
     @FindBy(xpath = "//button[@type='submit' and contains(text(),'Sign in')]")
     WebElement submitButton;
 
+    @FindBy(xpath = "//button[@type='button' and contains(text(),'Sign In')]")
+    WebElement signInButton;
+
     @FindBy(xpath = "//button[contains(text(),'SignOut')]")
     WebElement signOutButton;
 
@@ -29,6 +32,10 @@ public class LoginPage extends BasePage {
 
     public LoginPage(WebDriver driver, WebDriverWait wait) {
         super(driver, wait);
+    }
+
+    public void openLoginPage() {
+        signInButton.click();
     }
 
     public void enterEmail(String email) {

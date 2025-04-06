@@ -9,15 +9,11 @@ import wbd.web.web_pages.HomePage;
 import wbd.web.web_pages.LoginPage;
 
 public class LoginTests extends TestBaseUI {
-    LoginPage loginPage;
-
-    @BeforeMethod
-    public void precondition() {
-        loginPage = new HomePage(app.driver, app.wait).getLoginPage();
-    }
 
     @Test
     public void loginPositiveTest() {
+        LoginPage loginPage = new LoginPage(app.driver, app.wait);
+        loginPage.openLoginPage();
         loginPage.enterEmail(UserData.VALID_EMAIL);
         loginPage.enterPassword("Password!123");
         loginPage.submitLogin();
