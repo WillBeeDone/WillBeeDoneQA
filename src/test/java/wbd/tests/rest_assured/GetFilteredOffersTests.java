@@ -2,11 +2,9 @@ package wbd.tests.rest_assured;
 
 import io.restassured.response.Response;
 import org.testng.annotations.Test;
-import org.testng.asserts.SoftAssert;
 import wbd.api.client.get.ApiClient_GetFilterOffers;
-import wbd.core.TestBaseRA;
 import wbd.api.dto.FilteredOffersResponseDto;
-
+import wbd.core.TestBaseRA;
 
 import java.util.List;
 
@@ -25,8 +23,6 @@ public class GetFilteredOffersTests extends TestBaseRA {
 
         // парсим JSON в список
         List<FilteredOffersResponseDto> filteredOffers = response.jsonPath().getList("contain", FilteredOffersResponseDto.class);
-
-        SoftAssert softAssert = new SoftAssert();
 
         // проверяем статус 200
         response.then().statusCode(200);

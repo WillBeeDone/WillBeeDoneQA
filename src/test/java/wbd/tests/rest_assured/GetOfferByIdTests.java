@@ -22,8 +22,6 @@ public class GetOfferByIdTests extends TestBaseRA {
         Response response = ApiClient_GetOfferById.getOfferById(offerId); // получаем оффер по ID
         logger.info("Response body: " + response.asString());
 
-        SoftAssert softAssert = new SoftAssert();
-
         // проверка статуса 200 OK
         softAssert.assertEquals(response.getStatusCode(), 200, "Expected status code 200");
 

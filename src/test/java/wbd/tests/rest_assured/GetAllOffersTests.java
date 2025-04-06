@@ -1,12 +1,11 @@
 package wbd.tests.rest_assured;
 
-import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import wbd.api.client.get.ApiClient_GetAllOffers;
-import wbd.core.TestBaseRA;
 import wbd.api.dto.AllOffersResponseDto;
+import wbd.core.TestBaseRA;
 
 import java.util.List;
 
@@ -22,8 +21,6 @@ public class GetAllOffersTests extends TestBaseRA {
         // отправляем GET-запрос на получение всех офферов
         Response response = ApiClient_GetAllOffers.getAllOffers();
         logger.info("response body: " + response.asString());
-
-        SoftAssert softAssert = new SoftAssert();
 
         // проверяем статус-код 200 OK
         softAssert.assertEquals(response.getStatusCode(), 200, "expected status code 200");

@@ -19,8 +19,7 @@ public class OffersTests extends TestBaseUI {
                 .clickAllCategories()
                 .selectCategory(categoryName)
                 .scrollAfterCategorySelection()
-                .verifySelectedCategory(categoryName);
-        ;
+                .verifySelectedCategory(categoryName);       ;
 
     }
 

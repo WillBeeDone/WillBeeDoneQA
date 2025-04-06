@@ -4,12 +4,15 @@ import io.restassured.RestAssured;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeMethod;
+import org.testng.asserts.SoftAssert;
 
 public class TestBaseRA {
 
     protected static final Logger logger = LoggerFactory.getLogger(TestBaseRA.class);
     protected static String accessToken;
     protected static String refreshToken;
+
+    public SoftAssert softAssert = new SoftAssert();
 
     public static String getAccessToken() {
         return accessToken;
