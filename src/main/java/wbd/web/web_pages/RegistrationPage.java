@@ -27,6 +27,12 @@ public class RegistrationPage extends BasePage {
     @FindBy(xpath = "//button[@type='submit' and text()='Sign up']")
     private WebElement submitButton;
 
+    @FindBy(xpath = "//a[contains(@href, 'sign-in-form') and contains(normalize-space(), 'Sign In')]")
+    private WebElement signInLink;
+
+    @FindBy(xpath = "//button[@data-testid='MyButtonSignIn_JuhYt']")
+    private WebElement signInButton;
+
     //  =====================================
     public RegistrationPage(WebDriver driver, WebDriverWait wait) {
         super(driver, wait);
@@ -74,6 +80,18 @@ public class RegistrationPage extends BasePage {
         return this;
     }
 
+    // кликаем на ссылку "Sign In"
+    public RegistrationPage clickOnRegistrationLink() {
+        signInLink.click();
+        return this;
+    }
+
+    public RegistrationPage clickSingInButton() {
+        signInButton.click(); // теперь кликаем по настоящей кнопке входа
+        return this;
+    }
+
+
     // получаем текст алерта и закрываем его -> в BasePage
 
     // проверяем, что произошел редирект на главную страницу -> в BasePage
@@ -81,8 +99,6 @@ public class RegistrationPage extends BasePage {
     // проверяем, что отображается ошибка для некорректного email
     // - isEmailValidationErrorDisplayed(), isPasswordValidationErrorDisplayed() → теперь один универсальный метод в BasePage
 
-    //======================= EmailHelper ==========================  -> в EmailHelper
 
-    // создаем временный e-mail перед регистрацией, используя сервис "Guerrilla Mail",
-    // который дает временные e-mail через API
 }
+
