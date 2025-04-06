@@ -45,6 +45,11 @@ public class BasePage {
         js.executeScript("window.scrollBy(0," + y + ")");
     }
 
+    public void scrollToElement(WebElement element) {
+        js.executeScript("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element);
+    }
+
+
     protected void shouldHaveText(WebElement element, String text, int timeout) {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofMillis(timeout));
         try {
@@ -62,19 +67,24 @@ public class BasePage {
         }
     }
 
-    public void click(WebElement element,int y) {
-        scrollTo(y);
-        wait.until(ExpectedConditions.elementToBeClickable(element));
+    public void click(WebElement element) {
+        scrollToElement(element);
         element.click();
     }
 
     // получаем текст алерта и закрываем его
     public String getAlertTextAndAccept() {
-        wait.until(ExpectedConditions.alertIsPresent());  // ждем появления алерта
-        Alert alert = driver.switchTo().alert();  // переключаемся на алерт
-        String alertText = alert.getText();  // получаем текст алерта
-        alert.accept();  // принимаем алерт
-        return alertText;
+        try {
+            WebDriverWait shortWait = new WebDriverWait(driver, Duration.ofSeconds(5));
+            Alert alert = shortWait.until(ExpectedConditions.alertIsPresent());
+            String text = alert.getText();
+            logger.info("Alert text: " + text);
+            alert.accept();
+            return text;
+        } catch (TimeoutException | NoAlertPresentException e) {
+            logger.warn("Alert not found: " + e.getMessage());
+            return null;
+        }
     }
 
     // проверяем, что произошел редирект на главную страницу
@@ -83,7 +93,8 @@ public class BasePage {
     }
 
     public boolean isRedirectedToLoginPage() {
-        return driver.getCurrentUrl().contains("#/login");
+        return wait.until(ExpectedConditions.urlMatches(".*/#/(login|sign-in-form).*"));
+
     }
 
     // проверяем, что отображается ошибка для некорректного email или password
