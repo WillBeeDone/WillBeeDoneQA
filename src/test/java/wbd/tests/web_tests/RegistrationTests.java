@@ -1,10 +1,8 @@
 package wbd.tests.web_tests;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import wbd.core.TestBaseUI;
@@ -14,8 +12,6 @@ import wbd.web.helpers.HelperMailTm;
 import wbd.web.web_pages.RegistrationPage;
 
 import java.io.IOException;
-import java.time.Duration;
-import java.util.Set;
 
 import static wbd.web.helpers.HelperMailTm.getConfirmationLink;
 
