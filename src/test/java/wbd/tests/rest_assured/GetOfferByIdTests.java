@@ -4,16 +4,22 @@ import io.restassured.response.Response;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import wbd.api.client.get.ApiClient_GetOfferById;
+import wbd.api.client.get.ApiClient_GetOffers;
+import wbd.api.dto.OfferDto;
+import wbd.api.dto.OfferResponseDto;
 import wbd.core.TestBaseRA;
-import wbd.api.dto.FilteredOffersResponseDto;
 
 import static io.restassured.RestAssured.given;
 
+// позитивный тест проверяет, что API корректно возвращает список всех офферов.
+// негативные тесты предназначены для проверки ошибок, связанных с неверными или отсутствующими данными, которые могут быть получены от сервера при запросах по ID оффера.
+
 public class GetOfferByIdTests extends TestBaseRA {
+
+    // тест проверяет, что API корректно возвращает оффер по указанному ID (в данном случае, ID = 1). Мы проверяем, что оффер существует, и проверяем его поля, такие как title, description, pricePerHour, и категорию
 
     @Test
     public void testGetOfferById() {
-
         logger.info("Start testing GetOfferById");
         logger.info("=============================================");
 
@@ -33,8 +39,8 @@ public class GetOfferByIdTests extends TestBaseRA {
             logger.error("Error: Received response with code " + response.getStatusCode());
         }
 
-        // парсим JSON в объект FilteredOffersResponseDto
-        FilteredOffersResponseDto offer = response.as(FilteredOffersResponseDto.class);
+        // парсим JSON в объект OfferDto
+        OfferDto offer = response.as(OfferDto.class);
 
         softAssert.assertNotNull(offer, "Offer must not be null");
 
@@ -47,7 +53,7 @@ public class GetOfferByIdTests extends TestBaseRA {
 
         softAssert.assertTrue(offer.getPricePerHour() > 0, "The price has to be positive");
 
-        // проверка categoryResponseDto как объекта
+        // проверка categoryDto как объекта
         softAssert.assertNotNull(offer.getCategoryDto(), "Category must not be null");
         softAssert.assertNotNull(offer.getCategoryDto().getName(), "Category Name must not be null");
         softAssert.assertTrue(!offer.getCategoryDto().getName().isEmpty(), "Category name must not be empty");
@@ -71,56 +77,46 @@ public class GetOfferByIdTests extends TestBaseRA {
             }
         }
 
-        // проверка на наличие хотя бы одного изображения
-        if (offer.getImages() != null && !offer.getImages().isEmpty()) {
-            softAssert.assertNotNull(offer.getImages().get(0).getImageUrl(), "ImageUrl must not be null");
-            softAssert.assertTrue(!offer.getImages().get(0).getImageUrl().isEmpty(), "ImageUrl must not be empty");
-        }
-
         softAssert.assertAll();
     }
 
+    // ================= негативные тесты ====================
+
     @Test
     public void testGetOfferById_InvalidId() {
-        int invalidId = -1; // некорректный ID
+        int invalidId = -1; // Некорректный ID
         Response response = ApiClient_GetOfferById.getOfferById(invalidId);
 
         SoftAssert softAssert = new SoftAssert();
-        softAssert.assertNotEquals(response.getStatusCode(), 200, "An error is expected for an invalid ID");
+        softAssert.assertNotEquals(response.getStatusCode(), 200, "Ожидается ошибка для некорректного ID");
 
         softAssert.assertAll();
     }
 
     @Test
     public void testGetOfferByNonExistentId_404() {
-        int nonExistentOfferId = 9999;  // предположим, что такого оффера нет
-        Response response = ApiClient_GetOfferById.getOfferById(nonExistentOfferId); // получаем оффер по несуществующему ID
+        int nonExistentOfferId = 9999;  // Предположим, что такого оффера нет
+        Response response = ApiClient_GetOfferById.getOfferById(nonExistentOfferId);
 
         SoftAssert softAssert = new SoftAssert();
-
-        // проверка, что сервер вернул 404 (Not Found)
-        softAssert.assertEquals(response.getStatusCode(), 404, "Expected status code 404 for non-existent offer");
-
-        if (response.getStatusCode() == 404) {
-            logger.error("Error: Received response with code 404 (Not Found)");
-        }
+        softAssert.assertEquals(response.getStatusCode(), 404, "Ожидается статус 404 для несуществующего оффера");
 
         softAssert.assertAll();
     }
 
-    @Test  // написать баг-репорт
+    @Test
     public void testGetOffersByInvalidId_400() {
-        // запрос с несуществующим или неправильным параметром ID
+        // Запрос с неверным форматом ID
         Response response = given()
                 .when()
                 .get("/offers/invalid-id")
                 .then()
-                .statusCode(400)  // проверка на статус 400
+                .statusCode(400)  // Ожидаем ошибку 400
                 .log().all()
                 .extract().response();
 
         if (response.getStatusCode() == 400) {
-            logger.info("The test was successful: Received a response with code 400 (Bad Request)");
+            logger.info("Тест прошел успешно: Получен ответ с кодом 400 (Bad Request)");
         }
     }
 
