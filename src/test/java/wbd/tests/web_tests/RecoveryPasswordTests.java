@@ -179,7 +179,7 @@ public class RecoveryPasswordTests extends TestBaseUI {
 
         // Баг: пароль успешно изменён, хотя он совпадает со старым
         if (alertText != null && alertText.toLowerCase().contains("successfully")) {
-            logger.error("❗ BUG: Old password was accepted and changed successfully — this should be disallowed!");
+            logger.error("BUG: Old password was accepted and changed successfully — this should be disallowed!");
         }
 
         // Проверка, что alert НЕ содержит сообщение об успешной смене
