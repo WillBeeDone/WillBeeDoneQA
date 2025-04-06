@@ -1,11 +1,9 @@
 package wbd.tests.rest_assured;
 
 import io.restassured.response.Response;
-import org.testng.Assert;
 import org.testng.annotations.Test;
 import wbd.core.TestBaseRA;
 import wbd.utils.DataProviders;
-import org.testng.asserts.SoftAssert;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.not;
@@ -13,8 +11,6 @@ import static org.hamcrest.Matchers.*;
 
 
 public class GetApiSecurityTests extends TestBaseRA {
-    SoftAssert softAssert = new SoftAssert();
-
     // Задача проверки:
     // Подставляем вредоносные строки в query-параметры (в category, priceFrom, location)
     //Проверяем:

@@ -3,7 +3,6 @@ package wbd.tests.rest_assured;
 import io.restassured.response.Response;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.testng.asserts.SoftAssert;
 import wbd.api.client.AuthClient;
 import wbd.api.dto.AuthRequestDto;
 import wbd.api.dto.TokenResponseDto;
@@ -11,8 +10,6 @@ import wbd.core.TestBaseRA;
 import wbd.utils.RetryAnalyzer;
 
 public class LoginTests extends TestBaseRA {
-    SoftAssert softAssert = new SoftAssert();
-
     private final String validEmail = "john@gmail.com"; // подтверждённый пользователь
     private final String validPassword = "11111111";
     private final String invalidPassword = "111111112";
