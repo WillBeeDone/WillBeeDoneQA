@@ -11,7 +11,6 @@ import wbd.utils.DataProviders;
 
 public class RegisterTests extends TestBaseRA {
 
-    SoftAssert softAssert = new SoftAssert();
     String uniqueEmail = "user" + System.currentTimeMillis() + "@mail.com";
 
 

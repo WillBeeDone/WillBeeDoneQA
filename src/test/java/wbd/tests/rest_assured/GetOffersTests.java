@@ -22,7 +22,6 @@ public class GetOffersTests extends TestBaseRA {
         // отправляем GET-запрос на получение всех офферов
         Response response = ApiClient_GetOffers.getOffers();
         logger.info("Response body: " + response.asString());
-        SoftAssert softAssert = new SoftAssert();
 
         // проверяем статус-код 200 OK
         softAssert.assertEquals(response.getStatusCode(), 200, "Expected status code 200");

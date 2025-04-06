@@ -24,8 +24,6 @@ public class GetLocationsTest extends TestBaseRA {
         Response response = ApiClient_GetLocations.getLocations();
         logger.info("Response body: " + response.asString());
 
-        SoftAssert softAssert = new SoftAssert();
-
         // проверяем, что статус ответа 200 OK
         softAssert.assertEquals(response.getStatusCode(), 200, "Expected status code 200");
 
