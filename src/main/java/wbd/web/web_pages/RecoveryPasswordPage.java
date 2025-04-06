@@ -41,7 +41,7 @@ public class RecoveryPasswordPage extends BasePage {
 
     public RecoveryPasswordPage clickSaveNewPasswordButton() {
         wait.until(ExpectedConditions.elementToBeClickable(saveNewPasswordButton));
-        click(saveNewPasswordButton);
+        clickToElement(saveNewPasswordButton);
         return this;
     }
 

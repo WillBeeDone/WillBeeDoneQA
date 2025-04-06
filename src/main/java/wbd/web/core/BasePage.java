@@ -67,11 +67,15 @@ public class BasePage {
         }
     }
 
-    public void click(WebElement element) {
+    public void click(WebElement element,int y) {
+        scrollTo(y);
+        wait.until(ExpectedConditions.elementToBeClickable(element));
+        element.click();
+    }
+    public void clickToElement(WebElement element) {
         scrollToElement(element);
         element.click();
     }
-
     // получаем текст алерта и закрываем его
     public String getAlertTextAndAccept() {
         try {
