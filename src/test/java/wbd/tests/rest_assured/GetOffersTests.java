@@ -10,6 +10,8 @@ import wbd.api.dto.OfferDto;
 
 import java.util.List;
 
+import static io.restassured.RestAssured.given;
+
 public class GetOffersTests extends TestBaseRA {
 
     @Test
@@ -82,8 +84,8 @@ public class GetOffersTests extends TestBaseRA {
                 logger.info("Offer => " + offerDto.getTitle() + ";");
             }
         }
-
         // выполняем все SoftAssert проверки
         softAssert.assertAll();
     }
+
 }
