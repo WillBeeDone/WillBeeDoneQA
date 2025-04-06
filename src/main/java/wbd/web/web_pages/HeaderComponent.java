@@ -11,7 +11,7 @@ import java.util.List;
 
 public class HeaderComponent extends BasePage {
 
-    @FindBy(xpath = "(//select[@class='_dropdown_1sio9_1'])[1]")
+    @FindBy(css = "select[data-testid='DropDownLocationHeader_HfZydgG']")
     WebElement cityDropdown;
 
     public HeaderComponent(WebDriver driver, WebDriverWait wait) {
