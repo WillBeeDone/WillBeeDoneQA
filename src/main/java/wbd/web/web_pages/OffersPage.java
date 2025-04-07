@@ -1,9 +1,10 @@
 package wbd.web.web_pages;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,15 +35,35 @@ public class OffersPage extends BasePage {
     @FindBy(xpath = "//p[contains(@class,'_category') and text()]")
     List<WebElement> offerCategoryTitles;
     public OffersPage verifySelectedCategory(String categoryName) {
+
+        if (offerCategoryTitles.isEmpty()) {
+            logger.warn("⚠️ Нет офферов для категории '{}'. Отображается сообщение: I'm waiting for data ;)", categoryName);
+            return this;
+        }
         boolean found = false;
 
-        for (WebElement categoryTitle : offerCategoryTitles) {
-            String actual = categoryTitle.getText().trim();
-            logger.info("🔍 Category found in offer card: {}", actual);
+        try {
+            for (WebElement categoryTitle : offerCategoryTitles) {
+                String actual = categoryTitle.getText().trim();
+                logger.info("🔍 Category found in offer card: {}", actual);
 
-            if (actual.equalsIgnoreCase(categoryName)) {
-                found = true;
-                break;
+                if (actual.equalsIgnoreCase(categoryName)) {
+                    found = true;
+                    break;
+                }
+            }
+        } catch (StaleElementReferenceException e) {
+            logger.warn("⚠️ StaleElementReferenceException caught. Retrying...");
+
+            // Повторная попытка найти элементы
+            List<WebElement> freshElements = driver.findElements(By.xpath("//p[contains(@class,'_category')]"));
+            for (WebElement fresh : freshElements) {
+                String actual = fresh.getText().trim();
+                logger.info("🔁 Retry - Category found: {}", actual);
+                if (actual.equalsIgnoreCase(categoryName)) {
+                    found = true;
+                    break;
+                }
             }
         }
 

@@ -34,8 +34,9 @@ public class LoginPage extends BasePage {
         super(driver, wait);
     }
 
-    public void openLoginPage() {
+    public LoginPage openLoginPage() {
         signInButton.click();
+        return this;
     }
 
     public void enterEmail(String email) {

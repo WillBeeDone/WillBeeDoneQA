@@ -7,10 +7,11 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import wbd.web.core.BasePage;
 
+import java.time.Duration;
 
 
 public class RecoveryPasswordPage extends BasePage {
-
+    private static final String RECOVERY_PAGE_URL = "https://monkfish-app-73239.ondigitalocean.app/#/password-recovery-form/6e0a4ee9-7111-49ec-992f-d8b15fdb168a";
     @FindBy(css = "[data-testid='MyInputPasswordRecovery_KjfyhH']")
     WebElement newPasswordField;
 
@@ -25,6 +26,7 @@ public class RecoveryPasswordPage extends BasePage {
 
     public RecoveryPasswordPage(WebDriver driver, WebDriverWait wait) {
         super(driver, wait);
+        this.wait.withTimeout(Duration.ofSeconds(5));
     }
 
     public RecoveryPasswordPage enterNewPassword(String newPassword) {
@@ -47,6 +49,11 @@ public class RecoveryPasswordPage extends BasePage {
 
     public RecoveryPasswordPage clickCancelButton() {
         cancelButton.click();
+        return this;
+    }
+
+    public RecoveryPasswordPage openRecoveryPage() {
+        driver.get(RECOVERY_PAGE_URL);
         return this;
     }
 }
