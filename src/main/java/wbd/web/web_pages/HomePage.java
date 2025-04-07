@@ -93,32 +93,55 @@ public class HomePage extends BasePage {
     public void searchFor(String keyword) {
         enterSearchKeyword(keyword);
         clickSearchButton();
+        wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector("div._firstPartOfferCard_jqbzu_53")));
     }
 
     public List<WebElement> getAdCards() {
-        wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector("._offerContainer_jbegn_11 > div")));
-        return driver.findElements(By.cssSelector("._offerContainer_jbegn_11 > div"));
+        wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector("div._firstPartOfferCard_jqbzu_53")));
+        return driver.findElements(By.cssSelector("div._firstPartOfferCard_jqbzu_53"));
     }
 
+
     public String getCityFromCard(WebElement card) {
-        return card.findElement(By.cssSelector("._location_jbegn_143")).getText();
+        List<WebElement> cityElements = card.findElements(By.cssSelector("._location_jqbzu_143"));
+        return cityElements.isEmpty() ? "Город не найден" : cityElements.get(0).getText();
     }
 
     public String getCategoryFromCard(WebElement card) {
         return card.findElement(By.cssSelector("._category_jbegn_130")).getText();
     }
 
-    public void waitForAdCardsWithCategory(String category) {
+    public void waitForAdCardsWithCategory(String expectedCategory) {
         wait.until(driver -> {
-            List<WebElement> cards = getAdCards();
+            // Проверяем наличие iframe и переключаемся, если нужно
+            List<WebElement> iframes = driver.findElements(By.tagName("iframe"));
+            if (!iframes.isEmpty()) {
+                driver.switchTo().frame(iframes.get(0)); // Переключаемся на первый iframe (уточните селектор)
+            }
+
+            List<WebElement> cards = driver.findElements(By.cssSelector("div._firstPartOfferCard_jqbzu_53"));
             if (cards.isEmpty()) {
+                driver.switchTo().defaultContent(); // Возвращаемся в основной контекст
                 return false;
             }
-            String categoryText = getCategoryFromCard(cards.get(0));
-            System.out.println("Checking category: " + categoryText);
-            return categoryText.equals(category);
+
+            for (WebElement card : cards) {
+                try {
+                    String actualCategory = card.findElement(By.cssSelector("._category_jbegn_130")).getText();
+                    if (!expectedCategory.equals(actualCategory)) {
+                        driver.switchTo().defaultContent();
+                        return false;
+                    }
+                } catch (Exception e) {
+                    driver.switchTo().defaultContent();
+                    return false;
+                }
+            }
+            driver.switchTo().defaultContent();
+            return true;
         });
     }
+
 
 
     public void clickNextPage() {
@@ -155,7 +178,7 @@ public class HomePage extends BasePage {
         return prevButton.isEnabled();
     }
 
-    private void waitForCardsToUpdate() {
+    public void waitForCardsToUpdate() {
         List<WebElement> oldCards = getAdCards();
         List<String> oldCardsText = extractTextsFromElements(oldCards);
 
