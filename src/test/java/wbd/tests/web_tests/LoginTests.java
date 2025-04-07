@@ -1,11 +1,9 @@
 package wbd.tests.web_tests;
 
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import wbd.core.TestBaseUI;
 import wbd.utils.DataProviders;
 import wbd.web.data.UserData;
-import wbd.web.web_pages.HomePage;
 import wbd.web.web_pages.LoginPage;
 
 public class LoginTests extends TestBaseUI {
@@ -25,7 +23,7 @@ public class LoginTests extends TestBaseUI {
     @Test(dataProvider = "invalidPasswords", dataProviderClass = DataProviders.class)
     public void loginWrongPasswordNegativeTest(String invalidPassword, String errorDescription) {
         LoginPage loginPage = new LoginPage(app.driver, app.wait);
-
+        loginPage.openLoginPage();
         loginPage.enterEmail(UserData.VALID_EMAIL);
         loginPage.enterPassword(invalidPassword);
         loginPage.submitLogin();

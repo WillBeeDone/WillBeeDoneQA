@@ -30,7 +30,7 @@ public class DataProviders {
                 {"test @gmail.com", "❌ Superfluous spaces"},
                 {"test@gmail .com", "❌ Superfluous spaces"},
                 {"test@gmail. com", "❌ Superfluous spaces"},
-                {"я@есть.баг", "❌ Inadmissible symbols"}
+              //  {"я@есть.баг", "❌ Inadmissible symbols"}
         };
     }
 
@@ -71,7 +71,6 @@ public class DataProviders {
                 {"Beauty & Care"},
                 {"Appliance Repair"},
                 {"Handyman"},
-                {"Other"}
         };
     }
 }

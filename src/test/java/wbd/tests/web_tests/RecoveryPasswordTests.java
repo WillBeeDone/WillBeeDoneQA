@@ -5,8 +5,10 @@ import org.testng.annotations.Test;
 import wbd.core.TestBaseUI;
 import wbd.web.data.UserData;
 import wbd.web.helpers.HelperMailTm;
-import wbd.web.web_pages.*;
-
+import wbd.web.web_pages.ForgetPasswordPage;
+import wbd.web.web_pages.HomePage;
+import wbd.web.web_pages.RecoveryPasswordPage;
+import java.lang.reflect.Method;
 import java.io.IOException;
 
 
@@ -22,7 +24,7 @@ public class RecoveryPasswordTests extends TestBaseUI {
     private String resetLink;
 
     @BeforeMethod
-    public void precondition() throws IOException, InterruptedException {
+    public void precondition(Method method) throws IOException, InterruptedException {
         email = HelperMailTm.generateEmail();
         new HomePage(app.driver, app.wait)
                 .getRegistrationPage()
@@ -179,7 +181,7 @@ public class RecoveryPasswordTests extends TestBaseUI {
 
         // Баг: пароль успешно изменён, хотя он совпадает со старым
         if (alertText != null && alertText.toLowerCase().contains("successfully")) {
-            logger.error("❗ BUG: Old password was accepted and changed successfully — this should be disallowed!");
+            logger.error("BUG: Old password was accepted and changed successfully — this should be disallowed!");
         }
 
         // Проверка, что alert НЕ содержит сообщение об успешной смене
