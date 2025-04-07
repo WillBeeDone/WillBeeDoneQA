@@ -14,4 +14,5 @@ public class AllOffersResponseDto {
     private double pricePerHour;
     private String description;
     private UserDetailsDto userFilterResponseDto;
+    private LocationResponseDto locationDto;
 }

@@ -83,7 +83,7 @@ public class GetOffersTests extends TestBaseRA {
                 logger.info("Offer => " + offerDto.getTitle() + ";");
             }
         }
-        // выполняем все SoftAssert проверки
+
         softAssert.assertAll();
     }
 

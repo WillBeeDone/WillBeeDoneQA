@@ -11,6 +11,7 @@ import java.util.List;
 
 import static io.restassured.RestAssured.given;
 
+// проверяет дефолтный /offers без параметров, структуру и базовую логику DTO.
 public class GetAllOffersTests extends TestBaseRA {
 
     @Test
