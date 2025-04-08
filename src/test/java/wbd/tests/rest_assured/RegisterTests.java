@@ -64,7 +64,7 @@ public class RegisterTests extends TestBaseRA {
         Response response = AuthClient.register(request);
         logger.info("Registration with weak/simple password: {}", response.asString());
 
-        softAssert.assertEquals(response.getStatusCode(), 200, "Expected status code 200 OK during registration");
+        softAssert.assertEquals(response.getStatusCode(), 400, "Expected 400 Bad Request for weak password");
         softAssert.assertAll();
     }
 

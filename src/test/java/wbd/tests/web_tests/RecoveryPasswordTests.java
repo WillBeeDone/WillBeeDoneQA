@@ -1,5 +1,6 @@
 package wbd.tests.web_tests;
 
+import org.openqa.selenium.TimeoutException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import wbd.core.TestBaseUI;
@@ -180,19 +181,30 @@ public class RecoveryPasswordTests extends TestBaseUI {
         logger.info("Captured alert text: " + alertText);
 
         // Баг: пароль успешно изменён, хотя он совпадает со старым
-        if (alertText != null && alertText.toLowerCase().contains("successfully")) {
-            logger.error("BUG: Old password was accepted and changed successfully — this should be disallowed!");
-        }
+//        if (alertText != null && alertText.toLowerCase().contains("successfully")) {
+//            logger.error("BUG: Old password was accepted and changed successfully — this should be disallowed!");
+//        }
+
+        // Временно, что алерт содержит ожидаемое сообщение об ошибке
+        softAssert.assertTrue(alertText.contains("Something went wrong"),
+                "Expected alert to contain: 'Something went wrong... Password not changed.'");
 
         // Проверка, что alert НЕ содержит сообщение об успешной смене
         softAssert.assertFalse(alertText.toLowerCase().contains("successfully"),
                 "BUG: Alert text should not confirm password change when reusing old password");
 
         // Проверка, что НЕ произошло редиректа на страницу логина
-        boolean redirected = recoveryPage.isRedirectedToLoginPage();
-        if (redirected) {
-            logger.error("BUG: Redirected to login page even though old password was reused");
+//        boolean redirected = recoveryPage.isRedirectedToLoginPage();
+//        if (redirected) {
+//            logger.error("BUG: Redirected to login page even though old password was reused");
+//        }
+        boolean redirected = false;
+        try {
+            redirected = recoveryPage.isRedirectedToLoginPage();
+        } catch (TimeoutException e) {
+            logger.info("Expected behavior: no redirect to login page");
         }
+
         softAssert.assertFalse(redirected, "BUG: Should not redirect to login page when old password is reused");
 
         softAssert.assertAll();
