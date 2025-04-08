@@ -6,7 +6,7 @@ import org.testng.annotations.Test;
 import wbd.core.TestBaseUI;
 import wbd.web.data.UserData;
 import wbd.web.helpers.HelperMailTm;
-import wbd.web.web_pages.ForgetPasswordPage;
+import wbd.web.web_pages.ForgotPasswordPage;
 import wbd.web.web_pages.HomePage;
 import wbd.web.web_pages.RecoveryPasswordPage;
 import java.lang.reflect.Method;
@@ -47,13 +47,13 @@ public class RecoveryPasswordTests extends TestBaseUI {
 
     @Test
     public void recoveryPasswordConfirmPositiveTest() throws IOException, InterruptedException {
-        logger.info("Open Forget Password Page");
-        ForgetPasswordPage forgetPasswordPage = new HomePage(app.driver, app.wait)
+        logger.info("Open Forgot Password Page");
+        ForgotPasswordPage forgotPasswordPage = new HomePage(app.driver, app.wait)
                 .getLoginPage()
-                .getForgetPasswordPage();
+                .getForgotPasswordPage();
 
         logger.info("Send reset request");
-        forgetPasswordPage
+        forgotPasswordPage
                 .enterEmail(email)
                 .enterSendButton();
 
@@ -106,12 +106,12 @@ public class RecoveryPasswordTests extends TestBaseUI {
     @Test
     public void recoveryPasswordCancelPositiveTest() throws IOException, InterruptedException {
         logger.info("Open Forget Password Page");
-        ForgetPasswordPage forgetPasswordPage = new HomePage(app.driver, app.wait)
+        ForgotPasswordPage forgotPasswordPage = new HomePage(app.driver, app.wait)
                 .getLoginPage()
-                .getForgetPasswordPage();
+                .getForgotPasswordPage();
 
         logger.info("Send reset request");
-        forgetPasswordPage
+        forgotPasswordPage
                 .enterEmail(email)
                 .enterSendButton();
 
@@ -143,12 +143,12 @@ public class RecoveryPasswordTests extends TestBaseUI {
     @Test
     public void recoveryPasswordOldPasswordNegativeTest() throws IOException, InterruptedException {
         logger.info("Open Forget Password Page");
-        ForgetPasswordPage forgetPasswordPage = new HomePage(app.driver, app.wait)
+        ForgotPasswordPage forgotPasswordPage = new HomePage(app.driver, app.wait)
                 .getLoginPage()
-                .getForgetPasswordPage();
+                .getForgotPasswordPage();
 
         logger.info("Send reset request");
-        forgetPasswordPage
+        forgotPasswordPage
                 .enterEmail(email)
                 .enterSendButton();
 

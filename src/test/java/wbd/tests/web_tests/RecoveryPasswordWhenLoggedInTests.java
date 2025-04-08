@@ -4,7 +4,7 @@ import org.testng.annotations.Test;
 import wbd.core.TestBaseUI;
 import wbd.utils.DataProviders;
 import wbd.web.data.UserData;
-import wbd.web.web_pages.ForgetPasswordPage;
+import wbd.web.web_pages.ForgotPasswordPage;
 import wbd.web.web_pages.LoginPage;
 import wbd.web.web_pages.RecoveryPasswordPage;
 
@@ -17,16 +17,16 @@ public class RecoveryPasswordWhenLoggedInTests extends TestBaseUI {
     public void recoveryInvalidEmailNegativeTest(String invalidEmail, String reason) {
         logger.info("Trying to recover password with invalid email: {} ({})", invalidEmail, reason);
 
-        ForgetPasswordPage forgetPasswordPage = new LoginPage(app.driver, app.wait)
+        ForgotPasswordPage forgotPasswordPage = new LoginPage(app.driver, app.wait)
                 .openLoginPage()
-                .getForgetPasswordPage();
+                .getForgotPasswordPage();
 
-        forgetPasswordPage.enterEmail(invalidEmail)
+        forgotPasswordPage.enterEmail(invalidEmail)
                .enterSendButton();
 
         softAssert.assertTrue(
-                forgetPasswordPage.isValidationErrorDisplayed("Incorrect email") ||
-                        forgetPasswordPage.isValidationErrorDisplayed("Email is required"),
+                forgotPasswordPage.isValidationErrorDisplayed("Incorrect email") ||
+                        forgotPasswordPage.isValidationErrorDisplayed("Email is required"),
                 "Expected validation error not shown for email: " + invalidEmail
         );
 
