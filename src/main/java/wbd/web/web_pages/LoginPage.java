@@ -28,7 +28,7 @@ public class LoginPage extends BasePage {
     WebElement errorMessage;
 
     @FindBy(css = "a[data-testid='LinkToPasswordRecovery_HgFtg']")
-    WebElement forgetPasswordButton;
+    WebElement forgotPasswordButton;
 
     @FindBy(xpath = "//img[@alt='Hamburger icon']")
     WebElement hamburgerMenu;
@@ -68,9 +68,9 @@ public class LoginPage extends BasePage {
         return errorMessage.getText();
     }
 
-    public ForgetPasswordPage getForgetPasswordPage() {
-        wait.until(ExpectedConditions.visibilityOf(forgetPasswordButton));
-        forgetPasswordButton.click();
-        return new ForgetPasswordPage(driver, wait);
+    public ForgotPasswordPage getForgotPasswordPage() {
+        wait.until(ExpectedConditions.visibilityOf(forgotPasswordButton));
+        forgotPasswordButton.click();
+        return new ForgotPasswordPage(driver, wait);
     }
 }
