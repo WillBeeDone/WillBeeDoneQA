@@ -2,10 +2,8 @@ package wbd.tests.web_tests;
 
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.Test;
-import org.testng.asserts.SoftAssert;
 import wbd.core.TestBaseUI;
 import wbd.web.web_pages.HomePage;
-
 import java.util.List;
 
 public class SearchTests extends TestBaseUI {
@@ -16,6 +14,17 @@ public class SearchTests extends TestBaseUI {
 
         // Выполнение поиска
         homePage.searchFor("Plumber");
+
+        List<WebElement> adCardsBeforeWait = homePage.getAdCards();
+        System.out.println("Количество карточек до ожидания: " + adCardsBeforeWait.size());
+        for (WebElement card : adCardsBeforeWait) {
+            try {
+                String category = homePage.getCategoryFromCard(card);
+                System.out.println("Категория карточки: " + category);
+            } catch (Exception e) {
+                System.out.println("Ошибка при получении категории: " + e.getMessage());
+            }
+        }
 
         // Ожидание загрузки карточек с категорией "Plumber"
         homePage.waitForAdCardsWithCategory("Plumber");

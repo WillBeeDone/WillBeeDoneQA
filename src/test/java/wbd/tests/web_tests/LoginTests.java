@@ -15,6 +15,7 @@ public class LoginTests extends TestBaseUI {
         loginPage.enterEmail(UserData.VALID_EMAIL);
         loginPage.enterPassword("Password!123");
         loginPage.submitLogin();
+        loginPage.clickHamburgerMenu();
 
         softAssert.assertTrue(loginPage.isSignOutButtonDisplayed(), "Sign Out button is not displayed!");
         softAssert.assertAll();
