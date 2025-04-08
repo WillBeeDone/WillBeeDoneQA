@@ -13,7 +13,7 @@ public class LoginTests extends TestBaseUI {
         LoginPage loginPage = new LoginPage(app.driver, app.wait);
         loginPage.openLoginPage();
         loginPage.enterEmail(UserData.VALID_EMAIL);
-        loginPage.enterPassword("Password!123");
+        loginPage.enterPassword(UserData.VALID_PASSWORD);
         loginPage.submitLogin();
         loginPage.clickHamburgerMenu();
 

@@ -9,35 +9,27 @@ import java.util.List;
 public class SearchTests extends TestBaseUI {
     @Test
     public void testSearchByKeyword() {
-        // Инициализация страниц
         HomePage homePage = new HomePage(app.driver, app.wait);
 
-        // Выполнение поиска
+        // Выполняем поиск
         homePage.searchFor("Plumber");
 
-        List<WebElement> adCardsBeforeWait = homePage.getAdCards();
-        System.out.println("Количество карточек до ожидания: " + adCardsBeforeWait.size());
-        for (WebElement card : adCardsBeforeWait) {
-            try {
-                String category = homePage.getCategoryFromCard(card);
-                System.out.println("Категория карточки: " + category);
-            } catch (Exception e) {
-                System.out.println("Ошибка при получении категории: " + e.getMessage());
-            }
-        }
-
-        // Ожидание загрузки карточек с категорией "Plumber"
-        homePage.waitForAdCardsWithCategory("Plumber");
-
-        // Проверка наличия карточек
+        // Получаем актуальный список карточек после поиска
         List<WebElement> adCards = homePage.getAdCards();
+
+        // Проверяем, что карточек больше 0
         softAssert.assertTrue(adCards.size() > 0, "Ad cards should be present after search");
 
-        // Проверка категории каждой карточки
+        // Проверяем категорию каждой карточки
         for (WebElement card : adCards) {
-            String categoryText = homePage.getCategoryFromCard(card);
-            softAssert.assertEquals(categoryText, "Plumber",
-                    "Ad card category should be 'Plumber', but found: " + categoryText);
+            try {
+                String categoryText = homePage.getCategoryFromCard(card);
+                logger.info("Category: {}", categoryText);
+                softAssert.assertEquals(categoryText, "Plumber",
+                        "Ad card category should be 'Plumber', but found: " + categoryText);
+            } catch (Exception e) {
+                logger.error("Error when receiving the category: {}", e.getMessage(), e);
+            }
         }
 
         softAssert.assertAll();

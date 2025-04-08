@@ -4,13 +4,18 @@ import lombok.Getter;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import wbd.web.core.BasePage;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class SortingComponent extends BasePage {
     @Getter
     private HomePage homePage;
+
+    private static final Logger logger = LoggerFactory.getLogger(SortingComponent.class);
 
     @FindBy(css = "[data-testid='MyButtonHomePageSort_JnHb']")
     private WebElement sortButton;
@@ -25,17 +30,17 @@ public class SortingComponent extends BasePage {
     }
 
     public void waitForSortUpdate(List<Integer> initialPrices) {
-        System.out.println("Изначальные цены в waitForSortUpdate: " + initialPrices);
+        logger.info("Initial prices in waitForSortUpdate: {}", initialPrices);
 
         wait.until(driver -> {
             List<Integer> newPrices = extractPrices();
             if (newPrices.isEmpty()) {
-                System.out.println("Новые цены не найдены!");
+                logger.warn("New prices not found!");
                 return false;
             }
-            System.out.println("Цены после сортировки в waitForSortUpdate: " + newPrices);
+            logger.info("Prices after sort in waitForSortUpdate: {}", newPrices);
             boolean isDifferent = !newPrices.equals(initialPrices);
-            System.out.println("Цены изменились? " + isDifferent);
+            logger.info("Have prices changed? {}", isDifferent);
             return isDifferent;
         });
     }
@@ -51,7 +56,7 @@ public class SortingComponent extends BasePage {
                     prices.add(Integer.parseInt(priceText));
                 }
             } catch (Exception e) {
-                System.out.println("Ошибка извлечения цены: " + e.getMessage());
+                logger.error("Failed to extract price from card: {}", e.getMessage());
             }
         }
         return prices;

@@ -63,7 +63,6 @@ public class PaginationTests extends TestBaseUI {
     public void testPaginationByPageNumber() {
         // Переходим на страницу 3
         homePage.goToPage(3);
-
         homePage.waitForCurrentPageNumber(3);
         homePage.waitForCardsCountAtLeast(9);
 
