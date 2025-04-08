@@ -9,8 +9,6 @@ import wbd.web.web_pages.LoginPage;
 import wbd.web.web_pages.RecoveryPasswordPage;
 
 
-
-
 public class RecoveryPasswordWhenLoggedInTests extends TestBaseUI {
 
     RecoveryPasswordPage recoveryPage;

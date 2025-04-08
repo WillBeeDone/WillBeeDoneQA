@@ -32,7 +32,7 @@ public class TestBaseRA {
 
     @BeforeMethod
     public void init() {
-        RestAssured.baseURI = "https://monkfish-app-73239.ondigitalocean.app/";
+        RestAssured.baseURI = "http://localhost:8080/";
         RestAssured.basePath = "api";
     }
 }

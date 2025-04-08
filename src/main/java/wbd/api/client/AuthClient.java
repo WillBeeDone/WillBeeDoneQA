@@ -1,5 +1,6 @@
 package wbd.api.client;
 
+import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import wbd.api.dto.AuthRequestDto;
@@ -20,6 +21,7 @@ public class AuthClient {
     }
 
     public static Response login(AuthRequestDto body) {
+        System.out.println("Request to: " + RestAssured.baseURI + RestAssured.basePath + "/auth/login");
         return given()
                 .contentType("application/json")
                 .body(body)

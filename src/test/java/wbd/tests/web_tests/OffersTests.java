@@ -30,7 +30,6 @@ public class OffersTests extends TestBaseUI {
                 .selectCategory(categoryName)
                 .scrollAfterCategorySelection()
                 .verifySelectedCategory(categoryName);
-
     }
 
     @Test(groups = "Negative")
