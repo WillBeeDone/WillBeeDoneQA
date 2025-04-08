@@ -23,7 +23,7 @@ public class SortingTests extends TestBaseUI {
 
     @Test
     public void testDefaultSortOrderIsAscending() {
-        // Получаем карточки на странице (по умолчанию они должны быть отсортированы по возрастанию цены)
+        // Получаем карточки на странице с ценой по возрастанию
         List<WebElement> cards = homePage.getAdCards();
         List<Integer> prices = new ArrayList<>();
         for (WebElement card : cards) {
@@ -77,7 +77,7 @@ public class SortingTests extends TestBaseUI {
     }
 
     private int parsePrice(String priceText) {
-        // Убираем знак валюты и пробелы (если они есть) и оставляем только число
+        // Убираем знак валюты и пробелы и оставляем только число
         String cleaned = priceText.replace(" €", "").trim();
         return Integer.parseInt(cleaned);
     }

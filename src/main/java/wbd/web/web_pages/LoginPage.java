@@ -21,7 +21,7 @@ public class LoginPage extends BasePage {
     @FindBy(xpath = "//button[@type='button' and contains(text(),'Sign In')]")
     WebElement signInButton;
 
-    @FindBy(xpath = "//button[contains(text(),'SignOut')]")
+    @FindBy(css = "a[data-testid='sign-out-link']")
     WebElement signOutButton;
 
     @FindBy(xpath = "//*[contains(text(), 'Invalid login or password.')]")
@@ -29,6 +29,9 @@ public class LoginPage extends BasePage {
 
     @FindBy(css = "a[data-testid='LinkToPasswordRecovery_HgFtg']")
     WebElement forgetPasswordButton;
+
+    @FindBy(xpath = "//img[@alt='Hamburger icon']")
+    WebElement hamburgerMenu;
 
     public LoginPage(WebDriver driver, WebDriverWait wait) {
         super(driver, wait);
@@ -41,6 +44,10 @@ public class LoginPage extends BasePage {
     public void enterEmail(String email) {
         emailField.clear();
         emailField.sendKeys(email);
+    }
+
+    public void clickHamburgerMenu() {
+        hamburgerMenu.click();
     }
 
     public void enterPassword(String password) {

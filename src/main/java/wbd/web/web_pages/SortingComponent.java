@@ -3,10 +3,8 @@ package wbd.web.web_pages;
 import lombok.Getter;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import wbd.web.core.BasePage;
-
 import java.util.ArrayList;
 import java.util.List;
 

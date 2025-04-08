@@ -15,7 +15,6 @@ public class SearchTests extends TestBaseUI {
         // Выполнение поиска
         homePage.searchFor("Plumber");
 
-        // Логирование для диагностики
         List<WebElement> adCardsBeforeWait = homePage.getAdCards();
         System.out.println("Количество карточек до ожидания: " + adCardsBeforeWait.size());
         for (WebElement card : adCardsBeforeWait) {
@@ -26,6 +25,7 @@ public class SearchTests extends TestBaseUI {
                 System.out.println("Ошибка при получении категории: " + e.getMessage());
             }
         }
+
         // Ожидание загрузки карточек с категорией "Plumber"
         homePage.waitForAdCardsWithCategory("Plumber");
 
