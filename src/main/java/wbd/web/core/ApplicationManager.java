@@ -2,6 +2,7 @@ package wbd.web.core;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import lombok.Getter;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
