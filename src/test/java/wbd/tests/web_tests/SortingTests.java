@@ -23,7 +23,7 @@ public class SortingTests extends TestBaseUI {
 
     @Test
     public void testDefaultSortOrderIsAscending() {
-        // Получаем карточки на странице с ценой по возрастанию
+        // Get cards with ascending prices by default
         List<WebElement> cards = homePage.getAdCards();
         List<Integer> prices = new ArrayList<>();
         for (WebElement card : cards) {
@@ -32,17 +32,18 @@ public class SortingTests extends TestBaseUI {
             prices.add(price);
         }
 
-        // Проверяем, что цены идут по возрастанию
+        // Assert that prices are in ascending order
         for (int i = 1; i < prices.size(); i++) {
             softAssert.assertTrue(prices.get(i - 1) <= prices.get(i),
-                    "Ожидается, что цена " + prices.get(i - 1) + " будет меньше или равна " + prices.get(i));
+                    "Expected ascending order: " + prices.get(i - 1) + " <= " + prices.get(i));
         }
+
         softAssert.assertAll();
     }
 
     @Test
     public void testSortOrderAfterClickingToggleIsDescending() {
-        // 1. Фиксируем изначальный возрастающий порядок
+        // 1. Capture initial ascending order
         List<WebElement> initialCards = homePage.getAdCards();
         List<Integer> initialPrices = new ArrayList<>();
         for (WebElement card : initialCards) {
@@ -50,17 +51,18 @@ public class SortingTests extends TestBaseUI {
             int price = parsePrice(priceText);
             initialPrices.add(price);
         }
-        System.out.println("Цены до сортировки: " + initialPrices);
+        logger.info("Prices before sorting: {}", initialPrices);
+
         for (int i = 1; i < initialPrices.size(); i++) {
             softAssert.assertTrue(initialPrices.get(i - 1) <= initialPrices.get(i),
-                    "Изначально ожидается возрастающий порядок: " + initialPrices.get(i - 1) + " <= " + initialPrices.get(i));
+                    "Expected initial ascending order: " + initialPrices.get(i - 1) + " <= " + initialPrices.get(i));
         }
 
-        // 2. Нажимаем на кнопку сортировки и ждем изменения
+        // 2. Click sort toggle and wait for update
         sortingComponent.clickSortToggle();
-        sortingComponent.waitForSortUpdate(initialPrices); // Передаем изначальные цены
+        sortingComponent.waitForSortUpdate(initialPrices); // Pass original prices
 
-        // 3. Проверяем убывающий порядок
+        // 3. Verify descending order
         List<WebElement> cards = homePage.getAdCards();
         List<Integer> prices = new ArrayList<>();
         for (WebElement card : cards) {
@@ -68,17 +70,24 @@ public class SortingTests extends TestBaseUI {
             int price = parsePrice(priceText);
             prices.add(price);
         }
-        System.out.println("Цены после сортировки: " + prices);
+        logger.info("Prices after sorting: {}", prices);
+
         for (int i = 1; i < prices.size(); i++) {
             softAssert.assertTrue(prices.get(i - 1) >= prices.get(i),
-                    "Ожидается убывающий порядок: " + prices.get(i - 1) + " >= " + prices.get(i));
+                    "Expected descending order: " + prices.get(i - 1) + " >= " + prices.get(i));
         }
+
         softAssert.assertAll();
     }
 
     private int parsePrice(String priceText) {
-        // Убираем знак валюты и пробелы и оставляем только число
-        String cleaned = priceText.replace(" €", "").trim();
-        return Integer.parseInt(cleaned);
+        // Remove all non-digit characters to extract a clean integer price
+        try {
+            String cleaned = priceText.replaceAll("[^\\d]", "");
+            return Integer.parseInt(cleaned);
+        } catch (Exception e) {
+            logger.error("Failed to parse price from text: '{}'", priceText, e);
+            return 0;
+        }
     }
 }

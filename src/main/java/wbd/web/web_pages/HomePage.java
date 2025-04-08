@@ -28,7 +28,7 @@ public class HomePage extends BasePage {
 
     @FindBy(xpath = "//a[contains(text(),'Sign In')]")
     WebElement signInLink;
-  
+
     @FindBy(xpath = "(//select[@class='_dropdown_pua4g_1'])[2]")
     WebElement categoryDropdown;
 
@@ -96,6 +96,7 @@ public class HomePage extends BasePage {
         wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector("div._firstPartOfferCard_jqbzu_53")));
     }
 
+
     public List<WebElement> getAdCards() {
         wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector("div._firstPartOfferCard_jqbzu_53")));
         return driver.findElements(By.cssSelector("div._firstPartOfferCard_jqbzu_53"));
@@ -113,34 +114,29 @@ public class HomePage extends BasePage {
 
     public void waitForAdCardsWithCategory(String expectedCategory) {
         wait.until(driver -> {
-            // Проверяем наличие iframe и переключаемся, если нужно
-            List<WebElement> iframes = driver.findElements(By.tagName("iframe"));
-            if (!iframes.isEmpty()) {
-                driver.switchTo().frame(iframes.get(0)); // Переключаемся на первый iframe (уточните селектор)
-            }
-
             List<WebElement> cards = driver.findElements(By.cssSelector("div._firstPartOfferCard_jqbzu_53"));
+            logger.info("Found {} ad cards", cards.size());
+
             if (cards.isEmpty()) {
-                driver.switchTo().defaultContent(); // Возвращаемся в основной контекст
                 return false;
             }
 
             for (WebElement card : cards) {
                 try {
-                    String actualCategory = card.findElement(By.cssSelector("._category_jbegn_130")).getText();
-                    if (!expectedCategory.equals(actualCategory)) {
-                        driver.switchTo().defaultContent();
+                    String actualCategory = card.findElement(By.cssSelector("._category_jbegn_130")).getText().trim();
+                    logger.info("Category: {}", actualCategory);
+                    if (!expectedCategory.equalsIgnoreCase(actualCategory)) {
                         return false;
                     }
                 } catch (Exception e) {
-                    driver.switchTo().defaultContent();
+                    logger.error("Error while checking category: {}", e.getMessage());
                     return false;
                 }
             }
-            driver.switchTo().defaultContent();
             return true;
         });
     }
+
 
     public void clickNextPage() {
         click(nextButton, 0);
