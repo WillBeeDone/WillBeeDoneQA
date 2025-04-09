@@ -1,9 +1,9 @@
 package wbd.tests.rest_assured;
 
-import io.restassured.response.Response;
-import org.testng.annotations.BeforeClass;
+import io.qameta.allure.*;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import io.restassured.response.Response;
 import wbd.api.client.AuthClient;
 import wbd.api.client.get_post.ApiClient_PostAddOffer;
 import wbd.api.dto.AddOfferRequestDto;
@@ -11,10 +11,11 @@ import wbd.api.dto.AddOfferResponseDto;
 import wbd.api.dto.AuthRequestDto;
 import wbd.api.dto.LoginResponseDto;
 import wbd.core.TestBaseRA;
-import wbd.utils.RetryAnalyzer;
 
 import java.util.List;
 
+@Epic("Offers")
+@Feature("Add new offer")
 public class AddOfferTests extends TestBaseRA {
 
     private String accessToken;
@@ -55,7 +56,11 @@ public class AddOfferTests extends TestBaseRA {
         softAssert.assertAll();
     }
 
-    @Test
+    @Test(groups = "Positive")
+    @Severity(SeverityLevel.CRITICAL)
+    @Story("Authorized user can create a new offer")
+    @Description("Verify that a logged-in user can successfully add a new offer with valid data")
+    @TmsLink("")
     public void testAddOffer() {
 
         logger.info("The test begins: adding a new offer");
@@ -101,6 +106,10 @@ public class AddOfferTests extends TestBaseRA {
     }
 
     @Test(groups = "Negative")
+    @Severity(SeverityLevel.CRITICAL)
+    @Story("Unauthorized user tries to create an offer")
+    @Description("Verify that user cannot add an offer without being authenticated")
+    @TmsLink("")
     public void testAddOfferWithoutAuth() {
         logger.info("The test begins: adding an offer without authorization ");
         logger.info("=============================================");

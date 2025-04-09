@@ -1,5 +1,6 @@
 package wbd.tests.rest_assured;
 
+import io.qameta.allure.*;
 import io.restassured.response.Response;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
@@ -11,12 +12,16 @@ import static io.restassured.RestAssured.given;
 
 // позитивный тест проверяет, что API корректно возвращает список всех офферов.
 // негативные тесты предназначены для проверки ошибок, связанных с неверными или отсутствующими данными, которые могут быть получены от сервера при запросах по ID оффера.
-
+@Epic("Offers")
+@Feature("Get Offer By ID")
 public class GetOfferByIdTests extends TestBaseRA {
 
     // тест проверяет, что API корректно возвращает оффер по указанному ID (в данном случае, ID = 1). Мы проверяем, что оффер существует, и проверяем его поля, такие как title, description, pricePerHour, и категорию
-
-    @Test
+    @Test(groups = "positive")
+    @Severity(SeverityLevel.CRITICAL)
+    @Story("Successfully fetch offer by ID")
+    @Description("Verify that the system returns a valid offer when a valid offer ID is provided.")
+    @TmsLink("")
     public void testGetOfferById() {
         logger.info("Start testing GetOfferById");
         logger.info("=============================================");
@@ -78,7 +83,11 @@ public class GetOfferByIdTests extends TestBaseRA {
 
     // ================= негативные тесты ====================
 
-    @Test
+    @Test(groups = "negative")
+    @Severity(SeverityLevel.MINOR)
+    @Story("Fetch offer by invalid ID")
+    @Description("Verify that the system returns an error when an invalid offer ID is provided.")
+    @TmsLink("")
     public void testGetOfferById_InvalidId() {
         int invalidId = -1; // Некорректный ID
         Response response = ApiClient_GetOfferById.getOfferById(invalidId);
@@ -89,7 +98,11 @@ public class GetOfferByIdTests extends TestBaseRA {
         softAssert.assertAll();
     }
 
-    @Test
+    @Test(groups = "negative")
+    @Severity(SeverityLevel.MINOR)
+    @Story("Fetch offer by non-existent ID")
+    @Description("Verify that the system returns a 404 status code for a non-existent offer ID.")
+    @TmsLink("")
     public void testGetOfferByNonExistentId_404() {
         int nonExistentOfferId = 9999;  // Предположим, что такого оффера нет
         Response response = ApiClient_GetOfferById.getOfferById(nonExistentOfferId);
@@ -100,7 +113,11 @@ public class GetOfferByIdTests extends TestBaseRA {
         softAssert.assertAll();
     }
 
-    @Test
+    @Test(groups = "negative")
+    @Severity(SeverityLevel.NORMAL)
+    @Story("Fetch offer with invalid ID format")
+    @Description("Verify that the system returns a 400 status code for an invalid ID format.")
+    @TmsLink("")
     public void testGetOffersByInvalidId_400() {
         // Запрос с неверным форматом ID
         Response response = given()

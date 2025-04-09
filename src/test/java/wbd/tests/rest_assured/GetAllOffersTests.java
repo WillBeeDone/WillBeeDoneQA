@@ -1,8 +1,11 @@
 package wbd.tests.rest_assured;
 
+import io.qameta.allure.*;
 import io.restassured.response.Response;
 import org.testng.annotations.Test;
-import org.testng.asserts.SoftAssert;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.TmsLink;
 import wbd.api.client.get_post.ApiClient_GetAllOffers;
 import wbd.api.dto.AllOffersResponseDto;
 import wbd.core.TestBaseRA;
@@ -12,9 +15,15 @@ import java.util.List;
 import static io.restassured.RestAssured.given;
 
 // проверяет дефолтный /offers без параметров, структуру и базовую логику DTO.
+@Epic("Offers")
+@Feature("Get All Offers")
 public class GetAllOffersTests extends TestBaseRA {
 
-    @Test
+    @Test(groups = "Positive")
+    @Severity(SeverityLevel.NORMAL)
+    @Story("Retrieve all offers without query parameters")
+    @Description("Verify that API returns a non-empty list of offers with valid structure when no filters are applied")
+    @TmsLink("")
     public void testGetAllOffers() {
         logger.info("start testing GetAllOffers");
         logger.info("=============================================");
@@ -94,7 +103,11 @@ public class GetAllOffersTests extends TestBaseRA {
     //=========================== негативные тесты ===============================
 
     // баг-репорт QA-BugReport-5, сервер возвращает 200
-    @Test
+    @Test(groups = "Negative")
+    @Severity(SeverityLevel.NORMAL)
+    @Story("Invalid cityName query parameter")
+    @Description("Verify that sending a numeric value for cityName returns 400 Bad Request")
+    @TmsLink("QA-BugReport-5")
     public void testGetAllOffersWithInvalidQueryParam_Location() {
         // отправляем GET-запрос с некорректным значением для cityName (например, числовая строка)
         Response response = given()
@@ -126,7 +139,11 @@ public class GetAllOffersTests extends TestBaseRA {
     }
 
     // баг репорт QA-BugReport-3, сервер возвращает 200
-    @Test
+    @Test(groups = "Negative")
+    @Severity(SeverityLevel.NORMAL)
+    @Story("Invalid category query parameter")
+    @Description("Verify that using an unknown category returns 400 Bad Request")
+    @TmsLink("QA-BugReport-3")
     public void testGetAllOffersWithInvalidQueryParam_Category() {
         // отправляем запрос через API-клиент с некорректным значением категории
         Response response = given()
@@ -153,7 +170,11 @@ public class GetAllOffersTests extends TestBaseRA {
     }
 
     // баг репорт QA-BugReport-2, сервер возвращает 200
-    @Test
+    @Test(groups = "Negative")
+    @Severity(SeverityLevel.NORMAL)
+    @Story("Invalid pricePerHour query parameter")
+    @Description("Verify that passing a non-numeric value for pricePerHour returns 400 Bad Request")
+    @TmsLink("QA-BugReport-2")
     public void testGetAllOffersWithInvalidQueryParam_PricePerHour() {
         // отправляем запрос с некорректным значением для pricePerHour (например, строка вместо числа)
         Response response = given()
