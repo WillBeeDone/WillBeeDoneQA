@@ -28,7 +28,7 @@ public class SortingTests extends TestBaseUI {
         sortingComponent = new SortingComponent(app.driver, app.wait);
     }
 
-    @Test
+    @Test(groups = "Positive")
     @Severity(SeverityLevel.CRITICAL)
     @Story("Default Sorting")
     @Description("Test verifies that ads are sorted in ascending price order by default")
@@ -52,7 +52,7 @@ public class SortingTests extends TestBaseUI {
         softAssert.assertAll();
     }
 
-    @Test
+    @Test(groups = "Positive")
     @Severity(SeverityLevel.CRITICAL)
     @Story("Sorting Toggle")
     @Description("Test verifies that clicking sort toggle changes order to descending by price")
