@@ -2,6 +2,7 @@ package wbd.web.core;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import lombok.Getter;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -54,7 +55,8 @@ public class ApplicationManager {
                 driver = new ChromeDriver(options);
         }
 
-        //driver.manage().window().setPosition(new Point(2500, 0));
+
+        driver.manage().window().setPosition(new Point(2500, 0)); // Размещение окна браузера
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));

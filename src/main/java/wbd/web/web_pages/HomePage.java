@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import wbd.web.core.BasePage;
+import wbd.web.data.UserData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,10 +25,10 @@ public class HomePage extends BasePage {
 
     @FindBy(xpath = "//button[@type='button' and text()='Sign Up']")
     WebElement signUpButton;
-  
+
     @FindBy(xpath = "//a[contains(text(),'Sign In')]")
     WebElement signInLink;
-  
+
     @FindBy(xpath = "(//select[@class='_dropdown_pua4g_1'])[2]")
     WebElement categoryDropdown;
 
@@ -69,7 +70,6 @@ public class HomePage extends BasePage {
         return this;
     }
 
-
     public OffersPage selectCategory(String categoryName) {
         Select select = new Select(categoryDropdown);
         select.selectByVisibleText(categoryName);
@@ -93,30 +93,47 @@ public class HomePage extends BasePage {
     public void searchFor(String keyword) {
         enterSearchKeyword(keyword);
         clickSearchButton();
+        wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector("div._firstPartOfferCard_jqbzu_53")));
     }
+
 
     public List<WebElement> getAdCards() {
-        wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector("._offerContainer_jbegn_11 > div")));
-        return driver.findElements(By.cssSelector("._offerContainer_jbegn_11 > div"));
+        wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector("div._firstPartOfferCard_jqbzu_53")));
+        return driver.findElements(By.cssSelector("div._firstPartOfferCard_jqbzu_53"));
     }
 
+
     public String getCityFromCard(WebElement card) {
-        return card.findElement(By.cssSelector("._location_jbegn_143")).getText();
+        List<WebElement> cityElements = card.findElements(By.cssSelector("._location_jqbzu_143"));
+        return cityElements.isEmpty() ? "Город не найден" : cityElements.get(0).getText();
     }
 
     public String getCategoryFromCard(WebElement card) {
         return card.findElement(By.cssSelector("._category_jbegn_130")).getText();
     }
 
-    public void waitForAdCardsWithCategory(String category) {
+    public void waitForAdCardsWithCategory(String expectedCategory) {
         wait.until(driver -> {
-            List<WebElement> cards = getAdCards();
+            List<WebElement> cards = driver.findElements(By.cssSelector("div._firstPartOfferCard_jqbzu_53"));
+            logger.info("Found {} ad cards", cards.size());
+
             if (cards.isEmpty()) {
                 return false;
             }
-            String categoryText = getCategoryFromCard(cards.get(0));
-            System.out.println("Checking category: " + categoryText);
-            return categoryText.equals(category);
+
+            for (WebElement card : cards) {
+                try {
+                    String actualCategory = card.findElement(By.cssSelector("._category_jbegn_130")).getText().trim();
+                    logger.info("Category: {}", actualCategory);
+                    if (!expectedCategory.equalsIgnoreCase(actualCategory)) {
+                        return false;
+                    }
+                } catch (Exception e) {
+                    logger.error("Error while checking category: {}", e.getMessage());
+                    return false;
+                }
+            }
+            return true;
         });
     }
 
@@ -155,7 +172,7 @@ public class HomePage extends BasePage {
         return prevButton.isEnabled();
     }
 
-    private void waitForCardsToUpdate() {
+    public void waitForCardsToUpdate() {
         List<WebElement> oldCards = getAdCards();
         List<String> oldCardsText = extractTextsFromElements(oldCards);
 

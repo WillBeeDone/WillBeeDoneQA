@@ -21,26 +21,34 @@ public class LoginPage extends BasePage {
     @FindBy(xpath = "//button[@type='button' and contains(text(),'Sign In')]")
     WebElement signInButton;
 
-    @FindBy(xpath = "//button[contains(text(),'SignOut')]")
+    @FindBy(css = "a[data-testid='sign-out-link']")
     WebElement signOutButton;
 
     @FindBy(xpath = "//*[contains(text(), 'Invalid login or password.')]")
     WebElement errorMessage;
 
     @FindBy(css = "a[data-testid='LinkToPasswordRecovery_HgFtg']")
-    WebElement forgetPasswordButton;
+    WebElement forgotPasswordButton;
+
+    @FindBy(xpath = "//img[@alt='Hamburger icon']")
+    WebElement hamburgerMenu;
 
     public LoginPage(WebDriver driver, WebDriverWait wait) {
         super(driver, wait);
     }
 
-    public void openLoginPage() {
+    public LoginPage openLoginPage() {
         signInButton.click();
+        return this;
     }
 
     public void enterEmail(String email) {
         emailField.clear();
         emailField.sendKeys(email);
+    }
+
+    public void clickHamburgerMenu() {
+        hamburgerMenu.click();
     }
 
     public void enterPassword(String password) {
@@ -60,9 +68,9 @@ public class LoginPage extends BasePage {
         return errorMessage.getText();
     }
 
-    public ForgetPasswordPage getForgetPasswordPage() {
-        wait.until(ExpectedConditions.visibilityOf(forgetPasswordButton));
-        forgetPasswordButton.click();
-        return new ForgetPasswordPage(driver, wait);
+    public ForgotPasswordPage getForgotPasswordPage() {
+        wait.until(ExpectedConditions.visibilityOf(forgotPasswordButton));
+        forgotPasswordButton.click();
+        return new ForgotPasswordPage(driver, wait);
     }
 }

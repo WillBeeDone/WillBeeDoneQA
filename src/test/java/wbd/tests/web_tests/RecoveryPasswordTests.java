@@ -1,12 +1,15 @@
 package wbd.tests.web_tests;
 
+import org.openqa.selenium.TimeoutException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import wbd.core.TestBaseUI;
 import wbd.web.data.UserData;
 import wbd.web.helpers.HelperMailTm;
-import wbd.web.web_pages.*;
-
+import wbd.web.web_pages.ForgotPasswordPage;
+import wbd.web.web_pages.HomePage;
+import wbd.web.web_pages.RecoveryPasswordPage;
+import java.lang.reflect.Method;
 import java.io.IOException;
 
 
@@ -22,7 +25,7 @@ public class RecoveryPasswordTests extends TestBaseUI {
     private String resetLink;
 
     @BeforeMethod
-    public void precondition() throws IOException, InterruptedException {
+    public void precondition(Method method) throws IOException, InterruptedException {
         email = HelperMailTm.generateEmail();
         new HomePage(app.driver, app.wait)
                 .getRegistrationPage()
@@ -44,13 +47,13 @@ public class RecoveryPasswordTests extends TestBaseUI {
 
     @Test
     public void recoveryPasswordConfirmPositiveTest() throws IOException, InterruptedException {
-        logger.info("Open Forget Password Page");
-        ForgetPasswordPage forgetPasswordPage = new HomePage(app.driver, app.wait)
+        logger.info("Open Forgot Password Page");
+        ForgotPasswordPage forgotPasswordPage = new HomePage(app.driver, app.wait)
                 .getLoginPage()
-                .getForgetPasswordPage();
+                .getForgotPasswordPage();
 
         logger.info("Send reset request");
-        forgetPasswordPage
+        forgotPasswordPage
                 .enterEmail(email)
                 .enterSendButton();
 
@@ -103,12 +106,12 @@ public class RecoveryPasswordTests extends TestBaseUI {
     @Test
     public void recoveryPasswordCancelPositiveTest() throws IOException, InterruptedException {
         logger.info("Open Forget Password Page");
-        ForgetPasswordPage forgetPasswordPage = new HomePage(app.driver, app.wait)
+        ForgotPasswordPage forgotPasswordPage = new HomePage(app.driver, app.wait)
                 .getLoginPage()
-                .getForgetPasswordPage();
+                .getForgotPasswordPage();
 
         logger.info("Send reset request");
-        forgetPasswordPage
+        forgotPasswordPage
                 .enterEmail(email)
                 .enterSendButton();
 
@@ -140,12 +143,12 @@ public class RecoveryPasswordTests extends TestBaseUI {
     @Test
     public void recoveryPasswordOldPasswordNegativeTest() throws IOException, InterruptedException {
         logger.info("Open Forget Password Page");
-        ForgetPasswordPage forgetPasswordPage = new HomePage(app.driver, app.wait)
+        ForgotPasswordPage forgotPasswordPage = new HomePage(app.driver, app.wait)
                 .getLoginPage()
-                .getForgetPasswordPage();
+                .getForgotPasswordPage();
 
         logger.info("Send reset request");
-        forgetPasswordPage
+        forgotPasswordPage
                 .enterEmail(email)
                 .enterSendButton();
 
@@ -178,19 +181,30 @@ public class RecoveryPasswordTests extends TestBaseUI {
         logger.info("Captured alert text: " + alertText);
 
         // Баг: пароль успешно изменён, хотя он совпадает со старым
-        if (alertText != null && alertText.toLowerCase().contains("successfully")) {
-            logger.error("BUG: Old password was accepted and changed successfully — this should be disallowed!");
-        }
+//        if (alertText != null && alertText.toLowerCase().contains("successfully")) {
+//            logger.error("BUG: Old password was accepted and changed successfully — this should be disallowed!");
+//        }
+
+        // Временно, что алерт содержит ожидаемое сообщение об ошибке
+        softAssert.assertTrue(alertText.contains("Something went wrong"),
+                "Expected alert to contain: 'Something went wrong... Password not changed.'");
 
         // Проверка, что alert НЕ содержит сообщение об успешной смене
         softAssert.assertFalse(alertText.toLowerCase().contains("successfully"),
                 "BUG: Alert text should not confirm password change when reusing old password");
 
         // Проверка, что НЕ произошло редиректа на страницу логина
-        boolean redirected = recoveryPage.isRedirectedToLoginPage();
-        if (redirected) {
-            logger.error("BUG: Redirected to login page even though old password was reused");
+//        boolean redirected = recoveryPage.isRedirectedToLoginPage();
+//        if (redirected) {
+//            logger.error("BUG: Redirected to login page even though old password was reused");
+//        }
+        boolean redirected = false;
+        try {
+            redirected = recoveryPage.isRedirectedToLoginPage();
+        } catch (TimeoutException e) {
+            logger.info("Expected behavior: no redirect to login page");
         }
+
         softAssert.assertFalse(redirected, "BUG: Should not redirect to login page when old password is reused");
 
         softAssert.assertAll();
