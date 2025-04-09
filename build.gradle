@@ -11,52 +11,43 @@ repositories {
 }
 
 dependencies {
-
-    // Selenium WebDriver
     implementation 'org.seleniumhq.selenium:selenium-java:4.30.0'
-
-    // WebDriverManager (управление драйверами)
     implementation 'io.github.bonigarcia:webdrivermanager:6.0.0'
-
-    // Фреймворк TestNG для тестирования
     implementation 'org.testng:testng:7.11.0'
-
-    // Логирование: Logback вместо SLF4J
     implementation 'ch.qos.logback:logback-classic:1.5.18'
-
-    // Allure для отчетности
-    testImplementation 'io.qameta.allure:allure-testng:2.24.0'  // для TestNG !
-    //testImplementation 'io.qameta.allure:allure-selenide:2.29.1' // Логи и скриншоты
-
-    // rest-assured
+    testImplementation 'io.qameta.allure:allure-testng:2.24.0'
     implementation 'io.rest-assured:rest-assured:5.5.1'
-
-    // Lombok
     compileOnly 'org.projectlombok:lombok:1.18.36'
     annotationProcessor 'org.projectlombok:lombok:1.18.36'
-    // JSON парсинг org.json.JSONArray, org.json.JSONObject
     implementation 'org.json:json:20240303'
-
 }
+
 allure {
     version = '2.33.0'
     useTestNG {
         version = '2.24.0'
+        // resultsDir = file("allure-results") // 📁 Папка в корне проекта
     }
 }
 
-
 test {
-    useTestNG()
+    if (System.getProperty('suiteXmlFile') != null) {
+        println "Suite XML file (from Jenkins): " + System.getProperty('suiteXmlFile')
+        useTestNG {
+            suites System.getProperty('suiteXmlFile')
+        }
+    } else {
+        println "NO suiteXmlFile provided!"
+        useTestNG()
+    }
+
     systemProperty 'file.encoding', 'UTF-8'
 
-}
+    testLogging {
+        events "passed", "skipped", "failed"
+        showStandardStreams = true
+    }
 
-tasks.withType(JavaCompile) {
-    options.encoding = 'UTF-8'
-}
 
-// Добавление задачи для генерации Allure-отчета
-//task allureReport(type: Exec) {
-//  commandLine "allure", "generate", "allure-results", "-o", "allure-report", "--clean"
-//}
+    // outputs.dir("build/allure-results") — оставим закомментированным
+}
