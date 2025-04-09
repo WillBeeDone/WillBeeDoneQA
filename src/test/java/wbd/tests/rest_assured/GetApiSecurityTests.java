@@ -1,7 +1,9 @@
 package wbd.tests.rest_assured;
 
+
 import io.qameta.allure.*;
 import io.qameta.allure.testng.AllureTestNg;
+
 import io.restassured.response.Response;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
@@ -14,7 +16,6 @@ import static org.hamcrest.Matchers.*;
 
 @Epic("Security")
 @Feature("SQL Injection")
-
 @Listeners({AllureTestNg.class})
 
 public class GetApiSecurityTests extends TestBaseRA {
@@ -24,6 +25,7 @@ public class GetApiSecurityTests extends TestBaseRA {
     @Severity(SeverityLevel.CRITICAL)
     @Story("GET /offers/filter")
     @Description("SQL defense protection check in the OfferFilter parameter")
+
     public void testSqlInjectionInOfferFilter(String maliciousInput) {
         given()
                 .queryParam("category", maliciousInput)
@@ -46,6 +48,7 @@ public class GetApiSecurityTests extends TestBaseRA {
     @Story("GET /offers/{id}")
     @Description("Checking protection against SQL injections in the Offer ID: /Offers /{ID}")
 public void testSqlInjectionInOfferId(String maliciousId) {
+
         given()
                 .when()
                 .get("/offers/" + maliciousId)
@@ -63,6 +66,7 @@ public void testSqlInjectionInOfferId(String maliciousId) {
     @Severity(SeverityLevel.NORMAL)
     @Story("GET /offers/trigger-server-error")
     @Description("Error testing 404 with incorrect Endpoint: /Offers /Trigger-Server-Serror")
+
     public void testServerError() {
 
         Response response = given()

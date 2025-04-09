@@ -1,9 +1,9 @@
 package wbd.tests.rest_assured;
 
-import io.restassured.response.Response;
-import org.testng.annotations.BeforeClass;
+import io.qameta.allure.*;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import io.restassured.response.Response;
 import wbd.api.client.AuthClient;
 import wbd.api.client.get_post.ApiClient_PostAddOffer;
 import wbd.api.dto.AddOfferRequestDto;
@@ -11,10 +11,11 @@ import wbd.api.dto.AddOfferResponseDto;
 import wbd.api.dto.AuthRequestDto;
 import wbd.api.dto.LoginResponseDto;
 import wbd.core.TestBaseRA;
-import wbd.utils.RetryAnalyzer;
 
 import java.util.List;
 
+@Epic("Offers")
+@Feature("Add new offer")
 public class AddOfferTests extends TestBaseRA {
 
     private String accessToken;
@@ -55,7 +56,11 @@ public class AddOfferTests extends TestBaseRA {
         softAssert.assertAll();
     }
 
-    @Test
+    @Test(groups = "Positive")
+    @Severity(SeverityLevel.CRITICAL)
+    @Story("Authorized user can create a new offer")
+    @Description("Verify that a logged-in user can successfully add a new offer with valid data")
+    @TmsLink("")
     public void testAddOffer() {
 
         logger.info("The test begins: adding a new offer");
@@ -79,21 +84,21 @@ public class AddOfferTests extends TestBaseRA {
 
         // парсим ответ
         AddOfferResponseDto responseDto = response.as(AddOfferResponseDto.class);
-        softAssert.assertNotNull(responseDto, "Ответ не должен быть null");
+        softAssert.assertNotNull(responseDto, "The answer should not be null ");
 
         if (responseDto != null) {
-            softAssert.assertTrue(responseDto.getId() > 0, "id оффера должен быть больше 0");
-            softAssert.assertEquals(responseDto.getTitle(), requestDto.getTitle(), "title должен совпадать");
-            softAssert.assertEquals(responseDto.getPricePerHour(), requestDto.getPricePerHour(), "цена должна совпадать");
-            softAssert.assertEquals(responseDto.getDescription(), requestDto.getDescription(), "описание должно совпадать");
-            softAssert.assertNotNull(responseDto.getCategory(), "категория не должна быть null");
+            softAssert.assertTrue(responseDto.getId() > 0, "Offer ID should be more than 0");
+            softAssert.assertEquals(responseDto.getTitle(), requestDto.getTitle(), "Title must match");
+            softAssert.assertEquals(responseDto.getPricePerHour(), requestDto.getPricePerHour(), "The price should match");
+            softAssert.assertEquals(responseDto.getDescription(), requestDto.getDescription(), "The description must match");
+            softAssert.assertNotNull(responseDto.getCategory(), "The category should not be null");
 
             if (responseDto.getCategory() != null) {
-                softAssert.assertEquals(responseDto.getCategory().getName(), requestDto.getCategoryName(), "название категории должно совпадать");
+                softAssert.assertEquals(responseDto.getCategory().getName(), requestDto.getCategoryName(), "The name of the category must coincide");
             }
 
-            softAssert.assertNotNull(responseDto.getImages(), "список изображений не должен быть null");
-            logger.info("✅ оффер успешно добавлен с id: {}", responseDto.getId());
+            softAssert.assertNotNull(responseDto.getImages(), "The list of images should not be null");
+            logger.info("✅ Offer Successfully Added with ID: {}", responseDto.getId());
         }
 
         logger.info("---------------------------------------------------------");
@@ -101,25 +106,29 @@ public class AddOfferTests extends TestBaseRA {
     }
 
     @Test(groups = "Negative")
+    @Severity(SeverityLevel.CRITICAL)
+    @Story("Unauthorized user tries to create an offer")
+    @Description("Verify that user cannot add an offer without being authenticated")
+    @TmsLink("")
     public void testAddOfferWithoutAuth() {
-        logger.info("начинается тест: добавление оффера без авторизации");
+        logger.info("The test begins: adding an offer without authorization ");
         logger.info("=============================================");
 
         // создаем DTO запроса без токена
         AddOfferRequestDto requestDto = AddOfferRequestDto.builder()
                 .pricePerHour(25.0)
-                .description("Description ta-ta-ta-ta...")
+                .description("Description uuuuuuuuuuuuuuuuupssssss...")
                 .categoryName("Plumbing")
-                .title("Test Title")
+                .title("i'm a virus")
                 .images(List.of("img.jpg"))
                 .build();
 
         // отправляем запрос без токена
         Response response = ApiClient_PostAddOffer.addOffer(requestDto, null);
-        logger.info("ответ на добавление оффера без авторизации: {}", response.asString());
+        logger.info("The answer to the addition of an offer without authorization: {}", response.asString());
 
-        // проверка статус-кода (ожидаем ошибку 401)
-        softAssert.assertEquals(response.getStatusCode(), 401, "Expected status 401 Unauthorized");
+        // проверка статус-кода (ожидаем ошибку 403)
+        softAssert.assertEquals(response.getStatusCode(), 403, "Expected status 401 Unauthorized");
 
         softAssert.assertAll();
     }

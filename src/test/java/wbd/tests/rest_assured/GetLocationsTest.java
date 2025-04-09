@@ -1,5 +1,6 @@
 package wbd.tests.rest_assured;
 
+import io.qameta.allure.*;
 import io.restassured.response.Response;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
@@ -12,9 +13,15 @@ import java.util.List;
 
 import static io.restassured.RestAssured.given;
 
+@Epic("Locations")
+@Feature("Get Locations")
 public class GetLocationsTest extends TestBaseRA {
 
-    @Test
+    @Test(groups = "Positive")
+    @Severity(SeverityLevel.CRITICAL)
+    @Story("Successfully fetch locations")
+    @Description("Verify that the system returns a list of locations with a 200 status code and valid city names")
+    @TmsLink("")
     public void testGetLocations() {
 
         logger.info("Start testing GetLocations");
@@ -51,7 +58,11 @@ public class GetLocationsTest extends TestBaseRA {
 
     // ==================== негативные тесты =====================================
 
-    @Test
+    @Test(groups = "Negative")
+    @Severity(SeverityLevel.NORMAL)
+    @Story("Attempt to get locations with invalid endpoint")
+    @Description("Verify that the system returns a 404 status code for an invalid endpoint")
+    @TmsLink("")
     public void testGetLocationsWithInvalidEndpoint_Returns404() {
         // GET-запрос на неверный эндпоинт
         Response response = given()
@@ -69,7 +80,11 @@ public class GetLocationsTest extends TestBaseRA {
     }
 
     // баг-репорт QA-BugReport - 11, не возвращает 400, а отвечает 200 (ОК)
-    @Test
+    @Test(groups = "Negative")
+    @Severity(SeverityLevel.NORMAL)
+    @Story("Unexpected query parameter returns 400")
+    @Description("Verify that the system returns a 400 status code when an unexpected query parameter is provided")
+    @TmsLink("QA-BugReport - 11")
     public void testGetLocationsWithUnexpectedQueryParam_Returns400() {
         //  GET-запрос с неподдерживаемым query-параметром
         Response response = given()

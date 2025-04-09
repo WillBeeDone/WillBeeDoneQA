@@ -1,5 +1,6 @@
 package wbd.tests.rest_assured;
 
+import io.qameta.allure.*;
 import io.restassured.response.Response;
 import org.testng.annotations.Test;
 import wbd.api.client.get_post.ApiClient_GetOffers;
@@ -11,9 +12,15 @@ import java.util.List;
 
 import static io.restassured.RestAssured.given;
 
+@Epic("Offers")
+@Feature("Get All Offers")
 public class GetOffersTests extends TestBaseRA {
 
-    @Test
+    @Test(groups = "Positive")
+    @Severity(SeverityLevel.NORMAL)
+    @Story("Retrieve all available offers")
+    @Description("Verify that the system successfully retrieves all offers")
+    @TmsLink("")
     public void testGetOffers() {
         logger.info("Starting GetOffers test");
         logger.info("=============================================");
