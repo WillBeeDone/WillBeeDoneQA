@@ -15,12 +15,12 @@ import java.util.List;
 
 public class SearchTests extends TestBaseUI {
 
-    @Test
+    @Test(groups = "Positive")
     @Severity(SeverityLevel.CRITICAL)
     @Story("Search by keyword")
     @Description("Verify that search returns relevant results for the keyword 'Plumber'")
     @TmsLink("")
-    public void testSearchByKeyword() {
+    public void testSearchByKeywordPositive() {
         HomePage homePage = new HomePage(app.driver, app.wait);
 
         // Выполняем поиск

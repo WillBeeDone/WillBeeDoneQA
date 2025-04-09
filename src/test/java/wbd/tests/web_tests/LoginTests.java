@@ -14,7 +14,7 @@ import wbd.web.web_pages.LoginPage;
 @Listeners({AllureTestNg.class})
 public class LoginTests extends TestBaseUI {
 
-    @Test
+    @Test(groups = "Positive")
     @Severity(SeverityLevel.BLOCKER)
     @Story("User authentication")
     @Description("Verify that user can login with valid email and password")
@@ -31,7 +31,7 @@ public class LoginTests extends TestBaseUI {
         softAssert.assertAll();
     }
 
-    @Test(dataProvider = "invalidPasswords", dataProviderClass = DataProviders.class)
+    @Test(dataProvider = "invalidPasswords", dataProviderClass = DataProviders.class, groups = "Negative")
     @Severity(SeverityLevel.CRITICAL)
     @Story("Negative login scenarios")
     @Description("Verify system behavior when using invalid passwords")
