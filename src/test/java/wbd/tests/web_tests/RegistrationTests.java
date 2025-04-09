@@ -76,7 +76,7 @@ public class RegistrationTests extends TestBaseUI {
 
     // негативный тест валидации пароля c массивом данных
     @Test(groups = "Negative")
-    @Severity(SeverityLevel.NORMAL)
+    @Severity(SeverityLevel.CRITICAL)
     @Story("Negative registration scenarios")
     @Description("Verify that system displays error for invalid passwords")
     @TmsLink("")

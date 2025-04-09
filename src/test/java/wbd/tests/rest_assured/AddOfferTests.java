@@ -61,7 +61,7 @@ public class AddOfferTests extends TestBaseRA {
     @Story("Authorized user can create a new offer")
     @Description("Verify that a logged-in user can successfully add a new offer with valid data")
     @TmsLink("")
-    public void testAddOffer() {
+    public void testAddOfferPositiveTest() {
 
         logger.info("The test begins: adding a new offer");
         logger.info("=============================================");
@@ -110,7 +110,7 @@ public class AddOfferTests extends TestBaseRA {
     @Story("Unauthorized user tries to create an offer")
     @Description("Verify that user cannot add an offer without being authenticated")
     @TmsLink("")
-    public void testAddOfferWithoutAuth() {
+    public void testAddOfferWithoutAuthNegativeTest() {
         logger.info("The test begins: adding an offer without authorization ");
         logger.info("=============================================");
 

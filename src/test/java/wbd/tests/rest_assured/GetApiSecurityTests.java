@@ -71,7 +71,7 @@ public class GetApiSecurityTests extends TestBaseRA {
     @Story("Server error handling")
     @Description("Verify that the system correctly handles server errors (e.g., incorrect endpoint) and responds with appropriate status code.")
     @TmsLink("QA-BugReport-10")
-    public void testServerError() {
+    public void testServerErrorTest() {
         // симулируем ошибку на сервере, например, при вызове неправильного endpoint или когда сервер не может обработать запрос
         Response response = given()
                 .when()
