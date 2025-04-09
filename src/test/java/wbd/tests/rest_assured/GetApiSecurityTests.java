@@ -1,5 +1,8 @@
 package wbd.tests.rest_assured;
 
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.*;
 import io.restassured.response.Response;
 import org.testng.annotations.Test;
 import wbd.core.TestBaseRA;
@@ -9,7 +12,8 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.Matchers.*;
 
-
+@Epic("Security")
+@Feature("SQL Injection Testing")
 public class GetApiSecurityTests extends TestBaseRA {
     // Задача проверки:
     // Подставляем вредоносные строки в query-параметры (в category, priceFrom, location)
@@ -19,6 +23,10 @@ public class GetApiSecurityTests extends TestBaseRA {
     //сервис корректно фильтрует/отфутболивает
     // GET /offers/filter, SQL-инъекции в query-параметры
     @Test(dataProvider = "sqlInjectionPayloads", dataProviderClass = DataProviders.class, groups = "security")
+    @Severity(SeverityLevel.CRITICAL)
+    @Story("SQL Injection in offer filter parameters")
+    @Description("Verify that the system correctly handles SQL injection attempts in query parameters such as category, priceFrom, and location.")
+    @TmsLink("")
     public void testSqlInjectionInOfferFilter(String maliciousInput) {
         given()
                 .queryParam("category", maliciousInput)
@@ -42,6 +50,10 @@ public class GetApiSecurityTests extends TestBaseRA {
     // нет SQL сообщений;
     //бэк отвечает контролируемо (400, 404, 422 и т.д.)
     @Test(dataProvider = "sqlInjectionPayloads", dataProviderClass = DataProviders.class, groups = "security")
+    @Severity(SeverityLevel.CRITICAL)
+    @Story("SQL Injection in offer ID parameter")
+    @Description("Verify that the system correctly handles SQL injection attempts in the path parameter (offer ID).")
+    @TmsLink("")
     public void testSqlInjectionInOfferId(String maliciousId) {
         given()
                 .when()
@@ -55,6 +67,10 @@ public class GetApiSecurityTests extends TestBaseRA {
     }
     // баг-репорт QA-BugReport-10, сервер возвращает 200
     @Test(groups = "security")
+    @Severity(SeverityLevel.CRITICAL)
+    @Story("Server error handling")
+    @Description("Verify that the system correctly handles server errors (e.g., incorrect endpoint) and responds with appropriate status code.")
+    @TmsLink("QA-BugReport-10")
     public void testServerError() {
         // симулируем ошибку на сервере, например, при вызове неправильного endpoint или когда сервер не может обработать запрос
         Response response = given()

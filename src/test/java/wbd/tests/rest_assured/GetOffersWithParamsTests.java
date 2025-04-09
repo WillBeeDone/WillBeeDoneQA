@@ -1,5 +1,6 @@
 package wbd.tests.rest_assured;
 
+import io.qameta.allure.*;
 import io.restassured.response.Response;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
@@ -16,10 +17,15 @@ import java.util.List;
 // - можно ограничить по minPrice / maxPrice
 // - работает sort=pricePerHour,desc
 // - корректные size и page
+@Epic("Offers")
+@Feature("Get Offers with Parameters")
 public class GetOffersWithParamsTests extends TestBaseRA {
 
-    @Test
-    public void testGetOffersWithCityNameParam() {
+    @Test(groups = "Positive")
+    @Severity(SeverityLevel.NORMAL)
+    @Story("Get offers with cityName filter")
+    @Description("Verify that offers are filtered correctly by cityName (e.g. Berlin).")
+    @TmsLink("")    public void testGetOffersWithCityNameParam() {
         logger.info("Starting GetOffersWithCityNameParam test");
         logger.info("=============================================");
 
@@ -49,7 +55,11 @@ public class GetOffersWithParamsTests extends TestBaseRA {
         softAssert.assertAll();
     }
 
-    @Test
+    @Test(groups = "Positive")
+    @Severity(SeverityLevel.NORMAL)
+    @Story("Get offers with category filter")
+    @Description("Verify that offers are filtered correctly by category (e.g. Plumber).")
+    @TmsLink("")
     public void testGetOffersWithCategoryParam() {
         logger.info("Starting GetOffersWithCategoryParam test");
         logger.info("=============================================");
@@ -80,7 +90,11 @@ public class GetOffersWithParamsTests extends TestBaseRA {
         softAssert.assertAll();
     }
 
-    @Test
+    @Test(groups = "Positive")
+    @Severity(SeverityLevel.NORMAL)
+    @Story("Get offers with keyPhrase filter")
+    @Description("Verify that offers are filtered correctly by keyPhrase (e.g. Plumber).")
+    @TmsLink("")
     public void testGetOffersWithKeyPhraseParam() {
         logger.info("Starting GetOffersWithKeyPhraseParam test");
         logger.info("=========================================");
@@ -112,7 +126,11 @@ public class GetOffersWithParamsTests extends TestBaseRA {
         softAssert.assertAll();
     }
 
-    @Test
+    @Test(groups = "Positive")
+    @Severity(SeverityLevel.NORMAL)
+    @Story("Get offers with price range filter")
+    @Description("Verify that offers are filtered correctly by price range.")
+    @TmsLink("")
     public void testGetOffersWithPriceRangeParams() {
         logger.info("Starting GetOffersWithPriceRangeParams test");
         logger.info("=============================================");
@@ -141,7 +159,11 @@ public class GetOffersWithParamsTests extends TestBaseRA {
         softAssert.assertAll();
     }
 
-    @Test
+    @Test(groups = "Positive")
+    @Severity(SeverityLevel.NORMAL)
+    @Story("Get offers with sorting parameter")
+    @Description("Verify that offers are sorted correctly by pricePerHour.")
+    @TmsLink("")
     public void testGetOffersWithSortingParam() {
         logger.info("Starting GetOffersWithSortingParam test");
         logger.info("=============================================");
@@ -187,7 +209,11 @@ public class GetOffersWithParamsTests extends TestBaseRA {
         softAssert.assertAll();
     }
 
-    @Test
+    @Test(groups = "Positive")
+    @Severity(SeverityLevel.NORMAL)
+    @Story("Get offers with pagination parameters")
+    @Description("Verify that offers pagination works with size and page parameters.")
+    @TmsLink("")
     public void testGetOffersWithPaginationParams() {
         logger.info("Starting GetOffersWithPaginationParams test");
         logger.info("=============================================");
@@ -211,7 +237,12 @@ public class GetOffersWithParamsTests extends TestBaseRA {
 
     // ========================== негативные тесты ==========================
 
-    @Test // баг-репорт QA - BugReport -23
+    @Test(groups = "Negative")  // баг-репорт QA-BugReport - 23
+    @Severity(SeverityLevel.CRITICAL)
+    @Story("Get offers with invalid cityName")
+    @Description("Verify that the system returns an error for invalid cityName (e.g. NonExistentCity).")
+    @TmsLink("QA-BugReport - 23")
+
     public void testGetOffersWithInvalidCityName() {
         logger.info("Testing GetOffers with Invalid City Name");
 

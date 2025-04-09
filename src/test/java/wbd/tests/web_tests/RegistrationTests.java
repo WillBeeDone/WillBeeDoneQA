@@ -1,9 +1,12 @@
 package wbd.tests.web_tests;
 
+import io.qameta.allure.*;
+import io.qameta.allure.testng.AllureTestNg;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 import wbd.core.TestBaseUI;
 import wbd.utils.DataProviders;
@@ -15,6 +18,9 @@ import java.io.IOException;
 
 import static wbd.web.helpers.HelperMailTm.getConfirmationLink;
 
+@Epic("Authorization")
+@Feature("Registration functionality")
+@Listeners({AllureTestNg.class})
 public class RegistrationTests extends TestBaseUI {
     RegistrationPage registrationPage;
 
@@ -25,7 +31,11 @@ public class RegistrationTests extends TestBaseUI {
     }
 
     // позитивный тест регистрации нового пользователя
-    @Test
+    @Test(groups = "Positive")
+    @Severity(SeverityLevel.CRITICAL)
+    @Story("User registration")
+    @Description("Verify that a user can register with valid email and password")
+    @TmsLink("")
     public void Registration_PositiveTest() {
         String randomEmail = "test" + System.currentTimeMillis() + "@gmail.com";
 
@@ -47,7 +57,11 @@ public class RegistrationTests extends TestBaseUI {
     }
 
     // негативный тест на ввод некорректного email с массивом данных
-    @Test
+    @Test(groups = "Negative")
+    @Severity(SeverityLevel.NORMAL)
+    @Story("Negative registration scenarios")
+    @Description("Verify that system displays error for invalid email formats")
+    @TmsLink("")
     public void Registration_InvalidEmail_NegativeTest() {
         registrationPage.openRegistrationPage();
         // массив 12 невалидных имейлов  (пока нет реакции сайта на русские буквы)
@@ -61,7 +75,11 @@ public class RegistrationTests extends TestBaseUI {
     }
 
     // негативный тест валидации пароля c массивом данных
-    @Test
+    @Test(groups = "Negative")
+    @Severity(SeverityLevel.NORMAL)
+    @Story("Negative registration scenarios")
+    @Description("Verify that system displays error for invalid passwords")
+    @TmsLink("")
     public void Password_Validation_NegativeTest() {
         // массив 11 невалидных паролей
         String[] invalidPasswords = {"1111111", "ffffffff", "Pa123!", " ", " password1!", " password1! ", " pass word1!", "password1!", "Password!", "Password1", "Пароль123!"};
@@ -80,6 +98,10 @@ public class RegistrationTests extends TestBaseUI {
 
     // негативный тест валидации имейла c DataProvider
     @Test(dataProvider = "invalidEmails", dataProviderClass = DataProviders.class)
+    @Severity(SeverityLevel.NORMAL)
+    @Story("Negative registration scenarios")
+    @Description("Email validation with invalid inputs using data provider")
+    @TmsLink("")
     public void Email_Validation_With_Provider_NegativeTest(String invalidEmail, String errorDescription) {
         registrationPage.openRegistrationPage()
                 .enterEmail(invalidEmail);
@@ -97,6 +119,10 @@ public class RegistrationTests extends TestBaseUI {
 
     // негативный тест валидации пароля c DataProvider
     @Test(dataProvider = "invalidPasswords", dataProviderClass = DataProviders.class)
+    @Severity(SeverityLevel.NORMAL)
+    @Story("Negative registration scenarios")
+    @Description("Password validation with invalid inputs using data provider")
+    @TmsLink("")
     public void Password_Validation_With_Provider_NegativeTest(String invalidPassword, String errorDescription) {
         registrationPage.openRegistrationPage()
                 .enterPassword(invalidPassword);
@@ -115,7 +141,11 @@ public class RegistrationTests extends TestBaseUI {
     //============================= Сервис mail.tm ==========================================
 
     // тест регистрации с временным email через mail.tm
-    @Test
+    @Test(groups = "Positive")
+    @Severity(SeverityLevel.BLOCKER)
+    @Story("User registration")
+    @Description("Verify registration with temporary email using mail.tm")
+    @TmsLink("")
     public void RegistrationWithMailTmPositiveTest() throws IOException, InterruptedException {
         String email = HelperMailTm.generateEmail(); // генерируем временный email
         String password = UserData.VALID_PASSWORD;

@@ -1,15 +1,22 @@
 package wbd.tests.rest_assured;
 
+import io.qameta.allure.*;
 import io.restassured.response.Response;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import wbd.api.client.get_post.ApiClient_GetCategories;
 import wbd.core.TestBaseRA;
-import java.util.List;
 
+import java.util.List;
+@Epic("Categories")
+@Feature("Get Categories")
 public class GetCategoriesTests extends TestBaseRA {
 
-    @Test
+    @Test(groups = "Positive")
+    @Severity(SeverityLevel.CRITICAL)
+    @Story("Successfully fetch categories")
+    @Description("Verify that the system returns a list of categories with a 200 status code and non-empty category names")
+    @TmsLink("")
     public void GetCategories_PositiveTest() {
 
         logger.info("Start testing GetCategories");
@@ -41,7 +48,11 @@ public class GetCategoriesTests extends TestBaseRA {
 
     // ======================= негативные тесты ================================
 
-    @Test
+    @Test(groups = "Negative")
+    @Severity(SeverityLevel.NORMAL)
+    @Story("Get categories with invalid endpoint")
+    @Description("Verify that the system returns a 404 status code when trying to get categories from an invalid endpoint")
+    @TmsLink("")
     public void testGetCategories_NotFound_404() {
         logger.info("Start testing GetCategories with invalid endpoint");
         logger.info("=============================================");
