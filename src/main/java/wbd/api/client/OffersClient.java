@@ -3,11 +3,11 @@ package wbd.api.client;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
-import wbd.api.dto.OfferRequestDto;
+import wbd.api.dto.AddOfferRequestDto;
 
 public class OffersClient {
 
-    public static Response createOffer(OfferRequestDto request, String accessToken) {
+    public static Response createOffer(AddOfferRequestDto request, String accessToken) {
         return RestAssured
                 .given()
                 .header("Authorization", "Bearer " + accessToken)

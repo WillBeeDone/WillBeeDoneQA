@@ -5,13 +5,13 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import wbd.api.client.AuthClient;
 import wbd.api.dto.AuthRequestDto;
-import wbd.api.dto.TokenResponseDto;
+import wbd.api.dto.LoginResponseDto;
 import wbd.core.TestBaseRA;
 import wbd.utils.RetryAnalyzer;
 
 public class LoginTests extends TestBaseRA {
-    private final String validEmail = "john@gmail.com"; // подтверждённый пользователь
-    private final String validPassword = "11111111";
+    private final String validEmail = "wbdqatest52@gmail.com"; // подтверждённый пользователь
+    private final String validPassword = "Password!123";
     private final String invalidPassword = "111111112";
     private AuthRequestDto body;
     private AuthRequestDto errorBody;
@@ -31,7 +31,7 @@ public class LoginTests extends TestBaseRA {
 
     }
 
-    @Test(retryAnalyzer = RetryAnalyzer.class)
+    @Test()
     public void loginSimpleTestWithoutAssert() {
         Response response = AuthClient.login(body);
         response
@@ -41,29 +41,35 @@ public class LoginTests extends TestBaseRA {
     }
 
 
-    //  баг-репорт
-    @Test(retryAnalyzer = RetryAnalyzer.class,groups = "Positive")
+    @Test(retryAnalyzer = RetryAnalyzer.class, groups = "Positive")
     public void loginSuccessTestPositive() {
         Response response = AuthClient.login(body);
         logger.info("Login response: {}", response.asString());
 
-        softAssert.assertEquals(response.getStatusCode(), 200, "Expected 200 OK");
+        int statusCode = response.getStatusCode();
+        softAssert.assertEquals(statusCode, 200, "Expected 200 OK");
 
-        TokenResponseDto tokens = response.as(TokenResponseDto.class);
-        softAssert.assertNotNull(tokens, "TokenResponseDto should not be null");
+        if (statusCode == 200) {
+            LoginResponseDto user = response.as(LoginResponseDto.class);
 
-        if (tokens != null) {
-            softAssert.assertNotNull(tokens.getAccessToken(), "accessToken should not be null");
-            softAssert.assertNotNull(tokens.getRefreshToken(), "refreshToken should not be null");
+            softAssert.assertNotNull(user, "TokenResponseDto should not be null");
 
-            logger.info("Access Token: {}", tokens.getAccessToken());
-            logger.info("Refresh Token: {}", tokens.getRefreshToken());
+            if (user != null) {
+                softAssert.assertNotNull(user.getAccessToken(), "accessToken should not be null");
+                softAssert.assertNotNull(user.getRefreshToken(), "refreshToken should not be null");
+
+                logger.info("Access Token: {}", user.getAccessToken());
+                logger.info("Refresh Token: {}", user.getRefreshToken());
+            }
+        } else {
+            logger.error("Login failed: status code = {}, body = {}", statusCode, response.asPrettyString());
+            softAssert.fail("Login failed: unexpected status code " + statusCode);
         }
 
         softAssert.assertAll();
     }
 
-    // баг-репорт
+
     @Test(groups = "Negative")
     public void loginWrongPasswordTestNegative() {
         Response loginResponse = AuthClient.login(errorBody);

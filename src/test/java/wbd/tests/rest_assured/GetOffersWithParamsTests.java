@@ -1,17 +1,14 @@
 package wbd.tests.rest_assured;
 
 import io.restassured.response.Response;
-import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
-import wbd.api.client.get.ApiClient_GetOffers;
+import wbd.api.client.get_post.ApiClient_GetOffers;
 import wbd.api.dto.OfferDto;
 import wbd.api.dto.OfferResponseDto;
 import wbd.core.TestBaseRA;
 
 import java.util.List;
-
-import static wbd.core.TestBaseUI.logger;
 
 // В тестах проверяем параметры запроса для получения списка офферов !
 //  что фильтры работают корректно:
@@ -86,18 +83,16 @@ public class GetOffersWithParamsTests extends TestBaseRA {
     @Test
     public void testGetOffersWithKeyPhraseParam() {
         logger.info("Starting GetOffersWithKeyPhraseParam test");
-        logger.info("=============================================");
+        logger.info("=========================================");
 
-        // отправляем GET-запрос с параметром keyPhrase=Plumber with beard
-        Response response = ApiClient_GetOffers.getOffersWithParams(null, null, "Plumber with beard", null, null, null, null, null);
+        // отправляем GET-запрос с параметром keyPhrase=Plumber
+        Response response = ApiClient_GetOffers.getOffersWithParams(null, null, "Plumber", null, null, null, null, null);
         logger.info("Response body: " + response.asString());
-
-        SoftAssert softAssert = new SoftAssert();
 
         // проверяем статус-код 200 OK
         softAssert.assertEquals(response.getStatusCode(), 200, "Expected status code 200");
 
-        // парсим ответ в объект OfferResponseDto
+        // Парсим ответ в объект OfferResponseDto
         OfferResponseDto offerResponse = response.as(OfferResponseDto.class);
 
         // проверяем, что список офферов не пустой
@@ -105,10 +100,13 @@ public class GetOffersWithParamsTests extends TestBaseRA {
         softAssert.assertNotNull(offers, "Offers list must not be null");
         softAssert.assertFalse(offers.isEmpty(), "Offers list must not be empty");
 
-        // проверяем, что ключевая фраза каждого оффера соответствует фильтру
+        // проверяем, что categoryDto.name соответствует фильтру
         for (OfferDto offer : offers) {
-            softAssert.assertTrue(offer.getTitle().contains("Plumber with beard"),
-                    "Offer title should contain 'Plumber with beard'");
+            String categoryName = offer.getCategoryDto().getName();
+            softAssert.assertTrue(
+                    categoryName != null && categoryName.toLowerCase().contains("plumber"),
+                    "Offer category name should contain 'Plumber'"
+            );
         }
 
         softAssert.assertAll();
@@ -122,8 +120,6 @@ public class GetOffersWithParamsTests extends TestBaseRA {
         // отправляем GET-запрос с параметрами minPrice=50 и maxPrice=200
         Response response = ApiClient_GetOffers.getOffersWithParams(null, null, null, 50.0, 200.0, null, null, null);
         logger.info("Response body: " + response.asString());
-
-        SoftAssert softAssert = new SoftAssert();
 
         // проверяем статус-код 200 OK
         softAssert.assertEquals(response.getStatusCode(), 200, "Expected status code 200");
@@ -150,28 +146,42 @@ public class GetOffersWithParamsTests extends TestBaseRA {
         logger.info("Starting GetOffersWithSortingParam test");
         logger.info("=============================================");
 
-        // отправляем GET-запрос с параметром sort=pricePerHour,desc
-        Response response = ApiClient_GetOffers.getOffersWithParams(null, null, null, null, null, "pricePerHour,desc", null, null);
+        //  GET-запрос с параметром сортировки
+        Response response = ApiClient_GetOffers.getOffersWithParams(
+                null, null, null, null, null,
+                "pricePerHour,desc", // сортировка
+                null, null
+        );
+
         logger.info("Response body: " + response.asString());
 
-        SoftAssert softAssert = new SoftAssert();
-
         // проверяем статус-код 200 OK
-        softAssert.assertEquals(response.getStatusCode(), 200, "Expected status code 200");
+        int statusCode = response.getStatusCode();
+        softAssert.assertEquals(statusCode, 200, "Expected status code 200");
 
-        // парсим ответ в объект OfferResponseDto
+        // если ошибка — не продолжаем, выводим причину
+        if (statusCode != 200) {
+            logger.error("❌ Server returned error instead of expected data: " + response.asString());
+            softAssert.fail("Can't parse OfferResponseDto because server returned error");
+            softAssert.assertAll();
+            return;
+        }
+        // парсим ответ
         OfferResponseDto offerResponse = response.as(OfferResponseDto.class);
-
-        // проверяем, что список офферов не пустой
         List<OfferDto> offers = offerResponse.getContent();
+
         softAssert.assertNotNull(offers, "Offers list must not be null");
         softAssert.assertFalse(offers.isEmpty(), "Offers list must not be empty");
 
-        // проверяем, что офферы отсортированы по цене
-        double previousPrice = -1;
+        // проверяем, что отсортировано по убыванию
+        double previousPrice = Double.MAX_VALUE;
         for (OfferDto offer : offers) {
-            softAssert.assertTrue(offer.getPricePerHour() <= previousPrice, "Offers should be sorted by pricePerHour in descending order");
-            previousPrice = offer.getPricePerHour();
+            double currentPrice = offer.getPricePerHour();
+            softAssert.assertTrue(
+                    currentPrice <= previousPrice,
+                    String.format("Offers should be sorted by pricePerHour descending. Got: %.2f > %.2f", currentPrice, previousPrice)
+            );
+            previousPrice = currentPrice;
         }
 
         softAssert.assertAll();
@@ -185,8 +195,6 @@ public class GetOffersWithParamsTests extends TestBaseRA {
         // отправляем GET-запрос с параметрами size=5 и page=1
         Response response = ApiClient_GetOffers.getOffersWithParams(null, null, null, null, null, null, 5, 1);
         logger.info("Response body: " + response.asString());
-
-        SoftAssert softAssert = new SoftAssert();
 
         // проверяем статус-код 200 OK
         softAssert.assertEquals(response.getStatusCode(), 200, "Expected status code 200");
@@ -203,7 +211,7 @@ public class GetOffersWithParamsTests extends TestBaseRA {
 
     // ========================== негативные тесты ==========================
 
-    @Test
+    @Test // баг-репорт QA - BugReport -23
     public void testGetOffersWithInvalidCityName() {
         logger.info("Testing GetOffers with Invalid City Name");
 
@@ -211,7 +219,6 @@ public class GetOffersWithParamsTests extends TestBaseRA {
         Response response = ApiClient_GetOffers.getOffersWithParams("NonExistentCity", null, null, null, null, null, null, null);
 
         // проверяем, что статус ответа 400 (Bad Request) или 404 (Not Found) для несуществующего города
-        SoftAssert softAssert = new SoftAssert();
         softAssert.assertEquals(response.getStatusCode(), 400, "Expected status code 400 for invalid cityName");
 
         // проверяем, что в ответе есть сообщение об ошибке (если оно присутствует)
@@ -221,6 +228,7 @@ public class GetOffersWithParamsTests extends TestBaseRA {
         softAssert.assertAll();
     }
 
+    // баг-репорт QA-BugReport - 22
     @Test
     public void testGetOffersWithInvalidCategory() {
         logger.info("Testing GetOffers with Invalid Category");
@@ -229,7 +237,6 @@ public class GetOffersWithParamsTests extends TestBaseRA {
         Response response = ApiClient_GetOffers.getOffersWithParams(null, "NonExistentCategory", null, null, null, null, null, null);
 
         // проверяем, что статус ответа 400 (Bad Request) или 404 (Not Found) для несуществующей категории
-        SoftAssert softAssert = new SoftAssert();
         softAssert.assertEquals(response.getStatusCode(), 400, "Expected status code 400 for invalid category");
 
         // проверяем сообщение об ошибке
@@ -239,14 +246,12 @@ public class GetOffersWithParamsTests extends TestBaseRA {
         softAssert.assertAll();
     }
 
-    @Test  //   ожидали статус-код 400 или 422, но получили 200 - писать багрепорт - API не проверяет валидность цен
+    @Test  // баг-репорт QA-Bagreport -24 (не проверяет валидность цен)
     public void testGetOffersWithInvalidPrice() {
         logger.info("Testing GetOffers with Invalid Price");
 
         // Здесь просто передаем null, чтобы тестировать, что происходит с отсутствием значения
         Response response = ApiClient_GetOffers.getOffersWithParams(null, null, null, null, null, null, null, null);
-
-        SoftAssert softAssert = new SoftAssert();
 
         // Проверяем, что статус ответа либо 400 (Bad Request), либо 422 (Unprocessable Entity)
         softAssert.assertTrue(response.getStatusCode() == 400 || response.getStatusCode() == 422,
@@ -259,20 +264,17 @@ public class GetOffersWithParamsTests extends TestBaseRA {
         softAssert.assertAll();
     }
 
-
-
-    @Test
+    @Test // баг-репорт QA-BagReport-25 (null не отбивает)
     public void testGetOffersWithInvalidMinPrice() {
         logger.info("Testing GetOffers with Invalid Min Price");
 
-        // Отправляем запрос с некорректным значением для параметра minPrice (строка вместо числа)
-        Response response = ApiClient_GetOffers.getOffersWithParams(null, null, "invalidPrice", null, null, null, null, null);
+        // отправляем запрос с некорректным значением для параметра minPrice (строка вместо числа)
+        Response response = ApiClient_GetOffers.getOffersWithParams(null, null, null, 0.0, null, null, null, null);
 
-        // Проверяем, что статус ответа 400 (Bad Request) для некорректной цены
-        SoftAssert softAssert = new SoftAssert();
+        // проверяем, что статус ответа 400 (Bad Request) для некорректной цены
         softAssert.assertEquals(response.getStatusCode(), 400, "Expected status code 400 for invalid minPrice");
 
-        // Проверяем, что в ответе есть сообщение об ошибке
+        // проверяем, что в ответе есть сообщение об ошибке
         String errorMessage = response.jsonPath().getString("error");
         softAssert.assertNotNull(errorMessage, "Error message must not be null");
 
@@ -284,10 +286,9 @@ public class GetOffersWithParamsTests extends TestBaseRA {
         logger.info("Testing GetOffers with Invalid Max Price");
 
         // отправляем запрос с некорректным значением для параметра maxPrice (строка вместо числа)
-        Response response = ApiClient_GetOffers.getOffersWithParams(null, null, null, null, null, null, null, null);
+        Response response = ApiClient_GetOffers.getOffersWithParams(null, null, null, null, -5.0, null, null, null);
 
         // проверяем, что статус ответа 400 (Bad Request) для некорректной максимальной цены
-        SoftAssert softAssert = new SoftAssert();
         softAssert.assertEquals(response.getStatusCode(), 400, "Expected status code 400 for invalid maxPrice");
 
         // проверяем, что в ответе есть сообщение об ошибке
@@ -297,6 +298,7 @@ public class GetOffersWithParamsTests extends TestBaseRA {
         softAssert.assertAll();
     }
 
+    // баг-репорт QA-BagReport -25
     @Test
     public void testGetOffersWithNegativePage() {
         logger.info("Testing GetOffers with Invalid Page Number");
@@ -305,7 +307,6 @@ public class GetOffersWithParamsTests extends TestBaseRA {
         Response response = ApiClient_GetOffers.getOffersWithParams(null, null, null, null, null, null, null, -1);
 
         // проверяем, что статус ответа 400 (Bad Request) для отрицательного номера страницы
-        SoftAssert softAssert = new SoftAssert();
         softAssert.assertEquals(response.getStatusCode(), 400, "Expected status code 400 for negative page number");
 
         // проверяем, что в ответе есть сообщение об ошибке
@@ -315,6 +316,7 @@ public class GetOffersWithParamsTests extends TestBaseRA {
         softAssert.assertAll();
     }
 
+    // баг-репорт QA-BagReport -27
     @Test
     public void testGetOffersWithInvalidSort() {
         logger.info("Testing GetOffers with Invalid Sort Parameter");
@@ -323,7 +325,6 @@ public class GetOffersWithParamsTests extends TestBaseRA {
         Response response = ApiClient_GetOffers.getOffersWithParams(null, null, null, null, null, "invalidSort", null, null);
 
         // проверяем, что статус ответа 400 (Bad Request) для неверного параметра sort
-        SoftAssert softAssert = new SoftAssert();
         softAssert.assertEquals(response.getStatusCode(), 400, "Expected status code 400 for invalid sort parameter");
 
         // проверяем, что в ответе есть сообщение об ошибке
@@ -333,6 +334,7 @@ public class GetOffersWithParamsTests extends TestBaseRA {
         softAssert.assertAll();
     }
 
+    // добавлено в баг-репорт QA-Bagreport -24
     @Test
     public void testGetOffersWithMissingMandatoryParams() {
         logger.info("Testing GetOffers with Missing Mandatory Parameters");
@@ -341,7 +343,6 @@ public class GetOffersWithParamsTests extends TestBaseRA {
         Response response = ApiClient_GetOffers.getOffersWithParams(null, null, null, null, null, null, null, null);
 
         // проверяем, что статус ответа 400 (Bad Request) для отсутствующих обязательных параметров
-        SoftAssert softAssert = new SoftAssert();
         softAssert.assertEquals(response.getStatusCode(), 400, "Expected status code 400 for missing mandatory parameters");
 
         // проверяем, что в ответе есть сообщение об ошибке

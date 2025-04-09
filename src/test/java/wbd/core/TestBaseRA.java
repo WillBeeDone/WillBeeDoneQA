@@ -32,7 +32,15 @@ public class TestBaseRA {
 
     @BeforeMethod
     public void init() {
-        RestAssured.baseURI = "https://monkfish-app-73239.ondigitalocean.app/";
+        RestAssured.baseURI = "http://localhost:8080/";
         RestAssured.basePath = "api";
+    }
+
+    // вспомогательный метод для проверки, что строка не null и не пустая
+    protected void assertNotNullAndNotEmpty(String value, String fieldName) {
+        softAssert.assertNotNull(value, fieldName + " must not be null");
+        if (value != null) {
+            softAssert.assertFalse(value.isEmpty(), fieldName + " must not be empty");
+        }
     }
 }

@@ -3,7 +3,7 @@ package wbd.tests.rest_assured;
 import io.restassured.response.Response;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
-import wbd.api.client.get.ApiClient_GetAllOffers;
+import wbd.api.client.get_post.ApiClient_GetAllOffers;
 import wbd.api.dto.AllOffersResponseDto;
 import wbd.core.TestBaseRA;
 
@@ -47,44 +47,39 @@ public class GetAllOffersTests extends TestBaseRA {
             softAssert.assertTrue(offer.getId() > 0, "id must be greater than 0");
 
             // проверяем title
-            softAssert.assertNotNull(offer.getTitle(), "title must not be null");
-            softAssert.assertFalse(offer.getTitle().isEmpty(), "title must not be empty");
+            assertNotNullAndNotEmpty(offer.getTitle(), "title");
 
             // проверяем категорию
             softAssert.assertNotNull(offer.getCategoryDto(), "category must not be null");
-            softAssert.assertNotNull(offer.getCategoryDto().getName(), "category name must not be null");
-            softAssert.assertFalse(offer.getCategoryDto().getName().isEmpty(), "category name must not be empty");
+            if (offer.getCategoryDto() != null) {
+                assertNotNullAndNotEmpty(offer.getCategoryDto().getName(), "category name");
+            }
 
             // проверяем pricePerHour
             softAssert.assertTrue(offer.getPricePerHour() > 0, "price per hour must be positive");
 
             // проверяем description
-            softAssert.assertNotNull(offer.getDescription(), "description must not be null");
-            softAssert.assertFalse(offer.getDescription().isEmpty(), "description must not be empty");
+            assertNotNullAndNotEmpty(offer.getDescription(), "description");
 
             // проверяем пользователя
             softAssert.assertNotNull(offer.getUserFilterResponseDto(), "user must not be null");
 
             if (offer.getUserFilterResponseDto() != null) {
                 // проверяем firstName
-                softAssert.assertNotNull(offer.getUserFilterResponseDto().getFirstName(), "firstName must not be null");
-                softAssert.assertFalse(offer.getUserFilterResponseDto().getFirstName().isEmpty(), "firstName must not be empty");
+                assertNotNullAndNotEmpty(offer.getUserFilterResponseDto().getFirstName(), "firstName");
 
                 // проверяем lastName
-                softAssert.assertNotNull(offer.getUserFilterResponseDto().getLastName(), "lastName must not be null");
-                softAssert.assertFalse(offer.getUserFilterResponseDto().getLastName().isEmpty(), "lastName must not be empty");
+                assertNotNullAndNotEmpty(offer.getUserFilterResponseDto().getLastName(), "lastName");
 
                 // проверяем profilePicture
-                softAssert.assertNotNull(offer.getUserFilterResponseDto().getProfilePicture(), "profilePicture must not be null");
-                softAssert.assertFalse(offer.getUserFilterResponseDto().getProfilePicture().isEmpty(), "profilePicture must not be empty");
+                assertNotNullAndNotEmpty(offer.getUserFilterResponseDto().getProfilePicture(), "profilePicture");
 
                 // проверяем locationDto
                 softAssert.assertNotNull(offer.getUserFilterResponseDto().getLocationDto(), "location must not be null");
 
                 if (offer.getUserFilterResponseDto().getLocationDto() != null) {
                     // проверяем cityName
-                    softAssert.assertNotNull(offer.getUserFilterResponseDto().getLocationDto().getCityName(), "cityName must not be null");
-                    softAssert.assertFalse(offer.getUserFilterResponseDto().getLocationDto().getCityName().isEmpty(), "cityName must not be empty");
+                    assertNotNullAndNotEmpty(offer.getUserFilterResponseDto().getLocationDto().getCityName(), "cityName");
                 }
             }
 
@@ -93,25 +88,23 @@ public class GetAllOffersTests extends TestBaseRA {
                 logger.info("offer => " + offerDto.getTitle() + ";");
             }
         }
-
-        // выполняем все SoftAssert проверки
         softAssert.assertAll();
     }
 
-    // баг-репорт, сервер возвращает 200
+    //=========================== негативные тесты ===============================
+
+    // баг-репорт QA-BugReport-5, сервер возвращает 200
     @Test
     public void testGetAllOffersWithInvalidQueryParam_Location() {
         // отправляем GET-запрос с некорректным значением для cityName (например, числовая строка)
         Response response = given()
-                .queryParam("cityName", "123")
+                .queryParam("cityName", 123)
                 .when()
                 .get("/offers/all")
                 .then()
                 .log().all()
                 .extract()
                 .response();
-
-        SoftAssert softAssert = new SoftAssert();
 
         // ожидается, что API вернет статус 400 Bad Request, так как передан некорректный параметр cityName
         softAssert.assertEquals(response.getStatusCode(), 400,
@@ -132,10 +125,10 @@ public class GetAllOffersTests extends TestBaseRA {
         softAssert.assertAll();
     }
 
-    // баг репорт, сервер возвращает 200
+    // баг репорт QA-BugReport-3, сервер возвращает 200
     @Test
     public void testGetAllOffersWithInvalidQueryParam_Category() {
-        // Отправляем запрос через API-клиент с некорректным значением категории
+        // отправляем запрос через API-клиент с некорректным значением категории
         Response response = given()
                 .queryParam("category", "nonexistent-category")  // Некорректная категория
                 .when()
@@ -145,24 +138,21 @@ public class GetAllOffersTests extends TestBaseRA {
                 .extract()
                 .response();
 
-        SoftAssert softAssert = new SoftAssert();
-
-        // Проверяем, что возвращается ошибка 400 Bad Request при передаче некорректной категории
+        // проверяем, что возвращается ошибка 400 Bad Request при передаче некорректной категории
         softAssert.assertEquals(response.getStatusCode(), 400,
                 "Expected status code 400 for invalid category in GET request to /offers/all");
 
-        // Проверяем, что ошибка содержит упоминание категории, если она есть в сообщении
+        // проверяем, что ошибка содержит упоминание категории, если она есть в сообщении
         if (response.getStatusCode() == 400 && response.getContentType().contains("application/json")) {
             String errorMessage = response.jsonPath().getString("error");
             softAssert.assertTrue(errorMessage != null && errorMessage.toLowerCase().contains("category"),
                     "Error message should mention 'category'");
             logger.info("Received error message: " + errorMessage);
         }
-
-        // Выполняем все проверки
         softAssert.assertAll();
     }
 
+    // баг репорт QA-BugReport-2, сервер возвращает 200
     @Test
     public void testGetAllOffersWithInvalidQueryParam_PricePerHour() {
         // отправляем запрос с некорректным значением для pricePerHour (например, строка вместо числа)
@@ -174,8 +164,6 @@ public class GetAllOffersTests extends TestBaseRA {
                 .log().all()  // Логируем полный ответ для отладки
                 .extract()
                 .response();
-
-        SoftAssert softAssert = new SoftAssert();
 
         // Ожидаем, что API вернет статус 400 Bad Request
         softAssert.assertEquals(response.getStatusCode(), 400, "Expected status code 400 for invalid pricePerHour");
@@ -189,8 +177,5 @@ public class GetAllOffersTests extends TestBaseRA {
 
         softAssert.assertAll();
     }
-
-
-
 
 }

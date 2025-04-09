@@ -53,7 +53,7 @@ public class GetApiSecurityTests extends TestBaseRA {
                 .body(not(containsString("exception")))
                 .log().ifValidationFails();
     }
-
+    // баг-репорт QA-BugReport-10, сервер возвращает 200
     @Test(groups = "security")
     public void testServerError() {
         // симулируем ошибку на сервере, например, при вызове неправильного endpoint или когда сервер не может обработать запрос

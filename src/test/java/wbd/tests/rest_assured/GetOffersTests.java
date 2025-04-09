@@ -2,8 +2,7 @@ package wbd.tests.rest_assured;
 
 import io.restassured.response.Response;
 import org.testng.annotations.Test;
-import org.testng.asserts.SoftAssert;
-import wbd.api.client.get.ApiClient_GetOffers;
+import wbd.api.client.get_post.ApiClient_GetOffers;
 import wbd.core.TestBaseRA;
 import wbd.api.dto.OfferResponseDto;
 import wbd.api.dto.OfferDto;
@@ -69,12 +68,13 @@ public class GetOffersTests extends TestBaseRA {
             // проверяем пользователя
             softAssert.assertNotNull(offer.getUserFilterResponseDto(), "User must not be null");
             if (offer.getUserFilterResponseDto() != null) {
-                softAssert.assertNotNull(offer.getUserFilterResponseDto().getFirstName(), "FirstName must not be null");
-                softAssert.assertFalse(offer.getUserFilterResponseDto().getFirstName().isEmpty(), "FirstName must not be empty");
+                assertNotNullAndNotEmpty(offer.getUserFilterResponseDto().getFirstName(), "FirstName");
+                assertNotNullAndNotEmpty(offer.getUserFilterResponseDto().getLastName(), "LastName"); // можно добавить, если нужно
+
                 softAssert.assertNotNull(offer.getUserFilterResponseDto().getLocationDto(), "LocationResponseDto must not be null");
+
                 if (offer.getUserFilterResponseDto().getLocationDto() != null) {
-                    softAssert.assertNotNull(offer.getUserFilterResponseDto().getLocationDto().getCityName(), "CityName must not be null");
-                    softAssert.assertFalse(offer.getUserFilterResponseDto().getLocationDto().getCityName().isEmpty(), "CityName must not be empty");
+                    assertNotNullAndNotEmpty(offer.getUserFilterResponseDto().getLocationDto().getCityName(), "CityName");
                 }
             }
 
