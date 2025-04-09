@@ -3,40 +3,52 @@ package wbd.web.web_pages;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import wbd.web.core.BasePage;
 
 public class LoginPage extends BasePage {
 
-    @FindBy(xpath = "//button[@type='button' and contains(text(),'Sign In')]")
-    private WebElement signInButton;
-
     @FindBy(xpath = "//input[@type='email' and @name='email']")
-    private WebElement emailField;
+    WebElement emailField;
 
     @FindBy(xpath = "//input[@type='password' and @name='password']")
-    private WebElement passwordField;
+    WebElement passwordField;
 
     @FindBy(xpath = "//button[@type='submit' and contains(text(),'Sign in')]")
-    private WebElement submitButton;
+    WebElement submitButton;
 
-    @FindBy(xpath = "//button[contains(text(),'SignOut')]")
-    private WebElement signOutButton;
+    @FindBy(xpath = "//button[@type='button' and contains(text(),'Sign In')]")
+    WebElement signInButton;
+
+    @FindBy(css = "a[data-testid='sign-out-link']")
+    WebElement signOutButton;
 
     @FindBy(xpath = "//*[contains(text(), 'Invalid login or password.')]")
-    private WebElement errorMessage;
+    WebElement errorMessage;
+
+    @FindBy(css = "a[data-testid='LinkToPasswordRecovery_HgFtg']")
+    WebElement forgotPasswordButton;
+
+    @FindBy(xpath = "//img[@alt='Hamburger icon']")
+    WebElement hamburgerMenu;
 
     public LoginPage(WebDriver driver, WebDriverWait wait) {
         super(driver, wait);
     }
 
-    public void openLoginPage() {
+    public LoginPage openLoginPage() {
         signInButton.click();
+        return this;
     }
 
     public void enterEmail(String email) {
         emailField.clear();
         emailField.sendKeys(email);
+    }
+
+    public void clickHamburgerMenu() {
+        hamburgerMenu.click();
     }
 
     public void enterPassword(String password) {
@@ -54,5 +66,11 @@ public class LoginPage extends BasePage {
 
     public String getErrorMessageText() {
         return errorMessage.getText();
+    }
+
+    public ForgotPasswordPage getForgotPasswordPage() {
+        wait.until(ExpectedConditions.visibilityOf(forgotPasswordButton));
+        forgotPasswordButton.click();
+        return new ForgotPasswordPage(driver, wait);
     }
 }

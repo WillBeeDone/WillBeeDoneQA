@@ -4,14 +4,17 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.List;
+
 @Getter
 @Setter
 @ToString
-public class AllOffersResponseDto {
+public class AddOfferResponseDto {
     private int id;
     private String title;
-    private CategoryResponseDto categoryDto;
     private double pricePerHour;
     private String description;
-    private UserFilterResponseDto userFilterResponseDto;
+    private CategoryResponseDto category;
+    private List<String> images;
+    private Boolean active;
 }

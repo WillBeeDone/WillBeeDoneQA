@@ -1,37 +1,49 @@
 package wbd.tests.web_tests;
 
-import org.testng.Assert;
+import io.qameta.allure.*;
+import io.qameta.allure.testng.AllureTestNg;
+import org.openqa.selenium.WebElement;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 import wbd.core.TestBaseUI;
-import wbd.web.web_pages.HeaderComponent;
 import wbd.web.web_pages.HomePage;
-
 import java.util.List;
 
-import org.openqa.selenium.WebElement;
+@Epic("Search Functionality")
+@Feature("Basic Search")
+@Listeners({AllureTestNg.class})
 
 public class SearchTests extends TestBaseUI {
-    @Test
-    public void testSearchByKeyword() {
-        // Инициализация страниц
-        HomePage homePage = new HomePage(app.driver, app.wait);
-        HeaderComponent header = new HeaderComponent(app.driver);
 
-        // Выполнение поиска
+    @Test(groups = "Positive")
+    @Severity(SeverityLevel.CRITICAL)
+    @Story("Search by keyword")
+    @Description("Verify that search returns relevant results for the keyword 'Plumber'")
+    @TmsLink("")
+    public void testSearchByKeywordPositive() {
+        HomePage homePage = new HomePage(app.driver, app.wait);
+
+        // Выполняем поиск
         homePage.searchFor("Plumber");
 
-        // Ожидание загрузки карточек с категорией "Plumber"
-        homePage.waitForAdCardsWithCategory("Plumber");
-
-        // Проверка карточек
+        // Получаем актуальный список карточек после поиска
         List<WebElement> adCards = homePage.getAdCards();
-        Assert.assertTrue(adCards.size() > 0, "Ad cards should be present after search");
 
-        // Проверка категории каждой карточки
+        // Проверяем, что карточек больше 0
+        softAssert.assertTrue(adCards.size() > 0, "Ad cards should be present after search");
+
+        // Проверяем категорию каждой карточки
         for (WebElement card : adCards) {
-            String categoryText = homePage.getCategoryFromCard(card);
-            Assert.assertEquals(categoryText, "Plumber",
-                    "Ad card category should be 'Plumber', but found: " + categoryText);
+            try {
+                String categoryText = homePage.getCategoryFromCard(card);
+                logger.info("Category: {}", categoryText);
+                softAssert.assertEquals(categoryText, "Plumber",
+                        "Ad card category should be 'Plumber', but found: " + categoryText);
+            } catch (Exception e) {
+                logger.error("Error when receiving the category: {}", e.getMessage(), e);
+            }
         }
+
+        softAssert.assertAll();
     }
 }

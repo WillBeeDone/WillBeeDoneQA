@@ -1,20 +1,28 @@
 package wbd.tests.web_tests;
 
-import org.testng.Assert;
+import io.qameta.allure.*;
+import io.qameta.allure.testng.AllureTestNg;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
-import org.testng.asserts.SoftAssert;
 import wbd.core.TestBaseUI;
 import wbd.utils.DataProviders;
 import wbd.web.data.UserData;
-import wbd.web.web_pages.LoginPage;
+import wbd.web.helpers.HelperMailTm;
 import wbd.web.web_pages.RegistrationPage;
 
 import java.io.IOException;
 
+import static wbd.web.helpers.HelperMailTm.getConfirmationLink;
+
+@Epic("Authorization")
+@Feature("Registration functionality")
+@Listeners({AllureTestNg.class})
 public class RegistrationTests extends TestBaseUI {
-    private RegistrationPage registrationPage;
-    SoftAssert softAssert = new SoftAssert();
+    RegistrationPage registrationPage;
 
     // инициализация страницы регистрации перед выполнением тестов
     @BeforeMethod
@@ -23,11 +31,15 @@ public class RegistrationTests extends TestBaseUI {
     }
 
     // позитивный тест регистрации нового пользователя
-    @Test
+    @Test(groups = "Positive")
+    @Severity(SeverityLevel.CRITICAL)
+    @Story("User registration")
+    @Description("Verify that a user can register with valid email and password")
+    @TmsLink("")
     public void Registration_PositiveTest() {
         String randomEmail = "test" + System.currentTimeMillis() + "@gmail.com";
 
-        new RegistrationPage(app.driver, app.wait)
+        registrationPage
                 .openRegistrationPage() // открываем страницу регистрации
                 .enterEmail(randomEmail) // вводим email
                 .enterPassword(UserData.VALID_PASSWORD) // вводим пароль
@@ -45,7 +57,11 @@ public class RegistrationTests extends TestBaseUI {
     }
 
     // негативный тест на ввод некорректного email с массивом данных
-    @Test
+    @Test(groups = "Negative")
+    @Severity(SeverityLevel.NORMAL)
+    @Story("Negative registration scenarios")
+    @Description("Verify that system displays error for invalid email formats")
+    @TmsLink("")
     public void Registration_InvalidEmail_NegativeTest() {
         registrationPage.openRegistrationPage();
         // массив 12 невалидных имейлов  (пока нет реакции сайта на русские буквы)
@@ -53,13 +69,17 @@ public class RegistrationTests extends TestBaseUI {
         for (String email : invalidEmails) {
             registrationPage.enterEmail(email);
             // проверяем, что отображается сообщение об ошибке
-            softAssert.assertTrue(registrationPage.isEmailValidationErrorDisplayed(), "No error for: " + email);
+            softAssert.assertTrue(registrationPage.isValidationErrorDisplayed("Incorrect email"), "No error for: " + email);
         }
         softAssert.assertAll();
     }
 
     // негативный тест валидации пароля c массивом данных
-    @Test
+    @Test(groups = "Negative")
+    @Severity(SeverityLevel.NORMAL)
+    @Story("Negative registration scenarios")
+    @Description("Verify that system displays error for invalid passwords")
+    @TmsLink("")
     public void Password_Validation_NegativeTest() {
         // массив 11 невалидных паролей
         String[] invalidPasswords = {"1111111", "ffffffff", "Pa123!", " ", " password1!", " password1! ", " pass word1!", "password1!", "Password!", "Password1", "Пароль123!"};
@@ -69,7 +89,7 @@ public class RegistrationTests extends TestBaseUI {
             registrationPage.enterPassword(invalidPassword);
             registrationPage.confirmPassword(invalidPassword);
             // проверяем, что появляется сообщение об ошибке
-            softAssert.assertTrue(registrationPage.isPasswordValidationErrorDisplayed(), "No error for: " + invalidPassword);
+            softAssert.assertTrue(registrationPage.isValidationErrorDisplayed("Must contains upper&lower"), "No error for: " + invalidPassword);
         }
         softAssert.assertAll();
     }
@@ -78,12 +98,16 @@ public class RegistrationTests extends TestBaseUI {
 
     // негативный тест валидации имейла c DataProvider
     @Test(dataProvider = "invalidEmails", dataProviderClass = DataProviders.class)
+    @Severity(SeverityLevel.NORMAL)
+    @Story("Negative registration scenarios")
+    @Description("Email validation with invalid inputs using data provider")
+    @TmsLink("")
     public void Email_Validation_With_Provider_NegativeTest(String invalidEmail, String errorDescription) {
         registrationPage.openRegistrationPage()
                 .enterEmail(invalidEmail);
 
         // фиксируем, что вернет метод проверки появилось сообщение об ошибке или нет
-        boolean isErrorDisplayed = registrationPage.isEmailValidationErrorDisplayed();
+        boolean isErrorDisplayed = registrationPage.isValidationErrorDisplayed("Incorrect email");
 
         logger.info(isErrorDisplayed
                 ? "✅ The error is displayed: " + errorDescription
@@ -95,12 +119,16 @@ public class RegistrationTests extends TestBaseUI {
 
     // негативный тест валидации пароля c DataProvider
     @Test(dataProvider = "invalidPasswords", dataProviderClass = DataProviders.class)
+    @Severity(SeverityLevel.NORMAL)
+    @Story("Negative registration scenarios")
+    @Description("Password validation with invalid inputs using data provider")
+    @TmsLink("")
     public void Password_Validation_With_Provider_NegativeTest(String invalidPassword, String errorDescription) {
         registrationPage.openRegistrationPage()
                 .enterPassword(invalidPassword);
 
         // фиксируем, что вернет метод проверки появилось сообщение об ошибке или нет
-        boolean isErrorDisplayed = registrationPage.isPasswordValidationErrorDisplayed();
+        boolean isErrorDisplayed = registrationPage.isValidationErrorDisplayed("Must contains upper&lower");
 
         logger.info(isErrorDisplayed
                 ? "✅ The error is displayed: " + errorDescription
@@ -113,29 +141,81 @@ public class RegistrationTests extends TestBaseUI {
     //============================= Сервис mail.tm ==========================================
 
     // тест регистрации с временным email через mail.tm
-    @Test
+    @Test(groups = "Positive")
+    @Severity(SeverityLevel.BLOCKER)
+    @Story("User registration")
+    @Description("Verify registration with temporary email using mail.tm")
+    @TmsLink("")
     public void RegistrationWithMailTmPositiveTest() throws IOException, InterruptedException {
-        String email = RegistrationPage.generateEmail(); // генерируем временный email
+        String email = HelperMailTm.generateEmail(); // генерируем временный email
         String password = UserData.VALID_PASSWORD;
 
-        registrationPage.openRegistrationPage();
-        registrationPage.enterEmail(email);
-        registrationPage.enterPassword(password);
-        registrationPage.confirmPassword(password);
-        registrationPage.checkAgreeBox();
-        registrationPage.submitRegistration();
+        registrationPage
+                .openRegistrationPage()
+                .enterEmail(email)
+                .enterPassword(password)
+                .confirmPassword(password)
+                .checkAgreeBox()
+                .submitRegistration();
 
         // проверяем появление алерта и его текст
         String alertText = registrationPage.getAlertTextAndAccept();
         softAssert.assertEquals(alertText, "Please, check your email.", "Alert text mismatch!");
 
-        // получаем ссылку для подтверждения регистрации
-        String confirmationLink = RegistrationPage.getConfirmationLink(email);
+        long startTime = System.currentTimeMillis(); // засекаем время
+        String confirmationLink = getConfirmationLink(email); // получаем ссылку для подтверждения регистрации
+        long duration = System.currentTimeMillis() - startTime;
+        logger.info("⏱️ Time to get confirmation link: " + duration + "ms");
+
         softAssert.assertNotNull(confirmationLink, "No confirmation link found!");
 
+        logger.info("⏳ Ждём перед переходом по ссылке...");
+
         // переходим по ссылке подтверждения
+        confirmationLink = confirmationLink.replace("[", "").replace("]", "");
         app.driver.get(confirmationLink);
-        softAssert.assertTrue(registrationPage.isRedirectedToMainPage(), "Redirect failed!");
+
+        WebElement welcomeMsg = app.wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.xpath("//*[contains(text(), 'Welcome!')]")
+        ));
+
+        logger.info(welcomeMsg.getText());
+
+        softAssert.assertTrue(welcomeMsg.isDisplayed(), "Welcome text! Not found");
+
+        // проверяем наличие текста подтверждения
+        WebElement successText = app.driver.findElement(
+                By.xpath("//*[contains(text(), 'Email confirmed successfully!')]")
+        );
+
+        softAssert.assertTrue(successText.isDisplayed(), "Success message not displayed");
+
+        // проверяем наличие ссылки "Sign In"
+        WebElement signInLink = app.wait.until(ExpectedConditions.elementToBeClickable(
+                By.xpath("//a[contains(text(), 'Sign In')]")));
+        softAssert.assertTrue(signInLink.isDisplayed(), "Link 'Sign in' not found");
+
+        // кликаем по ссылке "Sign In"
+        registrationPage.clickOnRegistrationLink();
+
+        // ждём перехода и подстановки значений
+
+        WebElement emailField = app.wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.xpath("//input[@type='email' and @name='email']")
+        ));
+        WebElement passwordField = app.wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.xpath("//input[@type='password' and @name='password']")
+        ));
+
+        // проверяем, что поля не пустые, если что, заполняем вручную
+        if (emailField.getAttribute("value").isEmpty()) {
+            emailField.sendKeys(email);
+        }
+        if (passwordField.getAttribute("value").isEmpty()) {
+            passwordField.sendKeys(password);
+        }
+        // жмем кнопку входа
+        registrationPage.clickSingInButton();
 
         softAssert.assertAll();
     }

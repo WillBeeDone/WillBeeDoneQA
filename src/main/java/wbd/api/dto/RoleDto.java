@@ -7,8 +7,8 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-
-public class TokenResponseDto {
-    private String accessToken;
-    private String refreshToken;
+public class RoleDto {
+    private int id;
+    private String title;
+    private String authority;
 }

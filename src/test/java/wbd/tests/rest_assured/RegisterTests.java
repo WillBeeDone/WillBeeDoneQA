@@ -1,8 +1,9 @@
 package wbd.tests.rest_assured;
 
+import io.qameta.allure.*;
+import io.qameta.allure.testng.AllureTestNg;
 import io.restassured.response.Response;
-import org.testng.Assert;
-import org.testng.annotations.DataProvider;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import wbd.api.client.AuthClient;
@@ -11,16 +12,20 @@ import wbd.core.TestBaseRA;
 import wbd.utils.DataProviders;
 
 
+@Epic("Authorization")
+@Feature("Registration API")
+@Listeners({AllureTestNg.class})
 public class RegisterTests extends TestBaseRA {
-
-    SoftAssert softAssert = new SoftAssert();
     String uniqueEmail = "user" + System.currentTimeMillis() + "@mail.com";
-
 
     /**
      * Тест: Валидный пароль (для контроля)
      */
-    @Test
+    @Test(groups = "Positive")
+    @Severity(SeverityLevel.BLOCKER)
+    @Story("Successful registration")
+    @Description("Registers a user with a valid complex password")
+    @TmsLink("")
     public void testRegisterWithComplexPassword_SuccessPositive() {
 
         AuthRequestDto request = AuthRequestDto.builder()
@@ -35,7 +40,11 @@ public class RegisterTests extends TestBaseRA {
         softAssert.assertAll();
     }
 
-    @Test(dataProvider = "validPasswords", dataProviderClass = DataProviders.class)
+    @Test(dataProvider = "validPasswords", dataProviderClass = DataProviders.class, groups = "Positive")
+    @Severity(SeverityLevel.CRITICAL)
+    @Story("Password validation")
+    @Description("Tests multiple valid passwords with unique email")
+    @TmsLink("")
     public void testValidPasswordsWithUniqueEmailPositive(String password, String description) {
         String uniqueEmail = "user" + System.currentTimeMillis() + "@mail.com";
 
@@ -56,7 +65,11 @@ public class RegisterTests extends TestBaseRA {
     /**
      * Тест: Пароль из Swagger
      */
-    @Test
+    @Test(groups = "Negative")
+    @Severity(SeverityLevel.CRITICAL)
+    @Story("Registration with weak password")
+    @Description("Attempts to register a user with an invalid password from Swagger example")
+    @TmsLink("")
     public void testRegisterNewUserNegative() {
 
         AuthRequestDto request = AuthRequestDto.builder()
@@ -67,11 +80,15 @@ public class RegisterTests extends TestBaseRA {
         Response response = AuthClient.register(request);
         logger.info("Registration with weak/simple password: {}", response.asString());
 
-        softAssert.assertEquals(response.getStatusCode(), 200, "Expected status code 200 OK during registration");
+        softAssert.assertEquals(response.getStatusCode(), 400, "Expected 400 Bad Request for weak password");
         softAssert.assertAll();
     }
 
-    @Test(dataProvider = "invalidPasswords", dataProviderClass = DataProviders.class)
+    @Test(dataProvider = "invalidPasswords", dataProviderClass = DataProviders.class, groups = "Negative")
+    @Severity(SeverityLevel.CRITICAL)
+    @Story("Invalid password rejection")
+    @Description("Checks that server rejects invalid passwords for registration")
+    @TmsLink("")
     public void testInvalidPasswordsWithUniqueEmailNegative(String password, String description) {
         String uniqueEmail = "user" + System.currentTimeMillis() + "@mail.com";
 

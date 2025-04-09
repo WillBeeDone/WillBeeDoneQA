@@ -1,0 +1,19 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="UI Tests">
+
+  <test name="Positive UI Tests">
+    <groups>
+      <run>
+        <include name="Positive"/>
+      </run>
+    </groups>
+    <classes>
+      <class name="wbd.tests.web_tests.HeaderComponentTests"/>
+      <class name="wbd.tests.web_tests.LoginTests"/>
+      <class name="wbd.tests.web_tests.PaginationTests"/>
+      <class name="wbd.tests.web_tests.SearchTests"/>
+      <class name="wbd.tests.web_tests.SortingTests"/>
+    </classes>
+  </test>
+
+</suite>
