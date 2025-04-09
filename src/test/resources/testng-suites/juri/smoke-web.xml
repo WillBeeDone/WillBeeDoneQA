@@ -1,0 +1,11 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+<suite name="Smoke Web Suite" parallel="false">
+    <test name="Web Smoke Tests">
+        <classes>
+            <class name="wbd.tests.web_tests.RegistrationTests"/>
+            <class name="wbd.tests.web_tests.LoginTests"/>
+            <class name="wbd.tests.web_tests.SearchTests"/>
+            <class name="wbd.tests.web_tests.OffersTests"/>
+        </classes>
+    </test>
+</suite>
