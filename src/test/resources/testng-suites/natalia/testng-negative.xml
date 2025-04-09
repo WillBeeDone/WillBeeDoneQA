@@ -1,0 +1,19 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="WBD UI and API Tests by Groups">
+
+    <test name="Run only Negative tests">
+        <groups>
+            <run>
+                <include name="Negative"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="wbd.tests.rest_assured.LoginTests"/>
+            <class name="wbd.tests.rest_assured.RegisterTests"/>
+            <class name="wbd.tests.web_tests.OffersTests"/>
+            <class name="wbd.tests.web_tests.RecoveryPasswordTests"/>
+            <class name="wbd.tests.web_tests.RecoveryPasswordWhenLoggedInTests"/>
+        </classes>
+    </test>
+
+</suite>

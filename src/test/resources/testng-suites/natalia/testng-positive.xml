@@ -1,0 +1,18 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="WBD UI and API Tests by Groups">
+
+    <test name="Run only Positive tests">
+        <groups>
+            <run>
+                <include name="Positive"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="wbd.tests.rest_assured.LoginTests"/>
+            <class name="wbd.tests.rest_assured.RegisterTests"/>
+            <class name="wbd.tests.web_tests.OffersTests"/>
+            <class name="wbd.tests.web_tests.RecoveryPasswordTests"/>
+        </classes>
+    </test>
+
+</suite>

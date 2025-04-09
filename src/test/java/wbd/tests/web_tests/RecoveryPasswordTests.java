@@ -1,7 +1,10 @@
 package wbd.tests.web_tests;
 
+import io.qameta.allure.*;
+import io.qameta.allure.testng.AllureTestNg;
 import org.openqa.selenium.TimeoutException;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 import wbd.core.TestBaseUI;
 import wbd.web.data.UserData;
@@ -12,7 +15,9 @@ import wbd.web.web_pages.RecoveryPasswordPage;
 import java.lang.reflect.Method;
 import java.io.IOException;
 
-
+@Epic("Authorization")
+@Feature("Password Recovery")
+@Listeners({AllureTestNg.class})
 public class RecoveryPasswordTests extends TestBaseUI {
 
     RecoveryPasswordPage recoveryPage;
@@ -45,7 +50,11 @@ public class RecoveryPasswordTests extends TestBaseUI {
 
     }
 
-    @Test
+    @Test(groups = "Positive")
+    @Severity(SeverityLevel.BLOCKER)
+    @Story("Successful password recovery")
+    @Description("Checks full password recovery flow: email request, reset link, new password, success alert and redirect")
+    @TmsLink("")
     public void recoveryPasswordConfirmPositiveTest() throws IOException, InterruptedException {
         logger.info("Open Forgot Password Page");
         ForgotPasswordPage forgotPasswordPage = new HomePage(app.driver, app.wait)
@@ -103,7 +112,11 @@ public class RecoveryPasswordTests extends TestBaseUI {
 
     }
 
-    @Test
+    @Test(groups = "Positive")
+    @Severity(SeverityLevel.NORMAL)
+    @Story("Cancel password recovery")
+    @Description("Checks that user can cancel password recovery and gets redirected back to main page")
+    @TmsLink("")
     public void recoveryPasswordCancelPositiveTest() throws IOException, InterruptedException {
         logger.info("Open Forget Password Page");
         ForgotPasswordPage forgotPasswordPage = new HomePage(app.driver, app.wait)
@@ -139,8 +152,11 @@ public class RecoveryPasswordTests extends TestBaseUI {
         softAssert.assertAll();
     }
 
-
-    @Test
+    @Test(groups = "Negative")
+    @Severity(SeverityLevel.CRITICAL)
+    @Story("Reusing old password")
+    @Description("Checks that user cannot reuse their old password during password recovery")
+    @TmsLink("")
     public void recoveryPasswordOldPasswordNegativeTest() throws IOException, InterruptedException {
         logger.info("Open Forget Password Page");
         ForgotPasswordPage forgotPasswordPage = new HomePage(app.driver, app.wait)

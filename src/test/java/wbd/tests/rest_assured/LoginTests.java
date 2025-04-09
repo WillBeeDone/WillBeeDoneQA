@@ -1,7 +1,10 @@
 package wbd.tests.rest_assured;
 
+import io.qameta.allure.*;
+import io.qameta.allure.testng.AllureTestNg;
 import io.restassured.response.Response;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 import wbd.api.client.AuthClient;
 import wbd.api.dto.AuthRequestDto;
@@ -9,6 +12,9 @@ import wbd.api.dto.LoginResponseDto;
 import wbd.core.TestBaseRA;
 import wbd.utils.RetryAnalyzer;
 
+@Epic("Authorization")
+@Feature("Login API")
+@Listeners({AllureTestNg.class})
 public class LoginTests extends TestBaseRA {
     private final String validEmail = "wbdqatest52@gmail.com"; // подтверждённый пользователь
     private final String validPassword = "Password!123";
@@ -32,6 +38,10 @@ public class LoginTests extends TestBaseRA {
     }
 
     @Test()
+    @Severity(SeverityLevel.NORMAL)
+    @Story("Raw request logging")
+    @Description("Sends login request and logs response without assertions")
+    @TmsLink("")
     public void loginSimpleTestWithoutAssert() {
         Response response = AuthClient.login(body);
         response
@@ -42,6 +52,10 @@ public class LoginTests extends TestBaseRA {
 
 
     @Test(retryAnalyzer = RetryAnalyzer.class, groups = "Positive")
+    @Severity(SeverityLevel.BLOCKER)
+    @Story("Successful login")
+    @Description("Verifies successful login with valid credentials and checks token values")
+    @TmsLink("")
     public void loginSuccessTestPositive() {
         Response response = AuthClient.login(body);
         logger.info("Login response: {}", response.asString());
@@ -71,6 +85,10 @@ public class LoginTests extends TestBaseRA {
 
 
     @Test(groups = "Negative")
+    @Severity(SeverityLevel.CRITICAL)
+    @Story("Unsuccessful login")
+    @Description("Verifies error response when logging in with wrong password")
+    @TmsLink("")
     public void loginWrongPasswordTestNegative() {
         Response loginResponse = AuthClient.login(errorBody);
         logger.info("Wrong password login response: {}", loginResponse.asString());
