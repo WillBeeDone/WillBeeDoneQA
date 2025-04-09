@@ -187,7 +187,6 @@ public class RegistrationTests extends TestBaseUI {
         // жмем кнопку входа
         registrationPage.clickSingInButton();
 
-        // Завершаем тест
         softAssert.assertAll();
     }
 }

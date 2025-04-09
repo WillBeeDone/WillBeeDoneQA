@@ -9,11 +9,12 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class OfferRequestDto {
+public class AddOfferResponseDto {
+    private int id;
     private String title;
-    private String description;
-    private String categoryName;
     private double pricePerHour;
+    private String description;
+    private CategoryResponseDto category;
     private List<String> images;
+    private Boolean active;
 }
-

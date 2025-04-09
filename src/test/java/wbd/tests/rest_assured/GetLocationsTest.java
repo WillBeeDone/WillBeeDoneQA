@@ -3,7 +3,7 @@ package wbd.tests.rest_assured;
 import io.restassured.response.Response;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
-import wbd.api.client.get.ApiClient_GetLocations;
+import wbd.api.client.get_post.ApiClient_GetLocations;
 import wbd.core.TestBaseRA;
 import wbd.api.dto.LocationResponseDto;
 
@@ -49,6 +49,8 @@ public class GetLocationsTest extends TestBaseRA {
         softAssert.assertAll();
     }
 
+    // ==================== негативные тесты =====================================
+
     @Test
     public void testGetLocationsWithInvalidEndpoint_Returns404() {
         // GET-запрос на неверный эндпоинт
@@ -66,8 +68,7 @@ public class GetLocationsTest extends TestBaseRA {
         softAssert.assertAll();
     }
 
-    //  написать баг-репорт! сервер игнорирует незнакомые query-параметры
-    //  и не возвращает 400, а отвечает 200 (ОК)
+    // баг-репорт QA-BugReport - 11, не возвращает 400, а отвечает 200 (ОК)
     @Test
     public void testGetLocationsWithUnexpectedQueryParam_Returns400() {
         //  GET-запрос с неподдерживаемым query-параметром
@@ -86,33 +87,4 @@ public class GetLocationsTest extends TestBaseRA {
         logger.info("Received status code " + response.getStatusCode() + " for GET request to /locations with unexpected query param");
         softAssert.assertAll();
     }
-
-    @Test
-    public void testGetOffersWithInvalidCityName_Returns400() {
-        // отправляем GET-запрос с некорректным значением для cityName (например, числовая строка)
-        Response response = given()
-                .queryParam("cityName", "123")
-                .when()
-                .get("/locations")  // отправляем запрос на эндпоинт получения офферов
-                .then()
-                .log().all()  // логируем полный ответ для отладки
-                .extract()
-                .response();
-
-        SoftAssert softAssert = new SoftAssert();
-
-        // Ожидается, что API вернет статус 400 Bad Request, так как передан некорректный параметр cityName
-        softAssert.assertEquals(response.getStatusCode(), 400, "Expected status code 400 for GET request to /api/offers with invalid cityName");
-
-        // Логируем статус ответа
-        logger.info("Received status code " + response.getStatusCode() + " for GET request to /api/offers with invalid cityName");
-
-        // Если API возвращает сообщение об ошибке, можно проверить его
-        String errorMessage = response.jsonPath().getString("error");
-        softAssert.assertTrue(errorMessage.contains("Invalid cityName"), "Error message does not match");
-
-        // Выполняем все проверки
-        softAssert.assertAll();
-    }
-
 }

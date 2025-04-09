@@ -1,17 +1,21 @@
 package wbd.api.dto;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.List;
+
 @Getter
 @Setter
 @ToString
-public class AllOffersResponseDto {
-    private int id;
-    private String title;
-    private CategoryResponseDto categoryDto;
+@Builder
+public class AddOfferRequestDto {
     private double pricePerHour;
     private String description;
-    private UserFilterResponseDto userFilterResponseDto;
+    private String categoryName;
+    private String title;
+    private List<String> images;
 }
+

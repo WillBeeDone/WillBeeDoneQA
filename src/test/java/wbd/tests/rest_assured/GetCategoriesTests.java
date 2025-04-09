@@ -3,14 +3,14 @@ package wbd.tests.rest_assured;
 import io.restassured.response.Response;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import wbd.api.client.get.ApiClient_GetCategories;
+import wbd.api.client.get_post.ApiClient_GetCategories;
 import wbd.core.TestBaseRA;
 import java.util.List;
 
 public class GetCategoriesTests extends TestBaseRA {
 
     @Test
-    public void testGetCategories_Success() {
+    public void GetCategories_PositiveTest() {
 
         logger.info("Start testing GetCategories");
         logger.info("=============================================");
@@ -38,6 +38,8 @@ public class GetCategoriesTests extends TestBaseRA {
             Assert.assertFalse(category.trim().isEmpty(), "The category name must not be empty");
         }
     }
+
+    // ======================= негативные тесты ================================
 
     @Test
     public void testGetCategories_NotFound_404() {

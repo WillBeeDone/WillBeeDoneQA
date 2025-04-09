@@ -41,6 +41,7 @@ public class HelperMailTm {
     // получаем ссылку подтверждения из письма
     public static String getConfirmationLink(String email) throws IOException, InterruptedException {
         String token = authenticate(email, UserData.VALID_PASSWORD);// токен для авторизации
+        logger.info("Generated token: " + token);
 
         for (int i = 0; i < 10; i++) {
             Thread.sleep(5000);

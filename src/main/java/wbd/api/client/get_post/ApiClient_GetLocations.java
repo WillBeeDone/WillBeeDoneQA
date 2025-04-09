@@ -1,15 +1,15 @@
-package wbd.api.client.get;
+package wbd.api.client.get_post;
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 
-public class ApiClient_GetAllOffers {
+public class ApiClient_GetLocations {
 
-    public static Response getAllOffers() {
+    public static Response getLocations() {
         return RestAssured
                 .given()
                 .when()
-                .get("/offers/all")
+                .get("/locations")
                 .then()
                 .log().all()
                 .extract()
