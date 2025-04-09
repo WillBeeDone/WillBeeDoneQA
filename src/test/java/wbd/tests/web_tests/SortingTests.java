@@ -17,7 +17,6 @@ import java.util.List;
 @Epic("Content Display")
 @Feature("Sorting Functionality")
 @Listeners({AllureTestNg.class})
-
 public class SortingTests extends TestBaseUI {
     private HomePage homePage;
     private SortingComponent sortingComponent;
@@ -28,18 +27,18 @@ public class SortingTests extends TestBaseUI {
         sortingComponent = new SortingComponent(app.driver, app.wait);
     }
 
-    @Test
+    @Test(groups = "Positive")
     @Severity(SeverityLevel.CRITICAL)
     @Story("Default Sorting")
     @Description("Test verifies that ads are sorted in ascending price order by default")
     @TmsLink("")
-    public void testDefaultSortOrderIsAscending() {
+    public void testDefaultSortOrderIsAscendingPositive() {
         // Get cards with ascending prices by default
         List<WebElement> cards = homePage.getAdCards();
         List<Integer> prices = new ArrayList<>();
         for (WebElement card : cards) {
             String priceText = card.findElement(By.cssSelector("._euro_jqbzu_166")).getText();
-            int price = parsePrice(priceText);
+            int price = SortingComponent.parsePrice(priceText);
             prices.add(price);
         }
 
@@ -52,18 +51,18 @@ public class SortingTests extends TestBaseUI {
         softAssert.assertAll();
     }
 
-    @Test
+    @Test(groups = "Positive")
     @Severity(SeverityLevel.CRITICAL)
     @Story("Sorting Toggle")
     @Description("Test verifies that clicking sort toggle changes order to descending by price")
     @TmsLink("")
-    public void testSortOrderAfterClickingToggleIsDescending() {
+    public void testSortOrderAfterClickingToggleIsDescendingPositive() {
         // 1. Capture initial ascending order
         List<WebElement> initialCards = homePage.getAdCards();
         List<Integer> initialPrices = new ArrayList<>();
         for (WebElement card : initialCards) {
             String priceText = card.findElement(By.cssSelector("._euro_jqbzu_166")).getText();
-            int price = parsePrice(priceText);
+            int price = SortingComponent.parsePrice(priceText);
             initialPrices.add(price);
         }
         logger.info("Prices before sorting: {}", initialPrices);
@@ -82,7 +81,7 @@ public class SortingTests extends TestBaseUI {
         List<Integer> prices = new ArrayList<>();
         for (WebElement card : cards) {
             String priceText = card.findElement(By.cssSelector("._euro_jqbzu_166")).getText();
-            int price = parsePrice(priceText);
+            int price = SortingComponent.parsePrice(priceText);
             prices.add(price);
         }
         logger.info("Prices after sorting: {}", prices);
@@ -93,16 +92,5 @@ public class SortingTests extends TestBaseUI {
         }
 
         softAssert.assertAll();
-    }
-
-    private int parsePrice(String priceText) {
-        // Remove all non-digit characters to extract a clean integer price
-        try {
-            String cleaned = priceText.replaceAll("[^\\d]", "");
-            return Integer.parseInt(cleaned);
-        } catch (Exception e) {
-            logger.error("Failed to parse price from text: '{}'", priceText, e);
-            return 0;
-        }
     }
 }

@@ -24,12 +24,12 @@ public class PaginationTests extends TestBaseUI {
     }
 
 
-    @Test
+    @Test(groups = "Positive")
     @Severity(SeverityLevel.CRITICAL)
     @Story("Pagination Navigation")
     @Description("Verify correct behavior when navigating between pages using Next/Previous buttons")
     @TmsLink("")
-    public void testPaginationNextAndPrevious() {
+    public void testPaginationNextAndPreviousPositive() {
         // Проверяем первую страницу
         softAssert.assertEquals(homePage.getCurrentPageNumber(), 1, "Should start on page 1");
         softAssert.assertFalse(homePage.isPreviousButtonEnabled(), "Previous button should be disabled on page 1");
@@ -69,12 +69,12 @@ public class PaginationTests extends TestBaseUI {
         softAssert.assertAll();
     }
 
-    @Test
+    @Test(groups = "Positive")
     @Severity(SeverityLevel.NORMAL)
     @Story("Pagination Navigation")
     @Description("Verify correct behavior when navigating to specific page number")
     @TmsLink("")
-    public void testPaginationByPageNumber() {
+    public void testPaginationByPageNumberPositive() {
         // Переходим на страницу 3
         homePage.goToPage(3);
         homePage.waitForCurrentPageNumber(3);
@@ -89,12 +89,12 @@ public class PaginationTests extends TestBaseUI {
         softAssert.assertAll();
     }
 
-    @Test
+    @Test(groups = "Positive")
     @Severity(SeverityLevel.NORMAL)
     @Story("Pagination Edge Cases")
     @Description("Verify correct behavior when reaching the last page of pagination")
     @TmsLink("")
-    public void testLastPage() {
+    public void testLastPagePositive() {
         // Идем до последней страницы
         while (homePage.isNextButtonEnabled()) {
             homePage.clickNextPage();

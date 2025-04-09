@@ -26,7 +26,6 @@ allure {
     version = '2.33.0'
     useTestNG {
         version = '2.24.0'
-        // resultsDir = file("allure-results") // 📁 Папка в корне проекта
     }
 }
 
@@ -48,6 +47,4 @@ test {
         showStandardStreams = true
     }
 
-
-    // outputs.dir("build/allure-results") — оставим закомментированным
 }

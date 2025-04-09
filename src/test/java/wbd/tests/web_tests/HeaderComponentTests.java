@@ -27,12 +27,12 @@ public class HeaderComponentTests extends TestBaseUI {
         app.wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("select[data-testid='DropDownLocationHeader_HfZydgG']")));
     }
 
-    @Test
+    @Test(groups = "Positive")
     @TmsLink("")
     @Severity(SeverityLevel.NORMAL)
     @Story("Verify available cities in dropdown")
     @Description("Test verifies that the city dropdown contains options and 'Berlin' is present")
-    public void testCityDropdownOptions() {
+    public void testCityDropdownOptionsPositive() {
         HeaderComponent header = new HeaderComponent(app.driver, app.wait);
 
         List<WebElement> cities = header.getCityOptions();
@@ -42,12 +42,12 @@ public class HeaderComponentTests extends TestBaseUI {
         softAssert.assertAll();
     }
 
-    @Test
+    @Test(groups = "Positive")
     @TmsLink("")
     @Severity(SeverityLevel.CRITICAL)
     @Story("Select city from dropdown")
     @Description("Test verifies that a city can be selected and the selection is applied")
-    public void testSelectCity() {
+    public void testSelectCityPositive() {
         HeaderComponent header = new HeaderComponent(app.driver, app.wait);
 
         header.selectCity("Berlin");
@@ -56,12 +56,12 @@ public class HeaderComponentTests extends TestBaseUI {
         softAssert.assertAll();
     }
 
-    @Test
+    @Test(groups = "Positive")
     @TmsLink("")
     @Severity(SeverityLevel.NORMAL)
     @Story("Ads filtering by selected city")
     @Description("Test checks if ad cards display the selected city (Berlin) after selection")
-    public void testAdCardsAfterCitySelection() {
+    public void testAdCardsAfterCitySelectionPositive() {
         HeaderComponent header = new HeaderComponent(app.driver, app.wait);
         HomePage homePage = new HomePage(app.driver, app.wait);
 

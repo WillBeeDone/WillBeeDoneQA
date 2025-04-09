@@ -61,4 +61,14 @@ public class SortingComponent extends BasePage {
         }
         return prices;
     }
+    public static int parsePrice(String priceText) {
+        try {
+            String cleaned = priceText.replaceAll("[^\\d]", "");
+            return Integer.parseInt(cleaned);
+        } catch (Exception e) {
+            logger.error("Failed to parse price from text: '{}'", priceText, e);
+            return 0;
+        }
+    }
+
 }
