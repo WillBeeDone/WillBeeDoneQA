@@ -66,9 +66,8 @@ public void testSqlInjectionInOfferId(String maliciousId) {
     @Severity(SeverityLevel.NORMAL)
     @Story("GET /offers/trigger-server-error")
     @Description("Error testing 404 with incorrect Endpoint: /Offers /Trigger-Server-Serror")
-
-    public void testServerError() {
-
+    public void testServerErrorTest() {
+        // симулируем ошибку на сервере, например, при вызове неправильного endpoint или когда сервер не может обработать запрос
         Response response = given()
                 .when()
                 .get("/offers/trigger-server-error")
