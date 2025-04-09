@@ -16,15 +16,4 @@
     </classes>
   </test>
 
-  <test name="Negative UI Tests">
-    <groups>
-      <run>
-        <include name="Negative"/>
-      </run>
-    </groups>
-    <classes>
-      <class name="wbd.tests.web_tests.LoginTests"/>
-    </classes>
-  </test>
-
 </suite>
