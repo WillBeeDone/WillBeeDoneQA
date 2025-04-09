@@ -1,7 +1,10 @@
 package wbd.tests.web_tests;
 
+import io.qameta.allure.*;
+import io.qameta.allure.testng.AllureTestNg;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 import wbd.core.TestBaseUI;
 import wbd.web.web_pages.HomePage;
@@ -9,6 +12,9 @@ import wbd.web.web_pages.HomePage;
 import java.util.ArrayList;
 import java.util.List;
 
+@Epic("Content Display")
+@Feature("Pagination Functionality")
+@Listeners({AllureTestNg.class})
 public class PaginationTests extends TestBaseUI {
     private HomePage homePage;
 
@@ -19,6 +25,10 @@ public class PaginationTests extends TestBaseUI {
 
 
     @Test
+    @Severity(SeverityLevel.CRITICAL)
+    @Story("Pagination Navigation")
+    @Description("Verify correct behavior when navigating between pages using Next/Previous buttons")
+    @TmsLink("")
     public void testPaginationNextAndPrevious() {
         // Проверяем первую страницу
         softAssert.assertEquals(homePage.getCurrentPageNumber(), 1, "Should start on page 1");
@@ -60,6 +70,10 @@ public class PaginationTests extends TestBaseUI {
     }
 
     @Test
+    @Severity(SeverityLevel.NORMAL)
+    @Story("Pagination Navigation")
+    @Description("Verify correct behavior when navigating to specific page number")
+    @TmsLink("")
     public void testPaginationByPageNumber() {
         // Переходим на страницу 3
         homePage.goToPage(3);
@@ -76,6 +90,10 @@ public class PaginationTests extends TestBaseUI {
     }
 
     @Test
+    @Severity(SeverityLevel.NORMAL)
+    @Story("Pagination Edge Cases")
+    @Description("Verify correct behavior when reaching the last page of pagination")
+    @TmsLink("")
     public void testLastPage() {
         // Идем до последней страницы
         while (homePage.isNextButtonEnabled()) {
@@ -85,7 +103,7 @@ public class PaginationTests extends TestBaseUI {
         // Проверяем последнюю страницу
         softAssert.assertFalse(homePage.isNextButtonEnabled(), "Next button should be disabled on last page");
         softAssert.assertTrue(homePage.isPreviousButtonEnabled(), "Previous button should be enabled on last page");
-        softAssert.assertTrue(homePage.getAdCards().size() <= 12, "Should display 9 or fewer cards on last page");
+        softAssert.assertTrue(homePage.getAdCards().size() <= 12, "Should display 12 or fewer cards on last page");
 
         softAssert.assertAll();
     }

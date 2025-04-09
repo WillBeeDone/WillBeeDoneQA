@@ -1,8 +1,11 @@
 package wbd.tests.web_tests;
 
+import io.qameta.allure.*;
+import io.qameta.allure.testng.AllureTestNg;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 import wbd.core.TestBaseUI;
 import wbd.web.web_pages.HomePage;
@@ -10,6 +13,10 @@ import wbd.web.web_pages.SortingComponent;
 
 import java.util.ArrayList;
 import java.util.List;
+
+@Epic("Content Display")
+@Feature("Sorting Functionality")
+@Listeners({AllureTestNg.class})
 
 public class SortingTests extends TestBaseUI {
     private HomePage homePage;
@@ -22,6 +29,10 @@ public class SortingTests extends TestBaseUI {
     }
 
     @Test
+    @Severity(SeverityLevel.CRITICAL)
+    @Story("Default Sorting")
+    @Description("Test verifies that ads are sorted in ascending price order by default")
+    @TmsLink("")
     public void testDefaultSortOrderIsAscending() {
         // Get cards with ascending prices by default
         List<WebElement> cards = homePage.getAdCards();
@@ -42,6 +53,10 @@ public class SortingTests extends TestBaseUI {
     }
 
     @Test
+    @Severity(SeverityLevel.CRITICAL)
+    @Story("Sorting Toggle")
+    @Description("Test verifies that clicking sort toggle changes order to descending by price")
+    @TmsLink("")
     public void testSortOrderAfterClickingToggleIsDescending() {
         // 1. Capture initial ascending order
         List<WebElement> initialCards = homePage.getAdCards();
