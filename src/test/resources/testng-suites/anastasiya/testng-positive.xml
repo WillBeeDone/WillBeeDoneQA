@@ -15,7 +15,7 @@
             <class name="wbd.tests.rest_assured.GetOfferByIdTests"/>
             <class name="wbd.tests.rest_assured.GetOffersTests"/>
             <class name="wbd.tests.rest_assured.GetOffersWithParamsTests"/>
-            <class name="wbd.tests.web_tests.PaginationTests"/>
+            <class name="wbd.tests.web_tests.RegistrationTests"/>
         </classes>
     </test>
 

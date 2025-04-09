@@ -68,7 +68,7 @@ public class DataProviders {
                 {"Auto Mechanic"},
                 {"Cleaning"},
                 {"Electrician"},
-                {"Beauty & Care"},
+                {"Beauty"},
                 {"Appliance Repair"},
                 {"Handyman"},
         };
