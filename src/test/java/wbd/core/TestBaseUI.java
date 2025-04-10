@@ -24,7 +24,7 @@ public class TestBaseUI {
         softAssert = new SoftAssert(); // добавлено: инициализация softAssert
     }
 
-    @AfterMethod(enabled = false)
+    @AfterMethod(enabled = true)
     public void tearDown(Method method, ITestResult result) {
         try {
             softAssert.assertAll(); // автоматически проверяем все softAssert-ы
