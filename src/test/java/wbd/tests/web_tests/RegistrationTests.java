@@ -2,9 +2,6 @@ package wbd.tests.web_tests;
 
 import io.qameta.allure.*;
 import io.qameta.allure.testng.AllureTestNg;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
@@ -169,53 +166,21 @@ public class RegistrationTests extends TestBaseUI {
 
         softAssert.assertNotNull(confirmationLink, "No confirmation link found!");
 
-        logger.info("⏳ Ждём перед переходом по ссылке...");
+        logger.info("⏳ We are waiting before the crossing by link ...");
 
         // переходим по ссылке подтверждения
         confirmationLink = confirmationLink.replace("[", "").replace("]", "");
         app.driver.get(confirmationLink);
 
-        WebElement welcomeMsg = app.wait.until(ExpectedConditions.visibilityOfElementLocated(
-                By.xpath("//*[contains(text(), 'Welcome!')]")
-        ));
+        // проверяем наличие текста "Welcome!" и подтверждения email
+        softAssert.assertTrue(registrationPage.isEmailConfirmedSuccessfully(), "Welcome text or success message not found");
 
-        logger.info(welcomeMsg.getText());
-
-        softAssert.assertTrue(welcomeMsg.isDisplayed(), "Welcome text! Not found");
-
-        // проверяем наличие текста подтверждения
-        WebElement successText = app.driver.findElement(
-                By.xpath("//*[contains(text(), 'Email confirmed successfully!')]")
-        );
-
-        softAssert.assertTrue(successText.isDisplayed(), "Success message not displayed");
-
-        // проверяем наличие ссылки "Sign In"
-        WebElement signInLink = app.wait.until(ExpectedConditions.elementToBeClickable(
-                By.xpath("//a[contains(text(), 'Sign In')]")));
-        softAssert.assertTrue(signInLink.isDisplayed(), "Link 'Sign in' not found");
-
-        // кликаем по ссылке "Sign In"
-        registrationPage.clickOnRegistrationLink();
-
-        // ждём перехода и подстановки значений
-
-        WebElement emailField = app.wait.until(ExpectedConditions.visibilityOfElementLocated(
-                By.xpath("//input[@type='email' and @name='email']")
-        ));
-        WebElement passwordField = app.wait.until(ExpectedConditions.visibilityOfElementLocated(
-                By.xpath("//input[@type='password' and @name='password']")
-        ));
-
-        // проверяем, что поля не пустые, если что, заполняем вручную
-        if (emailField.getAttribute("value").isEmpty()) {
-            emailField.sendKeys(email);
-        }
-        if (passwordField.getAttribute("value").isEmpty()) {
-            passwordField.sendKeys(password);
-        }
-        // жмем кнопку входа
-        registrationPage.clickSingInButton();
+        // проверяем наличие ссылки "Sign In" и кликаем по ней
+        registrationPage
+                .clickSignInLinkAfterConfirmation()
+                .waitForEmailAndPasswordFields()
+                .fillEmailAndPasswordIfEmpty(email, password)
+                .clickSignInButton();
 
         softAssert.assertAll();
     }
