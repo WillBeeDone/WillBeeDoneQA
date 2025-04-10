@@ -1,0 +1,21 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="WBD UI and API Tests by Groups">
+
+    <test name="Run only Negative tests">
+        <groups>
+            <run>
+                <include name="Negative"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="wbd.tests.rest_assured.AddOfferTests"/>
+            <class name="wbd.tests.rest_assured.GetAllOffersTests"/>
+            <class name="wbd.tests.rest_assured.GetCategoriesTests"/>
+            <class name="wbd.tests.rest_assured.GetLocationsTest"/>
+            <class name="wbd.tests.rest_assured.GetOfferByIdTests"/>
+            <class name="wbd.tests.rest_assured.GetOffersWithParamsTests"/>
+            <class name="wbd.tests.web_tests.RegistrationTests"/>
+        </classes>
+    </test>
+
+</suite>

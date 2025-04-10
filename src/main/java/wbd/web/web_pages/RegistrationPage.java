@@ -3,6 +3,7 @@ package wbd.web.web_pages;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import wbd.web.core.BasePage;
 
@@ -10,28 +11,38 @@ import wbd.web.core.BasePage;
 public class RegistrationPage extends BasePage {
 
     @FindBy(xpath = "//button[@type='button' and text()='Sign Up']")
-    private WebElement signUpButton;
+    WebElement signUpButton;
 
     @FindBy(xpath = "//input[@type='email' and @name='email']")
-    private WebElement emailField;
+    WebElement emailField;
 
     @FindBy(xpath = "//input[@type='password' and @name='password']")
-    private WebElement passwordField;
+    WebElement passwordField;
 
     @FindBy(xpath = "//input[@type='password' and @name='confirmPassword']")
-    private WebElement confirmPasswordField;
+    WebElement confirmPasswordField;
 
     @FindBy(xpath = "//input[@type='checkbox' and @name='agree']")
-    private WebElement agreeCheckbox;
+    WebElement agreeCheckbox;
 
     @FindBy(xpath = "//button[@type='submit' and text()='Sign up']")
-    private WebElement submitButton;
+    WebElement submitButton;
 
     @FindBy(xpath = "//a[contains(@href, 'sign-in-form') and contains(normalize-space(), 'Sign In')]")
-    private WebElement signInLink;
+    WebElement signInLink;
 
     @FindBy(xpath = "//button[@data-testid='MyButtonSignIn_JuhYt']")
-    private WebElement signInButton;
+    WebElement signInButton;
+
+    @FindBy(xpath = "//*[contains(text(), 'Welcome!')]")
+    WebElement welcomeMessage;
+
+    @FindBy(xpath = "//*[contains(text(), 'Email confirmed successfully!')]")
+    WebElement confirmationSuccessText;
+
+    @FindBy(xpath = "//a[contains(text(), 'Sign In')]")
+    WebElement signInAfterConfirmationLink;
+
 
     //  =====================================
     public RegistrationPage(WebDriver driver, WebDriverWait wait) {
@@ -86,19 +97,42 @@ public class RegistrationPage extends BasePage {
         return this;
     }
 
-    public RegistrationPage clickSingInButton() {
+    public RegistrationPage clickSignInButton() {
+        wait.until(ExpectedConditions.elementToBeClickable(signInButton));
         signInButton.click(); // теперь кликаем по настоящей кнопке входа
         return this;
     }
 
+    public RegistrationPage waitForEmailAndPasswordFields() {
+        wait.until(ExpectedConditions.visibilityOf(emailField));
+        wait.until(ExpectedConditions.visibilityOf(passwordField));
+        return this;
+    }
 
-    // получаем текст алерта и закрываем его -> в BasePage
+    public boolean isEmailConfirmedSuccessfully() {
+        wait.until(ExpectedConditions.visibilityOf(welcomeMessage));
+        logger.info(welcomeMessage.getText());
 
-    // проверяем, что произошел редирект на главную страницу -> в BasePage
+        return welcomeMessage.isDisplayed() && confirmationSuccessText.isDisplayed();
+    }
 
-    // проверяем, что отображается ошибка для некорректного email
-    // - isEmailValidationErrorDisplayed(), isPasswordValidationErrorDisplayed() → теперь один универсальный метод в BasePage
+    public RegistrationPage clickSignInLinkAfterConfirmation() {
+        wait.until(ExpectedConditions.elementToBeClickable(signInAfterConfirmationLink)).click();
+        return this;
+    }
 
+
+    public RegistrationPage fillEmailAndPasswordIfEmpty(String email, String password) {
+        if (emailField.getAttribute("value").isEmpty()) {
+            logger.info("Email field is empty. Filling with: " + email);
+            emailField.sendKeys(email);
+        }
+        if (passwordField.getAttribute("value").isEmpty()) {
+            logger.info("Password field is empty. Filling with: " + password);
+            passwordField.sendKeys(password);
+        }
+        return this;
+    }
 
 }
 

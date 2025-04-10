@@ -1,0 +1,16 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+<suite name="Full Web Test Suite" parallel="false">
+    <test name="All Web UI Tests">
+        <classes>
+            <class name="wbd.tests.web_tests.HeaderComponentTests"/>
+            <class name="wbd.tests.web_tests.LoginTests"/>
+            <class name="wbd.tests.web_tests.OffersTests"/>
+            <class name="wbd.tests.web_tests.PaginationTests"/>
+            <class name="wbd.tests.web_tests.RecoveryPasswordTests"/>
+            <class name="wbd.tests.web_tests.RecoveryPasswordWhenLoggedInTests"/>
+            <class name="wbd.tests.web_tests.RegistrationTests"/>
+            <class name="wbd.tests.web_tests.SearchTests"/>
+            <class name="wbd.tests.web_tests.SortingTests"/>
+        </classes>
+    </test>
+</suite>

@@ -19,7 +19,9 @@ public class BasePage {
     public WebDriverWait wait;
     public JavascriptExecutor js;
 
-    Logger logger = LoggerFactory.getLogger(BasePage.class);
+    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+
     public BasePage(WebDriver driver, WebDriverWait wait) {
         this.driver = driver;
         this.wait = wait;
