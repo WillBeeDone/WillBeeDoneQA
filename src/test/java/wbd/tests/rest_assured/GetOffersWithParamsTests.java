@@ -260,7 +260,11 @@ public class GetOffersWithParamsTests extends TestBaseRA {
     }
 
     // баг-репорт QA-BugReport - 22
-    @Test
+    @Test(groups = "Negative")
+    @Severity(SeverityLevel.NORMAL)
+    @Story("Get offers with invalid category filter")
+    @Description("Verify the response when an invalid category is passed.")
+    @TmsLink("QA-BugReport-23")
     public void testGetOffersWithInvalidCategory() {
         logger.info("Testing GetOffers with Invalid Category");
 
@@ -277,7 +281,12 @@ public class GetOffersWithParamsTests extends TestBaseRA {
         softAssert.assertAll();
     }
 
-    @Test  // баг-репорт QA-Bagreport -24 (не проверяет валидность цен)
+    // баг-репорт QA-Bagreport -24 (не проверяет валидность цен)
+    @Test(groups = "Negative")
+    @Severity(SeverityLevel.CRITICAL)
+    @Story("Get offers with invalid price filter")
+    @Description("Check that system handles invalid price parameters correctly (bug QA-Bugreport-24).")
+    @TmsLink("QA-Bugreport-24")
     public void testGetOffersWithInvalidPrice() {
         logger.info("Testing GetOffers with Invalid Price");
 
@@ -295,7 +304,12 @@ public class GetOffersWithParamsTests extends TestBaseRA {
         softAssert.assertAll();
     }
 
-    @Test // баг-репорт QA-BagReport-25 (null не отбивает)
+    // баг-репорт QA-BagReport-25 (null не отбивает)
+    @Test(groups = "Negative")
+    @Severity(SeverityLevel.NORMAL)
+    @Story("Get offers with invalid minPrice filter")
+    @Description("Verify behavior when minPrice is set to an invalid value (bug QA-Bugreport-25).")
+    @TmsLink("QA-Bugreport-25")
     public void testGetOffersWithInvalidMinPrice() {
         logger.info("Testing GetOffers with Invalid Min Price");
 
@@ -312,7 +326,11 @@ public class GetOffersWithParamsTests extends TestBaseRA {
         softAssert.assertAll();
     }
 
-    @Test
+    @Test(groups = "Negative")
+    @Severity(SeverityLevel.NORMAL)
+    @Story("Get offers with invalid maxPrice filter")
+    @Description("Verify behavior when maxPrice is set to a negative value.")
+    @TmsLink("QA-Bugreport-26")
     public void testGetOffersWithInvalidMaxPrice() {
         logger.info("Testing GetOffers with Invalid Max Price");
 
@@ -330,7 +348,11 @@ public class GetOffersWithParamsTests extends TestBaseRA {
     }
 
     // баг-репорт QA-BagReport -25
-    @Test
+    @Test(groups = "Negative")
+    @Severity(SeverityLevel.NORMAL)
+    @Story("Get offers with negative page number")
+    @Description("Check system behavior when an invalid (negative) page number is passed (bug QA-Bugreport-25).")
+    @TmsLink("QA-Bugreport-25")
     public void testGetOffersWithNegativePage() {
         logger.info("Testing GetOffers with Invalid Page Number");
 
@@ -341,14 +363,18 @@ public class GetOffersWithParamsTests extends TestBaseRA {
         softAssert.assertEquals(response.getStatusCode(), 400, "Expected status code 400 for negative page number");
 
         // проверяем, что в ответе есть сообщение об ошибке
-        String errorMessage = response.jsonPath().getString("error");
+        String errorMessage = response.jsonPath().getString("message");
         softAssert.assertNotNull(errorMessage, "Error message must not be null");
 
         softAssert.assertAll();
     }
 
     // баг-репорт QA-BagReport -27
-    @Test
+    @Test(groups = "Negative")
+    @Severity(SeverityLevel.NORMAL)
+    @Story("Get offers with invalid sort parameter")
+    @Description("Ensure that invalid sort parameters result in appropriate error (bug QA-Bugreport-27).")
+    @TmsLink("QA-Bugreport-27")
     public void testGetOffersWithInvalidSort() {
         logger.info("Testing GetOffers with Invalid Sort Parameter");
 
@@ -366,7 +392,11 @@ public class GetOffersWithParamsTests extends TestBaseRA {
     }
 
     // добавлено в баг-репорт QA-Bagreport -24
-    @Test
+    @Test(groups = "Negative")
+    @Severity(SeverityLevel.CRITICAL)
+    @Story("Get offers with missing mandatory parameters")
+    @Description("Verify the behavior when mandatory parameters are missing (bug QA-Bugreport-24).")
+    @TmsLink("QA-Bugreport-24")
     public void testGetOffersWithMissingMandatoryParams() {
         logger.info("Testing GetOffers with Missing Mandatory Parameters");
 
