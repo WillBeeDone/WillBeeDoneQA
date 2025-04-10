@@ -35,13 +35,13 @@ public class RegistrationPage extends BasePage {
     WebElement signInButton;
 
     @FindBy(xpath = "//*[contains(text(), 'Welcome!')]")
-    private WebElement welcomeMessage;
+    WebElement welcomeMessage;
 
     @FindBy(xpath = "//*[contains(text(), 'Email confirmed successfully!')]")
-    private WebElement confirmationSuccessText;
+    WebElement confirmationSuccessText;
 
     @FindBy(xpath = "//a[contains(text(), 'Sign In')]")
-    private WebElement signInAfterConfirmationLink;
+    WebElement signInAfterConfirmationLink;
 
 
     //  =====================================
